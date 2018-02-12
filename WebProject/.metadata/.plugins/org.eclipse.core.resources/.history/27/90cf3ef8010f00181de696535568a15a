@@ -1,0 +1,40 @@
+package demo;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSON;
+
+public class ResponseUtil{
+	public static void response(HttpServletResponse response, String extendStr,boolean success)throws IOException {
+		response(response, null, null, extendStr, success);
+	}
+	public static void response(HttpServletResponse response, List resultList)throws IOException {
+		response(response, resultList, null, null, true);
+	}
+	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap)throws IOException {
+		response(response, resultList, resultMap, null, true);
+	}
+	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap, boolean success)throws IOException {
+		response(response, resultList, resultMap, null, success);
+	}
+	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String extendStr)throws IOException {
+		response(response, resultList, resultMap, extendStr, true);
+	}
+	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String extendStr,boolean success) throws IOException {
+		Map<String, Object> map = new HashMap();
+		map.put("success", success);
+		map.put("resultList", JSON.toJSONString(resultList));
+//		map.put("resultMap", JSON.toJSONString(resultMap));
+		map.put("resultMap", resultMap);
+		map.put("extendStr", extendStr);
+		String resultStr = JSON.toJSONString(map);
+		response.setCharacterEncoding("UTF-8"); 
+		response.getWriter().print(resultStr);
+	}
+}

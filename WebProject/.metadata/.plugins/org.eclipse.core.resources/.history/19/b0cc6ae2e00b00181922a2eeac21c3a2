@@ -1,0 +1,5 @@
+package demo;
+
+public interface Convert {
+	public String getRmb(String usd);  
+}

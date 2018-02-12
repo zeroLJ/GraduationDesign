@@ -1,0 +1,21 @@
+package demo;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/Signin")
+public class Signin extends BaseServlet {
+//	private static final long serialVersionUID = 1L;
+	@Override
+	protected void doSQL(HttpServletRequest request, HttpServletResponse response, Statement stmt)
+			throws SQLException, IOException {
+		// TODO Auto-generated method stub
+		super.doSQL(request, response, stmt);
+		ResponseUtil.response(response, "µÇÂ¼³É¹¦£¡£¡", true);
+	}
+}

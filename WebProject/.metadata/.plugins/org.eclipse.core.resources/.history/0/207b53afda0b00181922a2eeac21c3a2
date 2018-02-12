@@ -1,0 +1,37 @@
+package webDemo;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class Demo {
+
+    //1433是TCP端口
+    //databaseName是数据库名称
+    //user是sql管理员的登陆名（默认的sa）
+    //密码依照自己实际情况填写，这里的“*”是示范（想要我的密码，想得美）
+    
+    static String connectionUrl = "jdbc:sqlserver://localhost:1433;" 
+               +"databaseName=Demo;"
+               + "user=940034240;"
+               + "password=pp123456;";
+            
+    //主函数
+    public static void main(String[] args) throws Exception{
+        // TODO 自动生成的方法存根
+        
+        //注册驱动程序所需语句
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        Connection con = DriverManager.getConnection(connectionUrl);
+        
+        Statement stmt = con.createStatement();
+        //从 “S”表中查询 “Sno”列和“Ssex”列
+        ResultSet rs = stmt.executeQuery("select id,name from user");
+        
+        //如果查到有数据，全部输出
+        while(rs.next()){
+            System.out.println(rs.getString("id")+","+rs.getString("name"));
+        }
+    }
+}

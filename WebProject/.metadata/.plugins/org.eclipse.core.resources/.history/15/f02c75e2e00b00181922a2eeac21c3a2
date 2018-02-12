@@ -1,0 +1,8 @@
+package demo;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface Convert extends Remote  {
+	public String getRmb() throws RemoteException;  
+}

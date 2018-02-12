@@ -1,0 +1,53 @@
+package demo;
+
+import java.io.IOException;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class ServletDemo
+ */
+@WebServlet("/ServletDemo")
+public class ServletDemo extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	//ServletConfig对象是封装init_param数据  
+    //可以查看struts中的案例中的配置  
+    //在实际开发中，有一些不适合在servlet程序中写死的数据，这些数据就可以通过配置方式配给servlet,  
+    //例如:servlet采用哪个码表，servlet连接那个数据库，servlet读取哪个配置文件等信息  
+    public ServletConfig config = null;  
+      
+    @Override  
+    public void init(ServletConfig config){  
+        this.config = config;  
+    }  
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ServletDemo() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
