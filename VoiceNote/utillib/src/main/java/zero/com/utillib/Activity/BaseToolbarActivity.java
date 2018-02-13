@@ -3,6 +3,7 @@ package zero.com.utillib.Activity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.jar.Manifest;
@@ -10,9 +11,11 @@ import java.util.jar.Manifest;
 import zero.com.utillib.R;
 
 /**
- * 只可控制toolbar
+ * 只可控制toolbar（activity必须无ActionBar）
+ * 要修改toolbar背景通过修改toolbar_layout的背景实现，如：toolbar_layout.setBackgroundResource(R.mipmap.navigation_image_a);
  */
 public class BaseToolbarActivity extends BaseActivity {
+    protected RelativeLayout toolbar_layout;
     private Toolbar mToolbar;
     private ToolBarHelper mToolBarHelper;
     protected ImageView back_iv;
@@ -41,6 +44,7 @@ public class BaseToolbarActivity extends BaseActivity {
         top_right_tv = (TextView) toolbar.findViewById(R.id.right_tv);
         top_center_tv = (TextView) toolbar.findViewById(R.id.center_tv);
         back_iv = (ImageView) toolbar.findViewById(R.id.back_iv);
+        toolbar_layout = (RelativeLayout) toolbar.findViewById(R.id.toolbar_layout);
 //        top_center_tv.setText(getString(R.string.app_name));
         top_center_tv.setText(getTitle());
     }
@@ -74,4 +78,6 @@ public class BaseToolbarActivity extends BaseActivity {
     protected void setTitle(String title){
         top_center_tv.setText(title);
     }
+
+
 }

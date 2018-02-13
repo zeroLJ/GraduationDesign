@@ -6,7 +6,9 @@ import com.yanzhenjie.sofia.Sofia;
 
 
 /**
- * 可控制状态栏&&toolbar
+ * 可控制状态栏&&toolbar（activity必须无ActionBar）
+ * 调用Sofia改变状态栏会导致 软件盘弹出时，底部控件被挡住。（有此需求不能使用此类）
+ * 若单纯需要改变状态栏背景色，可使用BaseToolbarActivity并修改AppTheme中的colorPrimaryDark
  */
 public class BaseStatusAndToolBarActivity extends BaseToolbarActivity {
     @Override

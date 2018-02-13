@@ -13,43 +13,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_layout">
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white_bg"
-            android:hint="点击输入内容" />
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:orientation="vertical"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--android:paddingRight="10dp">-->
-            <!--<EditText-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:lines="1"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:background="@color/white_bg"-->
-                <!--android:hint="2018-02-13 的笔记"-->
-                <!--android:gravity="center"/>-->
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1px"-->
-                <!--android:background="@color/line_gray"/>-->
-            <!--<EditText-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:background="@color/white_bg"-->
-                <!--android:hint="点击输入内容" />-->
-        <!--</LinearLayout>-->
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white_bg"
+                android:hint="2018-02-13 的笔记"
+                android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line_gray"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white_bg"
+                android:hint="点击输入内容" />
+        </LinearLayout>
     </ScrollView>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

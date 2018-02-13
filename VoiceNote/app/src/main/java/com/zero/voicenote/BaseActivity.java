@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.yanzhenjie.sofia.Sofia;
 
 import zero.com.utillib.Activity.BaseStatusAndToolBarActivity;
+import zero.com.utillib.Activity.BaseToolbarActivity;
 import zero.com.utillib.http.HttpUtils;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.StringUtils;
@@ -15,7 +16,7 @@ import zero.com.utillib.utils.object.StringUtils;
  * Created by zero on 2018/2/8.
  */
 
-public class BaseActivity extends BaseStatusAndToolBarActivity {
+public class BaseActivity extends BaseToolbarActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -28,13 +29,6 @@ public class BaseActivity extends BaseStatusAndToolBarActivity {
         initListener();
     }
 
-    @Override
-    protected void setStatusBar() {
-        super.setStatusBar();
-        Sofia.with(this)
-                .statusBarBackground(getResources().getColor(R.color.colorPrimaryDark))
-                .statusBarLightFont();
-    }
 
     protected void initListener(){
 
