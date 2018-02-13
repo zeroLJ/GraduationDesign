@@ -31,14 +31,14 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
     compile 'com.yanzhenjie:sofia:1.0.4'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
     //  阿里巴巴公司开源的速度最快的Json和对象转换工具
     compile 'com.alibaba:fastjson:1.2.21'
     //  使用文档  https://github.com/Blankj/AndroidUtilCode/blob/master/utilcode/README-CN.md
     compile 'com.blankj:utilcode:1.9.12'
-
-    //https://github.com/greenrobot/EventBus#add-eventbus-to-your-project
     //组件间的消息通信
     compile 'org.greenrobot:eventbus:3.1.1'
+    //数据库
 //    compile 'org.greenrobot:greendao:3.2.0'
 //    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.1'
 }

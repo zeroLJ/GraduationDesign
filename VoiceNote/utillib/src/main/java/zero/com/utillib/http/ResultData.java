@@ -1,4 +1,4 @@
-package com.zero.voicenote.http;
+package zero.com.utillib.http;
 
 import com.alibaba.fastjson.JSON;
 

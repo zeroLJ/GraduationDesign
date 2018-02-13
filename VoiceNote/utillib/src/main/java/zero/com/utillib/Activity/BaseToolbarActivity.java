@@ -72,5 +72,6 @@ public class BaseToolbarActivity extends BaseActivity {
     }
 
     protected void setTitle(String title){
+        top_center_tv.setText(title);
     }
 }

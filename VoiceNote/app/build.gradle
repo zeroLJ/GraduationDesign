@@ -8,6 +8,7 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,7 +35,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':utillib')
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.4.0'//数据库升级辅助
+    compile 'com.yydcdut.sdlv:sdlv:0.7.0'
 }

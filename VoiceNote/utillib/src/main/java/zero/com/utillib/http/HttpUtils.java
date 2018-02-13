@@ -1,9 +1,11 @@
-package com.zero.voicenote.http;
+package zero.com.utillib.http;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ActivityUtils;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -23,6 +25,9 @@ public class HttpUtils {
     public static String PASSWORD = "";
     public static void doPost(String url, Map<String,Object> map, final OnResponseListener onResponseListener){
         OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newBuilder()
+                .connectTimeout(10, TimeUnit.SECONDS)//设置连接超时时间
+                .readTimeout(20,TimeUnit.SECONDS);
         FormBody.Builder formBodyBuild=new FormBody.Builder();
         formBodyBuild.add("name", USER);
         formBodyBuild.add("password", PASSWORD);
@@ -32,16 +37,23 @@ public class HttpUtils {
                 formBodyBuild.add(key, ObjUtils.objToStr(map.get(key)));
             }
         }
+        Logs.JLlog("u" + URL);
         url = URL + url;
         Request request=new Request.Builder().url(url)
                 .post(formBodyBuild.build())
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
+            public void onFailure(final okhttp3.Call call, final IOException e) {
                 Logs.JLlog("失败");
                 Logs.JLlog(e.getMessage());
-                onResponseListener.onFailure();
+                ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onResponseListener.onFailure(call, e);
+                        onResponseListener.OnFinal();
+                    }
+                });
             }
 
             @Override
@@ -51,12 +63,16 @@ public class HttpUtils {
                 Map map = JSON.parseObject(s, Map.class);
                 Logs.JLlog("map:"+map.toString());
                 ResultData resultData = new ResultData(s);
+
+
                 if (resultData.isSuccess()){
                     Logs.JLlog("成功");
                     onResponseListener.onSuccess(resultData.getResultList(), resultData);
+                    onResponseListener.OnFinal();
                 }else {
                     Logs.JLlog("有误");
                     onResponseListener.OnError(resultData.getMsg());
+                    onResponseListener.OnFinal();
                 }
 
             }
