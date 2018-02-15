@@ -57,5 +57,5 @@ freeline_project_description.json
 # Eclipse files
 .metadata/
 Servers/
-.recommenders/
 WebProject/RemoteSystemsTempFiles/
+.recommenders/
