@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/white_bg"
+            android:id="@+id/result_edt"
             android:hint="点击输入内容" />
         <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->

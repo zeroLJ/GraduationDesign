@@ -36,6 +36,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':utillib')
     compile 'org.greenrobot:greendao:3.2.2'
-    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.4.0'//数据库升级辅助
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.4.0'
+    //数据库升级辅助
     compile 'com.yydcdut.sdlv:sdlv:0.7.0'
 }
