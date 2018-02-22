@@ -8,4 +8,10 @@ public class Constant {
     public static String Name = "name";
     public static String Password = "password";
     public static String Url = "url";
+
+    public static String FLAG_COMPLETE = "0";
+    public static String FLAG_ADD = "1";
+    public static String FLAG_EDIT = "2";
+    public static String FLAG_DELETE = "3";
+
 }

@@ -1,5 +1,6 @@
 package com.zero.voicenote;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,27 +10,33 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
+import com.zero.voicenote.database.DaoUtils;
+import com.zero.voicenote.database.Note;
+import com.zero.voicenote.database.NoteDao;
+import com.zero.voicenote.util.Constant;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import zero.com.utillib.adapter.CommoAdapter;
 import zero.com.utillib.adapter.ViewHolder;
 import zero.com.utillib.http.HttpUtils;
+import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.ObjUtils;
 import zero.com.utillib.utils.view.Alert;
 
 
 public class MainActivity extends BaseActivity {
     private RecyclerView recyclerView;
-    private DataAdapter adapter;
-    private List<Map<String, Object>> data;
+    private Adapter adapter;
+    private List<Map<String, Object>> data = new ArrayList<>();;
     private SlideAndDragListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,7 @@ public class MainActivity extends BaseActivity {
         }else {
             top_left_tv.setText("登录");
         }
+
 
 //        recyclerView = findViewById(R.id.recyclerView);
 //        data = new ArrayList<>();
@@ -70,7 +78,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,100);
             }
         });
         top_left_tv.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +115,7 @@ public class MainActivity extends BaseActivity {
         listView.setMenu(menu);
         listView.setOnMenuItemClickListener(new SlideAndDragListView.OnMenuItemClickListener() {
             @Override
-            public int onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction) {
+            public int onMenuItemClick(View v, final int itemPosition, int buttonPosition, int direction) {
                 switch (direction) {
                     case MenuItem.DIRECTION_LEFT:
                         switch (buttonPosition) {
@@ -118,6 +126,15 @@ public class MainActivity extends BaseActivity {
                     case MenuItem.DIRECTION_RIGHT:
                         switch (buttonPosition) {
                             case 0:
+                                Alert.alertDialogTowBtn("确定要删除该笔记？", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(ObjUtils.objToLong(data.get(itemPosition).get("id")))).get(0);
+                                        note.setFlag(Constant.FLAG_DELETE);
+                                        DaoUtils.updata(note);
+                                        refreshData();
+                                    }
+                                });
                                 return Menu.ITEM_SCROLL_BACK;
                         }
                         break;
@@ -127,18 +144,17 @@ public class MainActivity extends BaseActivity {
                 return Menu.ITEM_NOTHING;
             }
         });
-
-        data = new ArrayList<>();
-        data.add(new HashMap<String, Object>());
-        data.add(new HashMap<String, Object>());
-        data.add(new HashMap<String, Object>());
-        listView.setAdapter(new Adapter(this,data));
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//        });
+        adapter = new Adapter(this,data);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Map<String, Object> map = data.get(position);
+                Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+                intent.putExtra("data",(Serializable) map);
+                startActivityForResult(intent, 100);
+            }
+        });
 
         listView.setOnDragDropListener(new SlideAndDragListView.OnDragDropListener() {
             Map t;
@@ -158,6 +174,7 @@ public class MainActivity extends BaseActivity {
                 data.set(finalPosition, t);
             }
         });
+        refreshData();
     }
 
     class Adapter extends CommoAdapter<Map<String, Object>> {
@@ -168,7 +185,9 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void convert(ViewHolder holder, Map<String, Object> map, int position) {
-            holder.setTextView(R.id.title, ObjUtils.objToStr(position));
+            holder.setTextView(R.id.title, ObjUtils.objToStr(map.get("title")));
+            holder.setTextView(R.id.message, ObjUtils.objToStr(map.get("message")));
+            holder.setTextView(R.id.time, ObjUtils.objToStr(map.get("addTime")).substring(0,16));
         }
     }
 
@@ -178,11 +197,34 @@ public class MainActivity extends BaseActivity {
             Alert.alertDialogTowBtn("是否要退出？", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    App.appExit();
+                    MApp.appExit();
                 }
             });
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == Activity.RESULT_OK){
+            data.clear();
+            List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.User.eq(HttpUtils.USER));
+            for (Note note : notes){
+                data.add(note.toMap());
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void refreshData(){
+        data.clear();
+        List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.User.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_DELETE));
+        for (Note note : notes){
+            data.add(note.toMap());
+        }
+        adapter.notifyDataSetChanged();
+        Logs.JLlog(data.toString());
     }
 }

@@ -10,7 +10,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * Created by zero on 2018/2/13.
  */
 @Entity
-public class Note {
+public class Note extends BaseEntity {
     @Unique
     @Id(autoincrement =true)
     private Long id;
@@ -22,11 +22,11 @@ public class Note {
     @NotNull
     private String addTime;
     private String editTime;
-    private String delete;
-    @Generated(hash = 1711255754)
+    private String flag;//0为已经与服务器数据同步，1为新增，2为修改，3为删除
+    @Generated(hash = 46778671)
     public Note(Long id, @NotNull String user, String title, String message,
             String audioPath, @NotNull String addTime, String editTime,
-            String delete) {
+            String flag) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -34,7 +34,7 @@ public class Note {
         this.audioPath = audioPath;
         this.addTime = addTime;
         this.editTime = editTime;
-        this.delete = delete;
+        this.flag = flag;
     }
     @Generated(hash = 1272611929)
     public Note() {
@@ -81,10 +81,10 @@ public class Note {
     public void setEditTime(String editTime) {
         this.editTime = editTime;
     }
-    public String getDelete() {
-        return this.delete;
+    public String getFlag() {
+        return this.flag;
     }
-    public void setDelete(String delete) {
-        this.delete = delete;
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 }

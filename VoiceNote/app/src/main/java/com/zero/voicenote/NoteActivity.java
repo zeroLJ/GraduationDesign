@@ -1,9 +1,14 @@
 package com.zero.voicenote;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -11,15 +16,25 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.zero.voicenote.database.DaoUtils;
+import com.zero.voicenote.database.Note;
+import com.zero.voicenote.database.NoteDao;
+import com.zero.voicenote.util.Constant;
 import com.zero.voicenote.util.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
+import zero.com.utillib.http.HttpUtils;
 import zero.com.utillib.utils.Logs;
+import zero.com.utillib.utils.object.DateUtils;
+import zero.com.utillib.utils.object.ObjUtils;
+import zero.com.utillib.utils.object.StringUtils;
 import zero.com.utillib.utils.view.Alert;
 
 
@@ -29,25 +44,85 @@ public class NoteActivity extends BaseActivity {
     int ret = 0; // 函数调用返回值
     // 用HashMap存储听写结果
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
-    private EditText result_edt;
+    private EditText result_edt, title_edt;
+    private Map<String, Object> data;
+    private boolean isNewNote = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         setReturnEnable(true);
-        top_right_tv.setText("完成");
         result_edt = findViewById(R.id.result_edt);
+        title_edt = findViewById(R.id.title_edt);
+        Intent intent = getIntent();
+        if (intent.getSerializableExtra("data") != null){
+            data = (Map<String, Object>) intent.getSerializableExtra("data");
+            title_edt.setText(ObjUtils.objToStr(data.get("title")));
+            result_edt.setText(ObjUtils.objToStr(data.get("message")));
+            top_right_tv.setText("保存");
+            title_edt.setHint(ObjUtils.objToStr(data.get("addTime")).substring(0,10)+"的笔记");
+            isNewNote = false;
+        }else {
+            title_edt.setHint(DateUtils.getNowDate()+"的笔记");
+            top_right_tv.setText("完成");
+        }
         // 初始化识别无UI识别对象
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         mIat = SpeechRecognizer.createRecognizer(this, initListener);
         setParam();
-        // 不显示听写对话框
-        ret = mIat.startListening(mRecognizerListener);
-        if (ret != ErrorCode.SUCCESS) {
-            Alert.toast("听写失败,错误码：" + ret);
-        } else {
-            Alert.toast("请开始说话");
-        }
+
+//        ret = mIat.startListening(mRecognizerListener);
+//        if (ret != ErrorCode.SUCCESS) {
+//            Alert.toast("听写失败,错误码：" + ret);
+//        } else {
+//            Alert.toast("请开始说话");
+//        }
+
+    }
+
+    private boolean isSending = false;
+    @Override
+    protected void initListener() {
+        super.initListener();
+        top_right_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSending) return;
+                isSending = true;
+                String title = title_edt.getText().toString().trim();
+                if (StringUtils.isEmpty(title)){
+                    title = title_edt.getHint().toString();
+                }
+                if (isNewNote){
+                    Note note = new Note(null, HttpUtils.USER, title,result_edt.getText().toString(),
+                            null, DateUtils.getNowTime(), null, Constant.FLAG_ADD);
+                    DaoUtils.insert(note);
+                    Logs.JLlog(note.toString());
+                }else {
+                    Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(Long.valueOf(ObjUtils.objToStr(data.get("id"))))).get(0);
+                    note.setMessage(result_edt.getText().toString());
+                    note.setTitle(title);
+                    note.setEditTime(DateUtils.getNowTime());
+                    note.setFlag(Constant.FLAG_EDIT);
+                    DaoUtils.updata(note);
+                }
+
+                setResult(Activity.RESULT_OK);
+                finish();
+                isSending = false;
+            }
+        });
+
+        findViewById(R.id.note_layout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!result_edt.hasFocus()){
+                    KeyboardUtils.showSoftInput(result_edt);
+                    result_edt.setSelection(result_edt.getText().toString().length());
+                }
+                return false;
+            }
+        });
 
     }
 

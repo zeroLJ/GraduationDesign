@@ -93,6 +93,14 @@ public class ObjUtils {
         }
     }
 
+    public static Long objToLong(Object obj) {
+        if (!objToStr(obj).equals("") && !objToStr(obj).equals("null")) {
+            return Long.parseLong(objToStr(obj));
+        } else {
+            return 0L;
+        }
+    }
+
     public static boolean objToBoolean(Object obj) {
         if (!objToStr(obj).equals("") && !objToStr(obj).equals("null")) {
             return Boolean.parseBoolean(objToStr(obj));

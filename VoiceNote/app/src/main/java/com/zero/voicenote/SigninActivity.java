@@ -4,7 +4,10 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
@@ -37,8 +40,8 @@ public class SigninActivity extends BaseActivity {
         setTitle("登录");
         user_et = findViewById(R.id.user_et);
         password_et = findViewById(R.id.password_et);
-        user_et.setText(App.spUtils.getString(Constant.Name));
-        password_et.setText(App.spUtils.getString(Constant.Password));
+        user_et.setText(MApp.spUtils.getString(Constant.Name));
+        password_et.setText(MApp.spUtils.getString(Constant.Password));
     }
 
     @Override
@@ -64,7 +67,7 @@ public class SigninActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SigninActivity.this, MainActivity.class);
-                HttpUtils.USER  = null;
+                HttpUtils.USER  = "";
                 startActivity(intent);
                 finish();
             }
@@ -88,7 +91,7 @@ public class SigninActivity extends BaseActivity {
                         String url = url_et.getText().toString();
                         if (StringUtils.isWebLink(url)){
                             HttpUtils.URL = url;
-                            App.spUtils.put(Constant.Url, url);
+                            MApp.spUtils.put(Constant.Url, url);
                             dialog.cancel();
                         }else {
                             Alert.toast("地址有误");
@@ -110,8 +113,8 @@ public class SigninActivity extends BaseActivity {
                 Intent intent = new Intent(SigninActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                App.spUtils.put(Constant.Name, user);
-                App.spUtils.put(Constant.Password, password);
+                MApp.spUtils.put(Constant.Name, user);
+                MApp.spUtils.put(Constant.Password, password);
                 HttpUtils.USER = user;
                 HttpUtils.PASSWORD = password;
             }
@@ -135,19 +138,36 @@ public class SigninActivity extends BaseActivity {
         };
 //        ActivityCompat.requestPermissions(this, permissions, 1000);
         Logs.JLlog("start");
-//        PermissionUtils.requestPermissions(ActivityUtils.getTopActivity(), 1000, permissions, new PermissionUtils.OnPermissionListener() {
-//            @Override
-//            public void onPermissionGranted() {
-//
-//            }
-//
-//            @Override
-//            public void onPermissionDenied(String[] deniedPermissions) {
-//                for (String s : deniedPermissions){
-//                    Logs.JLlog(s);
-//                }
-//            }
-//        });
+    }
+
+
+    private void requestPermissions(){
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int permission = ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if(permission!= PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,new String[]
+                            {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.LOCATION_HARDWARE,Manifest.permission.READ_PHONE_STATE,
+                                    Manifest.permission.WRITE_SETTINGS,Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS},0x0010);
+                }
+
+                if(permission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,new String[] {
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},0x0010);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
 
