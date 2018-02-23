@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.alibaba.fastjson.JSON;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
@@ -20,14 +23,19 @@ import com.zero.voicenote.database.Note;
 import com.zero.voicenote.database.NoteDao;
 import com.zero.voicenote.util.Constant;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Call;
 import zero.com.utillib.adapter.CommoAdapter;
 import zero.com.utillib.adapter.ViewHolder;
 import zero.com.utillib.http.HttpUtils;
+import zero.com.utillib.http.OnResponseListener;
+import zero.com.utillib.http.ResultData;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.ObjUtils;
 import zero.com.utillib.utils.view.Alert;
@@ -45,6 +53,7 @@ public class MainActivity extends BaseActivity {
         listView = findViewById(R.id.listview);
         if (hasSignin()){
             top_left_tv.setText(HttpUtils.USER);
+            top_right_tv.setText("同步");
         }else {
             top_left_tv.setText("登录");
         }
@@ -100,6 +109,37 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+
+        top_right_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Map<String, Object>> list = new ArrayList<>();
+                final List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_COMPLETE));
+                for (Note note : notes){
+                    list.add(note.toMap());
+                }
+                Logs.JLlog(list.toString());
+                Map<String, Object> map = new HashMap<>();
+                map.put("data", JSON.toJSONString(list));
+                showProgressDialog("正在同步，请稍后...");
+                HttpUtils.doPost("NoteRefresh", map, new OnResponseListener() {
+                    @Override
+                    public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                        Logs.JLlog("data:"+data.toString());
+                        DaoUtils.getDao(Note.class).deleteAll();
+                        DaoUtils.insert(Note.class, data);
+                        Alert.toast("同步完成");
+                        refreshData();
+                    }
+
+                    @Override
+                    public void OnFinal() {
+                        super.OnFinal();
+                        dismissProgressDialog();
+                    }
+                });
+            }
+        });
     }
 
     private void initListview() {
@@ -129,10 +169,23 @@ public class MainActivity extends BaseActivity {
                                 Alert.alertDialogTowBtn("确定要删除该笔记？", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(ObjUtils.objToLong(data.get(itemPosition).get("id")))).get(0);
+                                        final long id = ObjUtils.objToLong(data.get(itemPosition).get("id"));
+                                        Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(id)).get(0);
                                         note.setFlag(Constant.FLAG_DELETE);
                                         DaoUtils.updata(note);
                                         refreshData();
+                                        Map<String,Object> map = new HashMap<>();
+                                        map.put("data", JSON.toJSONString(note));
+                                        HttpUtils.doPost("NoteDelete", map, new OnResponseListener() {
+                                            @Override
+                                            public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                                                DaoUtils.delete(Note.class, NoteDao.Properties.Id.eq(id));
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call call, IOException e) {
+                                            }
+                                        });
                                     }
                                 });
                                 return Menu.ITEM_SCROLL_BACK;
@@ -197,7 +250,7 @@ public class MainActivity extends BaseActivity {
             Alert.alertDialogTowBtn("是否要退出？", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    MApp.appExit();
+                    App.appExit();
                 }
             });
             return false;
@@ -209,22 +262,18 @@ public class MainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (resultCode == Activity.RESULT_OK){
-            data.clear();
-            List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.User.eq(HttpUtils.USER));
-            for (Note note : notes){
-                data.add(note.toMap());
-            }
-            adapter.notifyDataSetChanged();
+            refreshData();
         }
     }
 
     private void refreshData(){
         data.clear();
-        List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.User.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_DELETE));
+        List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_DELETE));
         for (Note note : notes){
             data.add(note.toMap());
         }
         adapter.notifyDataSetChanged();
         Logs.JLlog(data.toString());
+        Logs.JLlog(DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER)).toString());
     }
 }

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -25,12 +26,17 @@ import com.zero.voicenote.util.JsonParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import okhttp3.Call;
 import zero.com.utillib.http.HttpUtils;
+import zero.com.utillib.http.OnResponseListener;
+import zero.com.utillib.http.ResultData;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.DateUtils;
 import zero.com.utillib.utils.object.ObjUtils;
@@ -94,22 +100,75 @@ public class NoteActivity extends BaseActivity {
                     title = title_edt.getHint().toString();
                 }
                 if (isNewNote){
-                    Note note = new Note(null, HttpUtils.USER, title,result_edt.getText().toString(),
+                    final Note note = new Note(null, HttpUtils.USER, title,result_edt.getText().toString(),
                             null, DateUtils.getNowTime(), null, Constant.FLAG_ADD);
+                    if (!hasSignin()){
+                        DaoUtils.insert(note);
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                        isSending = false;
+                        return;
+                    }
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("data", JSON.toJSONString(note));
+                    HttpUtils.doPost("NoteAdd", map, new OnResponseListener() {
+                        @Override
+                        public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                            note.setFlag(Constant.FLAG_COMPLETE);
+                            DaoUtils.insert(note);
+                        }
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                        }
+                        @Override
+                        public void OnFinal() {
+                            super.OnFinal();
+                            isSending = false;
+                            Logs.JLlog(note.toString());
+                        }
+                    });
                     DaoUtils.insert(note);
-                    Logs.JLlog(note.toString());
+                    setResult(Activity.RESULT_OK);
+                    finish();
+
                 }else {
-                    Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(Long.valueOf(ObjUtils.objToStr(data.get("id"))))).get(0);
+                    final Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(Long.valueOf(ObjUtils.objToStr(data.get("id"))))).get(0);
                     note.setMessage(result_edt.getText().toString());
                     note.setTitle(title);
                     note.setEditTime(DateUtils.getNowTime());
                     note.setFlag(Constant.FLAG_EDIT);
-                    DaoUtils.updata(note);
-                }
+                    if (!hasSignin()){
+                        DaoUtils.updata(note);
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                        isSending = false;
+                        return;
+                    }
 
-                setResult(Activity.RESULT_OK);
-                finish();
-                isSending = false;
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("data", JSON.toJSONString(note));
+                    HttpUtils.doPost("NoteUpdate", map, new OnResponseListener() {
+                        @Override
+                        public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                            note.setFlag(Constant.FLAG_COMPLETE);
+                            DaoUtils.updata(note);
+                        }
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+
+                        }
+                        @Override
+                        public void OnFinal() {
+                            super.OnFinal();
+                            isSending = false;
+                            Logs.JLlog(note.toString());
+                        }
+                    });
+                    DaoUtils.updata(note);
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }
             }
         });
 

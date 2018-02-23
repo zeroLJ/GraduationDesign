@@ -5,6 +5,7 @@ import org.greenrobot.greendao.query.WhereCondition;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +84,20 @@ public class DaoUtils {
     }
 
     /**
+     * 插入多条记录
+     */
+    public static <T extends BaseEntity> boolean insert(List<T> entitys){
+        boolean flag = false;
+        try {
+            getDao(entitys.get(0).getClass()).insertInTx(entitys);
+            flag = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /**
      * 通过map插入一条记录
      * @param c 要插入的表
      * @param map 带有表c所需的值，key值必须与表c的变量名相同
@@ -92,6 +107,27 @@ public class DaoUtils {
         boolean flag = false;
         try {
             getDao(c).insert(mapToEntity(c, map));
+            flag = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /**
+     * 通过map插入多条记录
+     * @param c 要插入的表
+     * @param list map中带有表c所需的值，key值必须与表c的变量名相同
+     * @return
+     */
+    public static <T extends BaseEntity> boolean insert(Class<T> c, List<Map<String,Object>> list){
+        boolean flag = false;
+        try {
+            List<T> mList = new ArrayList<>();
+            for (Map<String, Object> note : list){
+                mList.add(DaoUtils.mapToEntity(c, note));
+            }
+            insert(mList);
             flag = true;
         }catch (Exception e){
             e.printStackTrace();

@@ -13,7 +13,7 @@ import zero.com.utillib.utils.CrashHandler;
  * Created by zero on 2018/2/8.
  */
 
-public class MApp extends MApplication {
+public class App extends MApplication {
     public static SPUtils spUtils;
     @Override
     public void onCreate() {

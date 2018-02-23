@@ -13,6 +13,12 @@ import com.alibaba.fastjson.JSON;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class ResponseUtil{
+	public static void response(HttpServletResponse response)throws IOException {
+		response(response, "");
+	}
+	public static void response(HttpServletResponse response, String msg)throws IOException {
+		response(response, msg, true);
+	}
 	public static void response(HttpServletResponse response, String msg,boolean success)throws IOException {
 		response(response, null, null, msg, success);
 	}

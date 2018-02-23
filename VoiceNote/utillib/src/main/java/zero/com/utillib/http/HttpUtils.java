@@ -57,22 +57,32 @@ public class HttpUtils {
             }
 
             @Override
-            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+            public void onResponse(final okhttp3.Call call, Response response) throws IOException {
                 String s = response.body().string();
                 Logs.JLlog("json:"+s);
                 Map map = JSON.parseObject(s, Map.class);
                 Logs.JLlog("map:"+map.toString());
-                ResultData resultData = new ResultData(s);
+                final ResultData resultData = new ResultData(s);
 
 
                 if (resultData.isSuccess()){
                     Logs.JLlog("成功");
-                    onResponseListener.onSuccess(resultData.getResultList(), resultData);
-                    onResponseListener.OnFinal();
+                    ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onResponseListener.onSuccess(resultData.getResultList(), resultData);
+                            onResponseListener.OnFinal();
+                        }
+                    });
                 }else {
                     Logs.JLlog("有误");
-                    onResponseListener.OnError(resultData.getMsg());
-                    onResponseListener.OnFinal();
+                    ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onResponseListener.OnError(resultData.getMsg());
+                            onResponseListener.OnFinal();
+                        }
+                    });
                 }
 
             }

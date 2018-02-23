@@ -53,10 +53,11 @@ public abstract class BaseServlet extends HttpServlet {
 		System.out.println("Served at: "+request.getContextPath() + "  Class:" + getClass().getName());
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			request.setCharacterEncoding("UTF-8"); 
 			con = DriverManager.getConnection(connectionUrl);			
 			Map<String, String[]> map =  request.getParameterMap();
 			for(String key : map.keySet()) {
-				params.put(key, map.get(key)[1]);
+				params.put(key, map.get(key)[0]);
 			}
 			System.out.println("参数列表："+params.toString());
 		    stmt = con.createStatement();
@@ -73,7 +74,7 @@ public abstract class BaseServlet extends HttpServlet {
 	        	doSQL(request, response, stmt, params);
 			}else {
 				ResponseUtil.response(response, "用户名或密码错误！！", false);
-			}     
+			}      
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

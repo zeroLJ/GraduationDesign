@@ -15,7 +15,7 @@ public class Note extends BaseEntity {
     @Id(autoincrement =true)
     private Long id;
     @NotNull
-    private String user;
+    private String name;
     private String title;
     private String message;
     private String audioPath;
@@ -23,12 +23,12 @@ public class Note extends BaseEntity {
     private String addTime;
     private String editTime;
     private String flag;//0为已经与服务器数据同步，1为新增，2为修改，3为删除
-    @Generated(hash = 46778671)
-    public Note(Long id, @NotNull String user, String title, String message,
+    @Generated(hash = 1581996020)
+    public Note(Long id, @NotNull String name, String title, String message,
             String audioPath, @NotNull String addTime, String editTime,
             String flag) {
         this.id = id;
-        this.user = user;
+        this.name = name;
         this.title = title;
         this.message = message;
         this.audioPath = audioPath;
@@ -45,11 +45,11 @@ public class Note extends BaseEntity {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getUser() {
-        return this.user;
+    public String getName() {
+        return this.name;
     }
-    public void setUser(String user) {
-        this.user = user;
+    public void setName(String name) {
+        this.name = name;
     }
     public String getTitle() {
         return this.title;
@@ -87,4 +87,5 @@ public class Note extends BaseEntity {
     public void setFlag(String flag) {
         this.flag = flag;
     }
+   
 }

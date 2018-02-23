@@ -45,10 +45,12 @@ public class LoginActivity extends BaseActivity {
         if (!password.equals(checkPassword)){
             Alert.toast("两次输入的密码不一致！");
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("name", user);
-        map.put("password", password);
-        HttpUtils.doPost("Login", map, new OnResponseListener() {
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("name", user);
+//        map.put("password", password);
+        HttpUtils.USER = user;
+        HttpUtils.PASSWORD = password;
+        HttpUtils.doPost("Login", new OnResponseListener() {
             @Override
             public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
 

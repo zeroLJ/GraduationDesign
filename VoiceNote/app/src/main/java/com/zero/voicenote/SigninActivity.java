@@ -40,8 +40,10 @@ public class SigninActivity extends BaseActivity {
         setTitle("登录");
         user_et = findViewById(R.id.user_et);
         password_et = findViewById(R.id.password_et);
-        user_et.setText(MApp.spUtils.getString(Constant.Name));
-        password_et.setText(MApp.spUtils.getString(Constant.Password));
+        user_et.setText(App.spUtils.getString(Constant.Name));
+        password_et.setText(App.spUtils.getString(Constant.Password));
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class SigninActivity extends BaseActivity {
                         String url = url_et.getText().toString();
                         if (StringUtils.isWebLink(url)){
                             HttpUtils.URL = url;
-                            MApp.spUtils.put(Constant.Url, url);
+                            App.spUtils.put(Constant.Url, url);
                             dialog.cancel();
                         }else {
                             Alert.toast("地址有误");
@@ -104,19 +106,19 @@ public class SigninActivity extends BaseActivity {
 
     private void signIn(final String user,final String password){
         showProgressDialog("登录中");
-        Map<String,Object> map = new HashMap<>();
-        map.put("name",user);
-        map.put("password", password);
-        HttpUtils.doPost("Signin", map, new OnResponseListener() {
+        HttpUtils.USER = user;
+        HttpUtils.PASSWORD = password;
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("name",user);
+//        map.put("password", password);
+        HttpUtils.doPost("Signin", new OnResponseListener() {
             @Override
             public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                 Intent intent = new Intent(SigninActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                MApp.spUtils.put(Constant.Name, user);
-                MApp.spUtils.put(Constant.Password, password);
-                HttpUtils.USER = user;
-                HttpUtils.PASSWORD = password;
+                App.spUtils.put(Constant.Name, user);
+                App.spUtils.put(Constant.Password, password);
             }
 
             @Override
