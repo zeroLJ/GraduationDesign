@@ -1,5 +1,4 @@
-package zero.com.utillib.utils.object;
-
+package main;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by ljl on 2017/8/9.
+ * Created by ljl on 2018/2/9.
  */
 
 public class DateUtils {

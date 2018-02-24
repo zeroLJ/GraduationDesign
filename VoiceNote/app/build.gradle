@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.zero.voicenote"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -39,4 +39,5 @@ dependencies {
     compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.4.0'
     //数据库升级辅助
     compile 'com.yydcdut.sdlv:sdlv:0.7.0'
+    compile 'com.github.Jay-Goo:WaveLineView:v1.0.3'
 }

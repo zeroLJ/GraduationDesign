@@ -42,8 +42,10 @@ public class SigninActivity extends BaseActivity {
         password_et = findViewById(R.id.password_et);
         user_et.setText(App.spUtils.getString(Constant.Name));
         password_et.setText(App.spUtils.getString(Constant.Password));
-        Intent intent = new Intent(this, MyService.class);
-        startService(intent);
+//        Intent intent = new Intent(this, MyService.class);
+//        startService(intent);
+//        Intent intent2 = new Intent(this, MyService2.class);
+//        startService(intent2);
     }
 
     @Override

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +60,32 @@ public class NoteRefresh extends BaseServlet{
 								+"','"+audioPath
 								+"')"); 
 					}else {
-						
+						Date date1 = DateUtils.StringDateTime(editTime);
+						String eString = rs.getString(rs.findColumn("editTime"));
+						if (eString!=null) {
+							Date date2 = DateUtils.StringDateTime(rs.getString(rs.findColumn("editTime")));
+							if (date1.getTime() > date2.getTime()) { //客户端的修改时间晚于服务器端的修改时间
+								s = "update dbo.[note] set "
+										+ "title='"+title+"',"
+										+ "message='"+message+"',"
+										+ "editTime='"+editTime+"',"
+										+ "audioPath='"+audioPath+"' "
+										+ "where addTime='"+addTime+"' "
+										+ "and name='"+name+"'";
+								System.out.println("执行sql语句:"+s);
+								sql.execute(s);
+							}
+						}else {
+							s = "update dbo.[note] set "
+									+ "title='"+title+"',"
+									+ "message='"+message+"',"
+									+ "editTime='"+editTime+"',"
+									+ "audioPath='"+audioPath+"' "
+									+ "where addTime='"+addTime+"' "
+									+ "and name='"+name+"'";
+							System.out.println("执行sql语句:"+s);
+							sql.execute(s); 
+						}
 					}
 					break;
 				case "3"://删除

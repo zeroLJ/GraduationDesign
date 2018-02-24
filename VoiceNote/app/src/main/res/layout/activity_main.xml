@@ -17,14 +17,13 @@
         android:id="@+id/listview">
     </com.yydcdut.sdlv.SlideAndDragListView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="新建"
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
         android:id="@+id/add_bt"
-        android:textSize="20dp"/>
+        android:background="@mipmap/add" />
 </RelativeLayout>
