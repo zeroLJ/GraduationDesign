@@ -7,6 +7,7 @@ package com.zero.voicenote.util;
 public class Constant {
     public static String Name = "name";
     public static String Password = "password";
+    public static String IsLogin = "is_login";
     public static String Url = "url";
 
     public static String FLAG_COMPLETE = "0";

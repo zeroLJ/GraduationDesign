@@ -2,17 +2,13 @@ package com.zero.voicenote;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.alibaba.fastjson.JSON;
@@ -40,7 +36,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,14 +53,13 @@ import zero.com.utillib.utils.object.StringUtils;
 import zero.com.utillib.utils.view.Alert;
 
 
-public class NoteActivity extends BaseActivity {
+public class CopyOfNoteActivity extends BaseActivity {
     // 语音听写对象
     private SpeechRecognizer mIat;
     int ret = 0; // 函数调用返回值
     // 用HashMap存储听写结果
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
     private EditText result_edt, title_edt;
-    private Button play_bt;
     private Map<String, Object> data;
     private boolean isNewNote = true;
     private WaveLineView waveLineView;
@@ -78,7 +72,6 @@ public class NoteActivity extends BaseActivity {
         setContentView(R.layout.activity_note);
         setReturnEnable(true);
         waveLineView = findViewById(R.id.waveLineView);
-        play_bt = findViewById(R.id.play_bt);
         result_edt = findViewById(R.id.result_edt);
         title_edt = findViewById(R.id.title_edt);
         tab_layout = findViewById(R.id.tab_layout);
@@ -116,11 +109,9 @@ public class NoteActivity extends BaseActivity {
                 if (StringUtils.isEmpty(title)){
                     title = title_edt.getHint().toString();
                 }
-                String audioPath = Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime"))+"/"+System.currentTimeMillis()+".wav";
-                merge(pathList, audioPath);
                 if (isNewNote){
                     final Note note = new Note(null, HttpUtils.USER, title,result_edt.getText().toString(),
-                            audioPath, DateUtils.getNowTime(), null, Constant.FLAG_ADD);
+                            null, DateUtils.getNowTime(), null, Constant.FLAG_ADD);
                     if (!hasSignin()){
                         DaoUtils.insert(note);
                         setResult(Activity.RESULT_OK);
@@ -155,7 +146,6 @@ public class NoteActivity extends BaseActivity {
                     note.setMessage(result_edt.getText().toString());
                     note.setTitle(title);
                     note.setEditTime(DateUtils.getNowTime());
-                    note.setAudioPath(audioPath);
                     note.setFlag(Constant.FLAG_EDIT);
                     if (!hasSignin()){
                         DaoUtils.updata(note);
@@ -209,9 +199,9 @@ public class NoteActivity extends BaseActivity {
                 waveLineView.stopAnim();
                 tab_layout.setVisibility(View.VISIBLE);
                 waveLineView.setVisibility(View.INVISIBLE);
-                play_bt.setVisibility(View.VISIBLE);
                 if (mIat.isListening()){
                     mIat.cancel();
+                    getNewPath();
                 }
             }
         });
@@ -219,14 +209,10 @@ public class NoteActivity extends BaseActivity {
         findViewById(R.id.speak_iv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KeyboardUtils.hideSoftInput(NoteActivity.this);
+                KeyboardUtils.hideSoftInput(CopyOfNoteActivity.this);
                 waveLineView.setVisibility(View.VISIBLE);
                 tab_layout.setVisibility(View.GONE);
                 waveLineView.startAnim();
-                if (mediaPlayer!=null){
-                    play_bt.performClick();
-                }
-                play_bt.setVisibility(View.GONE);
                 getNewPath();
                 ret = mIat.startListening(mRecognizerListener);
                 if (ret != ErrorCode.SUCCESS) {
@@ -270,18 +256,6 @@ public class NoteActivity extends BaseActivity {
             }
         });
 
-        play_bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mediaPlayer != null){
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                    play_bt.setBackgroundResource(R.mipmap.play);
-                }else {
-                    play();
-                }
-            }
-        });
     }
 
     /**
@@ -446,11 +420,15 @@ public class NoteActivity extends BaseActivity {
     }
 
     private void getNewPath(){
-        if (path == null || new File(path).exists()){
-            path = Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime"))+"/temp/"+System.currentTimeMillis()+".wav";
-            pathList.add(path);
-            mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, path);
+        if (pathList.size() == 2){
+            if (new File(pathList.get(0)).exists()){
+               merge(pathList.get(0), pathList.get(1));
+            }
+            pathList.remove(0);
         }
+        path = Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime"))+"/"+System.currentTimeMillis()+".wav";
+        pathList.add(path);
+        mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, path);
     }
 
     @Override
@@ -472,35 +450,11 @@ public class NoteActivity extends BaseActivity {
     }
 
 
-    private MediaPlayer mediaPlayer;
     private void play(){
-        mediaPlayer = new MediaPlayer();
-//        File file = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime")),"1"+".wav");
-        File file = null;
-        ArrayList<File> fileList = new ArrayList<>();
-        if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
-            File f = new File(ObjUtils.objToStr(data.get("audioPath")));
-            if (f.exists()){
-                fileList.add(f);
-            }
-        }
-        for (String path : pathList){
-            fileList.add(new File(path));
-        }
-        final String path;
-        if (fileList.size() == 1){
-            file = fileList.get(0);
-        }else {
-            file = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime"))+"/temp/"+"temp.wav");
-            try {
-                WavMergeUtil.mergeWav(fileList, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        final MediaPlayer mediaPlayer = new MediaPlayer();
+        File file = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime")),"1519725566401"+".wav");
         FileInputStream fis = null;
         try {
-            path = file.getAbsolutePath();
             fis = new FileInputStream(file);
             mediaPlayer.setDataSource(fis.getFD());
             mediaPlayer.prepare();
@@ -508,13 +462,9 @@ public class NoteActivity extends BaseActivity {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     mediaPlayer.release();
-                    mediaPlayer = null;
-                    play_bt.setBackgroundResource(R.mipmap.play);
-                    new File(path).delete();
                 }
             });
             mediaPlayer.start();
-            play_bt.setBackgroundResource(R.mipmap.stop);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -523,36 +473,35 @@ public class NoteActivity extends BaseActivity {
 
     }
 
-    private void merge(final List<String> filePathList, final String mergePath) {
+    private void merge(final String oldAudioPath,final String newAudioPath) {
         Logs.JLlog("merge");
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 ArrayList<File> fileList = new ArrayList<>();
-                if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
-                    File f = new File(ObjUtils.objToStr(data.get("audioPath")));
-                    if (f.exists()){
-                        fileList.add(f);
-                    }
-                }
-                for (String path : filePathList){
-                    fileList.add(new File(path));
-                }
-                File file = new File(mergePath);
-                if (fileList.size() == 1){
-                    fileList.get(0).renameTo(file);
-                    Logs.JLlog("wav移动完成");
-                    return;
-                }
+//                File file = new File(Environment.getExternalStorageDirectory()+"/msc/"+ ObjUtils.objToStr(data.get("addTime")),"1519725566401"+".wav");
+//                File filea = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime")),"1519725772312"+".wav");
+//                File fileb = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime")),"1519726045902"+".wav");
+//                File filec = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime")),"temp"+".wav");
+//
+//                fileList.add(file);
+//                fileList.add(filea);
+//                fileList.add(fileb);
+
+                File oldFile = new File(oldAudioPath);
+                File newFile = new File(newAudioPath);
+                fileList.add(oldFile);
+                fileList.add(newFile);
+                File file = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime")),"temp"+".wav");
                 try {
                     WavMergeUtil.mergeWav(fileList, file);
-                    for (File f : fileList){
-                        f.delete();
-                    }
+                    oldFile.delete();
+                    newFile.delete();
+                    file.renameTo(newFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Logs.JLlog("wav合并完成");
+                Logs.JLlog("a.wav完了");
             }
         });
     }

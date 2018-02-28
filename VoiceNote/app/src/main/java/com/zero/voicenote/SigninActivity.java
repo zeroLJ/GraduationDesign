@@ -37,6 +37,13 @@ public class SigninActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        if (App.spUtils.getBoolean(Constant.IsLogin)){
+            HttpUtils.USER = App.spUtils.getString(Constant.Name);
+            HttpUtils.PASSWORD = App.spUtils.getString(Constant.Password);
+            Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
         setTitle("登录");
         user_et = findViewById(R.id.user_et);
         password_et = findViewById(R.id.password_et);
@@ -110,15 +117,13 @@ public class SigninActivity extends BaseActivity {
         showProgressDialog("登录中");
         HttpUtils.USER = user;
         HttpUtils.PASSWORD = password;
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("name",user);
-//        map.put("password", password);
         HttpUtils.doPost("Signin", new OnResponseListener() {
             @Override
             public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                 Intent intent = new Intent(SigninActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+                App.spUtils.put(Constant.IsLogin, true);
                 App.spUtils.put(Constant.Name, user);
                 App.spUtils.put(Constant.Password, password);
             }

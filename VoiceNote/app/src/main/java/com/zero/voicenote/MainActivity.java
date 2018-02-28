@@ -58,7 +58,6 @@ public class MainActivity extends BaseActivity {
             top_left_tv.setText("登录");
         }
 
-
 //        recyclerView = findViewById(R.id.recyclerView);
 //        data = new ArrayList<>();
 //        data.add(new HashMap<String, Object>());
@@ -99,6 +98,7 @@ public class MainActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(MainActivity.this, SigninActivity.class);
                             startActivity(intent);
+                            App.spUtils.put(Constant.IsLogin, false);
                             finish();
                         }
                     });

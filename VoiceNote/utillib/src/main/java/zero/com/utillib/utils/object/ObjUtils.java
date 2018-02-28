@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +40,8 @@ public class ObjUtils {
         if(obj == null){
             value = "";
         }else if(obj instanceof Number){
-            value = mDecimalFormat.format(obj);
+            BigDecimal b = new BigDecimal(String.valueOf(obj));
+            value = mDecimalFormat.format(b);
             //value = mDecimalFormat.parse(String.valueOf(obj).trim());
         }else{
             value = String.valueOf(obj).trim();
@@ -118,6 +120,20 @@ public class ObjUtils {
             return new Date(0);
         }
     }
+
+    public static boolean isInt(Object obj){
+        try {
+            String s = objToStr(obj);
+            Integer.valueOf(s);
+            if (s.contains(".")){
+                return false;
+            }
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
     /**
      * list深度拷贝
      * @param src
@@ -199,6 +215,49 @@ public class ObjUtils {
         return map;
     }
 
+
+    /**
+     * Created by ljl 简化查找方法
+     * 查找list中满足匹配条件的map
+     * @param data  被匹配的list
+     * @param maps  匹配条件
+     * @return
+     */
+    public static Map<String,Object> findMap(List<Map<String,Object>> data, Map<String,Object> maps){
+        Map<String,Object> map=null;
+        for(Map<String,Object> item:data){
+            boolean flag = true;
+            for(String name:maps.keySet()){
+                Object s = maps.get(name);
+                if(s!=null){
+                    if(s instanceof Number){
+                        if(s instanceof Integer){
+                            if(ObjUtils.objToInt(item.get(name))!=ObjUtils.objToInt(s)){
+                                flag =false;
+                                continue;
+                            }
+                        }else{
+                            if(Float.compare(ObjUtils.objToFloat(item.get(name)),ObjUtils.objToFloat(s))!=0){
+                                flag =false;
+                                continue;
+                            }
+                        }
+                    }else{
+                        if(!ObjUtils.objToStr(item.get(name)).equals(ObjUtils.objToStr(s))){
+                            flag =false;
+                            continue;
+                        }
+                    }
+                }
+            }
+            if(flag){
+                map = item;break;
+            }
+
+        }
+        return map;
+    }
+
     public static List<Map<String,Object>> findList(List<Map<String,Object>> data,String name,Object s){
         List<Map<String,Object>> list = new ArrayList<>();
         for(Map<String,Object> item:data){
@@ -236,7 +295,7 @@ public class ObjUtils {
                 }
             }else{
                 if(ObjUtils.objToStr(item.get(name)).equals(ObjUtils.objToStr(s))){
-                   count++;
+                    count++;
                 }
             }
         }
@@ -272,5 +331,29 @@ public class ObjUtils {
                 }
             }
         });
+    }
+
+    public static float mutiply(float a, float b){
+        BigDecimal bigDecimalA = new BigDecimal(Float.toString(a));
+        BigDecimal bigDecimalB = new BigDecimal(Float.toString(b));
+        return bigDecimalA.multiply(bigDecimalB).floatValue();
+    }
+
+    public static float add(float a, float b){
+        BigDecimal bigDecimalA = new BigDecimal(Float.toString(a));
+        BigDecimal bigDecimalB = new BigDecimal(Float.toString(b));
+        return bigDecimalA.add(bigDecimalB).floatValue();
+    }
+
+    public static float divide(float a, float b){
+        BigDecimal bigDecimalA = new BigDecimal(Float.toString(a));
+        BigDecimal bigDecimalB = new BigDecimal(Float.toString(b));
+        return bigDecimalA.divide(bigDecimalB, BigDecimal.ROUND_CEILING).floatValue();
+    }
+
+    public static float subtract(float a, float b){
+        BigDecimal bigDecimalA = new BigDecimal(Float.toString(a));
+        BigDecimal bigDecimalB = new BigDecimal(Float.toString(b));
+        return bigDecimalA.subtract(bigDecimalB).floatValue();
     }
 }

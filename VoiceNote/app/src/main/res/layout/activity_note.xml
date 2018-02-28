@@ -51,7 +51,6 @@
         </ScrollView>
     </LinearLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -79,14 +78,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/tab_layout">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:src="@mipmap/set"
-                    android:padding="5dp"
                     android:layout_marginLeft="5dp"
-                    android:id="@+id/set_iv"/>
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@mipmap/set"
+                        android:padding="5dp"
+                        android:id="@+id/set_iv"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="普"
+                        android:textSize="16dp"/>
+                </LinearLayout>
+
 
                 <ImageView
                     android:layout_width="40dp"
@@ -107,6 +118,15 @@
                     android:id="@+id/keyboard_iv"/>
             </RelativeLayout>
         </RelativeLayout>
-
     </LinearLayout>
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/play_bt"
+        android:layout_above="@+id/bottom_layout"
+        android:background="@mipmap/play" />
 </RelativeLayout>
