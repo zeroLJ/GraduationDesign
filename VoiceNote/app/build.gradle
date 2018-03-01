@@ -1,0 +1,44 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.zero.voicenote"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.voicenote.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    //greendao配置
+    greendao {
+        //版本号，升级时可配置
+        schemaVersion 2
+//        daoPackage 'com.fsp.greendao.gen'//这个是生成DAOs、DaoMaster、DaoSession代码保存的包名,默认为entities所在包名
+//        targetGenDir 'src/main/java'//生成DAOs、DaoMaster、DaoSession的目录。默认为build/generated/source/greendao
+    }
+}
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation project(':utillib')
+    compile 'org.greenrobot:greendao:3.2.2'
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.4.0'
+    //数据库升级辅助
+    compile 'com.yydcdut.sdlv:sdlv:0.7.0'
+    compile 'com.github.Jay-Goo:WaveLineView:v1.0.3'
+    //组件间的消息通信
+    compile 'org.greenrobot:eventbus:3.1.1'
+}
