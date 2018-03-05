@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ import com.zero.voicenote.database.NoteDao;
 import com.zero.voicenote.util.Constant;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import zero.com.utillib.http.HttpUtils;
 import zero.com.utillib.http.OnResponseListener;
 import zero.com.utillib.http.ResultData;
 import zero.com.utillib.utils.Logs;
+import zero.com.utillib.utils.object.DateUtils;
 import zero.com.utillib.utils.object.ObjUtils;
 import zero.com.utillib.utils.view.Alert;
 
@@ -169,6 +172,9 @@ public class MainActivity extends BaseActivity {
                                         final long id = ObjUtils.objToLong(data.get(itemPosition).get("id"));
                                         Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(id)).get(0);
                                         note.setFlag(Constant.FLAG_DELETE);
+                                        File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/"
+                                                + DateUtils.getFileNameByDate(DateUtils.StringDateTime(note.getAddTime())));
+                                        deleteFile(file);
                                         DaoUtils.updata(note);
                                         refreshData();
                                         Map<String,Object> map = new HashMap<>();
@@ -272,5 +278,19 @@ public class MainActivity extends BaseActivity {
         adapter.notifyDataSetChanged();
         Logs.JLlog(data.toString());
         Logs.JLlog(DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER)).toString());
+    }
+
+    private void deleteFile(File file) {
+        Logs.JLlog("delete: " + file.getAbsolutePath());
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File f = files[i];
+                deleteFile(f);
+            }
+            file.delete();//如要保留文件夹，只删除文件，请注释这行
+        } else if (file.exists()) {
+            file.delete();
+        }
     }
 }

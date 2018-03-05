@@ -1,6 +1,7 @@
 package com.zero.voicenote;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -164,35 +165,37 @@ public class SigninActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String[] permissions = new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.INTERNET
-        };
-//        ActivityCompat.requestPermissions(this, permissions, 1000);
         Logs.JLlog("start");
+
+        requestPermissions();
     }
 
 
     private void requestPermissions(){
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                int permission = ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if(permission!= PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,new String[]
-                            {Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                    Manifest.permission.LOCATION_HARDWARE,Manifest.permission.READ_PHONE_STATE,
-                                    Manifest.permission.WRITE_SETTINGS,Manifest.permission.READ_EXTERNAL_STORAGE,
-                                    Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS},0x0010);
-                }
+//                int permission = ActivityCompat.checkSelfPermission(this,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//                if(permission!= PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(this,new String[]
+//                            {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                                    Manifest.permission.LOCATION_HARDWARE,Manifest.permission.READ_PHONE_STATE,
+//                                    Manifest.permission.WRITE_SETTINGS,Manifest.permission.READ_EXTERNAL_STORAGE,
+//                                    Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS},0x0010);
+//                }
+//                if(permission != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(this,new String[] {
+//                            Manifest.permission.ACCESS_COARSE_LOCATION,
+//                            Manifest.permission.ACCESS_FINE_LOCATION},0x0010);
+//                }
 
-                if(permission != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,new String[] {
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},0x0010);
-                }
+                ActivityCompat.requestPermissions(this,new String[]
+                        {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.LOCATION_HARDWARE,Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.WRITE_SETTINGS,Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                 Manifest.permission.ACCESS_FINE_LOCATION},0x0010);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,6 +205,10 @@ public class SigninActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        for (int i = 0; i<permissions.length; i++ ){
+            Logs.JLlog(permissions[i]+ "  " + grantResults[i]);
+        }
     }
 }
 
