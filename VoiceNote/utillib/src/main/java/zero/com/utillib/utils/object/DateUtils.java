@@ -1,5 +1,7 @@
 package zero.com.utillib.utils.object;
 
+import android.provider.ContactsContract;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +42,11 @@ public class DateUtils {
     public static String getNowTime() {
         Date date = new Date();
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
+    }
+
+    public static String getFileNameByDate(Date date) {
+        DateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         return format.format(date);
     }
 

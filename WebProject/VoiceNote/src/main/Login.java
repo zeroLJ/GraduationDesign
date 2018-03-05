@@ -42,16 +42,7 @@ public class Login extends BaseServlet {
 	        password = params.get("password");
 	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where name='"+ name +"'");
 	        if (rs.next()) {
-	        	Map<String, Object> map = new HashMap<>();
-	        	map.put("A", "A");
-	        	map.put("C", 1);
-	        	List<Map<String, Object>> list = new ArrayList<>();
-	        	list.add(map);
-	        	map = new HashMap<>();
-	        	map.put("B", "B");
-	        	map.put("C", 2);
-	        	list.add(map);
-	        	ResponseUtil.response(response, list, map, "此用户名已存在！", false);
+	        	ResponseUtil.response(response, "此用户名已存在！", false);
 			}else {
 				stmt.execute("insert into dbo.[user](name,password) values('"+name+"','"+password+"')"); 
 //				response.getWriter().println("注册成功！");

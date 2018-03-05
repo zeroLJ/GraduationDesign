@@ -41,6 +41,11 @@ public class DateUtils {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(date);
     }
+    
+    public static String getFileNameByDate(Date date) {
+        DateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+        return format.format(date);
+    }
 
     public static String getNowDate() {
         Date date = new Date();

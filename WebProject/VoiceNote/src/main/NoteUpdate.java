@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +27,14 @@ public class NoteUpdate extends BaseServlet{
 		String editTime = ObjUtils.objToStr(map.get("editTime"));
 		String audioPath = ObjUtils.objToStr(map.get("audioPath"));
 		String query = "select * from dbo.[note] where addTime='"+addTime+"' and name='"+name+"'";
+		if (params.get("file") != null && !params.get("file").equals("") ) {
+			File file = new File(params.get("file"));
+			System.out.println("文件从:" + file.getAbsolutePath());  
+			File toFile = new File("D:\\VoiceNote\\" + name + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime)) + "\\iat.wav");
+			toFile.getParentFile().mkdirs();
+			file.renameTo(toFile);
+			System.out.println("文件到:" + toFile.getAbsolutePath());  
+		}
 		ResultSet rs = stmt.executeQuery(query);
 		if (!rs.next()) {
 			sql.execute("insert into dbo.[note](name,title,message,addTime,editTime,audioPath) values("

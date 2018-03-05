@@ -2,6 +2,8 @@ package zero.com.utillib.http;
 
 import com.alibaba.fastjson.JSON;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,20 +27,32 @@ public class ResultData {
         setResultList(resultList);
     }
 
+    public ResultData(){
+        setSuccess(true);
+        setMsg("");
+        setResultMap(new HashMap<String, Object>());
+        setResultList(new ArrayList<Map<String, Object>>());
+    }
+
     public ResultData(String json){
-        Map map = JSON.parseObject(json, Map.class);
-        boolean success = ObjUtils.objToBoolean(map.get("success"));
-        String msg = ObjUtils.objToStr(map.get("msg"));
-        Map<String, Object> resultMap = (Map<String, Object>) map.get("resultMap");
-        List<Map<String, Object>> resultList = (List<Map<String, Object>>) map.get("resultList");
-        Logs.JLlog("success"+success);
-        Logs.JLlog("msg"+msg);
-        Logs.JLlog("resultMap"+resultMap.toString());
-        Logs.JLlog("resultList"+resultList.toString());
-        setSuccess(success);
-        setMsg(msg);
-        setResultMap(resultMap);
-        setResultList(resultList);
+        try {
+            Map map = JSON.parseObject(json, Map.class);
+            Logs.JLlog("data:"+map.toString());
+            boolean success = ObjUtils.objToBoolean(map.get("success"));
+            String msg = ObjUtils.objToStr(map.get("msg"));
+            Map<String, Object> resultMap = (Map<String, Object>) map.get("resultMap");
+            List<Map<String, Object>> resultList = (List<Map<String, Object>>) map.get("resultList");
+            setSuccess(success);
+            setMsg(msg);
+            setResultMap(resultMap);
+            setResultList(resultList);
+        }catch (Exception e){
+            setSuccess(true);
+            setMsg("");
+            setResultMap(new HashMap<String, Object>());
+            setResultList(new ArrayList<Map<String, Object>>());
+        }
+
     }
 
     public boolean isSuccess() {

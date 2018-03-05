@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +17,8 @@ import android.widget.EditText;
 
 import com.zero.voicenote.util.Constant;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,18 +39,18 @@ public class SigninActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
-//        if (App.spUtils.getBoolean(Constant.IsLogin)){
-//            HttpUtils.USER = App.spUtils.getString(Constant.Name);
-//            HttpUtils.PASSWORD = App.spUtils.getString(Constant.Password);
-//            Intent intent = new Intent(SigninActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-//        setTitle("登录");
-//        user_et = findViewById(R.id.user_et);
-//        password_et = findViewById(R.id.password_et);
-//        user_et.setText(App.spUtils.getString(Constant.Name));
-//        password_et.setText(App.spUtils.getString(Constant.Password));
+        if (App.spUtils.getBoolean(Constant.IsLogin)){
+            HttpUtils.USER = App.spUtils.getString(Constant.Name);
+            HttpUtils.PASSWORD = App.spUtils.getString(Constant.Password);
+            Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        setTitle("登录");
+        user_et = findViewById(R.id.user_et);
+        password_et = findViewById(R.id.password_et);
+        user_et.setText(App.spUtils.getString(Constant.Name));
+        password_et.setText(App.spUtils.getString(Constant.Password));
 //        Intent intent = new Intent(this, MyService.class);
 //        startService(intent);
 //        Intent intent2 = new Intent(this, MyService2.class);
@@ -133,6 +136,29 @@ public class SigninActivity extends BaseActivity {
                 dismissProgressDialog();
             }
         });
+
+//        Map<String, Object>  map = new HashMap<>();
+//        map.put("a.wav",new File(Environment.getExternalStorageDirectory()+"/msc/iat.wav"));
+//        HttpUtils.doPostFile("Signin", map, new OnResponseListener() {
+//            @Override
+//            public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+//                Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+//                startActivity(intent);
+//                finish();
+//                App.spUtils.put(Constant.IsLogin, true);
+//                App.spUtils.put(Constant.Name, user);
+//                App.spUtils.put(Constant.Password, password);
+//            }
+//
+//            @Override
+//            public void OnFinal() {
+//                super.OnFinal();
+//                dismissProgressDialog();
+//            }
+//        });
+
+
+
     }
 
     @Override

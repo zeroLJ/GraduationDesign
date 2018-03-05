@@ -1,6 +1,11 @@
 package main;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,5 +58,41 @@ public class ResponseUtil{
 		String resultStr = JSON.toJSONString(map);
 		response.setCharacterEncoding("UTF-8"); 
 		response.getWriter().print(resultStr);
+	}
+	
+	public static void responseFile(HttpServletResponse response, File file) throws IOException {
+		OutputStream out = response.getOutputStream();  
+        response.addHeader("Content-Disposition", "attachment;filename="  
+                + file.getName()); 
+        response.setContentType("application/octet-stream"); 
+        response.addHeader("Content-Length", "" + file.length()); 
+        response.addHeader("FileName", "" + file.getName()); 
+        System.out.println("FileName:" + file.getName());  
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        int length = 0;   
+        try {
+        	bis = new BufferedInputStream(new FileInputStream(file));
+ 	        bos = new BufferedOutputStream(out);
+        	byte[] bytes = new byte[2048];  
+ 	        int read;
+ 	        while ((read = bis.read(bytes,0,bytes.length)) != -1) {
+ 	        	length = length + read;
+ 				bos.write(bytes, 0, read);
+ 			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();;
+		}finally {
+			if (bis!=null) {
+				bis.close();
+			}
+			if (bos!=null) {
+				bos.close();
+			}
+		}
+       
+        System.out.println("size:" + length);   
+		
 	}
 }

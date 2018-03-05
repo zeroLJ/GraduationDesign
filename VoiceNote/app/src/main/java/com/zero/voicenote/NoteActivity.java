@@ -89,6 +89,7 @@ public class NoteActivity extends BaseActivity {
             top_right_tv.setText("保存");
             title_edt.setHint(ObjUtils.objToStr(data.get("addTime")).substring(0,10)+"的笔记");
             isNewNote = false;
+            checkAudio();
         }else {
             addTime = DateUtils.getNowTime();
             title_edt.setHint(DateUtils.getNowDate()+"的笔记");
@@ -101,6 +102,11 @@ public class NoteActivity extends BaseActivity {
         mIat = SpeechRecognizer.createRecognizer(this, initListener);
         setParam();
 
+
+        File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/.nomedia");
+        if (!file.exists()){
+            file.mkdirs();
+        }
     }
 
     private boolean isSending = false;
@@ -112,83 +118,7 @@ public class NoteActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isSending) return;
                 isSending = true;
-                String title = title_edt.getText().toString().trim();
-                if (StringUtils.isEmpty(title)){
-                    title = title_edt.getHint().toString();
-                }
-                String audioPath = Environment.getExternalStorageDirectory()+"/msc/"+addTime+"/"+System.currentTimeMillis()+".wav";
-                merge(pathList, audioPath);
-                if (isNewNote){
-                    final Note note = new Note(null, HttpUtils.USER, title,result_edt.getText().toString(),
-                            audioPath, DateUtils.getNowTime(), null, Constant.FLAG_ADD);
-                    if (!hasSignin()){
-                        DaoUtils.insert(note);
-                        setResult(Activity.RESULT_OK);
-                        finish();
-                        isSending = false;
-                        return;
-                    }
-                    Map<String,Object> map = new HashMap<>();
-                    map.put("data", JSON.toJSONString(note));
-                    HttpUtils.doPost("NoteAdd", map, new OnResponseListener() {
-                        @Override
-                        public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
-                            note.setFlag(Constant.FLAG_COMPLETE);
-                            DaoUtils.insert(note);
-                        }
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                        }
-                        @Override
-                        public void OnFinal() {
-                            super.OnFinal();
-                            isSending = false;
-                            Logs.JLlog(note.toString());
-                        }
-                    });
-                    DaoUtils.insert(note);
-                    setResult(Activity.RESULT_OK);
-                    finish();
-
-                }else {
-                    final Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(Long.valueOf(ObjUtils.objToStr(data.get("id"))))).get(0);
-                    note.setMessage(result_edt.getText().toString());
-                    note.setTitle(title);
-                    note.setEditTime(DateUtils.getNowTime());
-                    note.setAudioPath(audioPath);
-                    note.setFlag(Constant.FLAG_EDIT);
-                    if (!hasSignin()){
-                        DaoUtils.updata(note);
-                        setResult(Activity.RESULT_OK);
-                        finish();
-                        isSending = false;
-                        return;
-                    }
-
-                    Map<String,Object> map = new HashMap<>();
-                    map.put("data", JSON.toJSONString(note));
-                    HttpUtils.doPost("NoteUpdate", map, new OnResponseListener() {
-                        @Override
-                        public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
-                            note.setFlag(Constant.FLAG_COMPLETE);
-                            DaoUtils.updata(note);
-                        }
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-
-                        }
-                        @Override
-                        public void OnFinal() {
-                            super.OnFinal();
-                            isSending = false;
-                            Logs.JLlog(note.toString());
-                        }
-                    });
-                    DaoUtils.updata(note);
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                }
+                save();
             }
         });
 
@@ -442,12 +372,12 @@ public class NoteActivity extends BaseActivity {
         mIat.setParameter(SpeechConstant.AUDIO_FORMAT,"wav");
 //        mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/msc/iat.wav");
 //        mIat.setParameter(SpeechConstant.AUDIO_FORMAT,"pcm");
-        getNewPath();
     }
 
     private void getNewPath(){
         if (path == null || new File(path).exists()){
-            path = Environment.getExternalStorageDirectory()+"/msc/"+addTime+"/temp/"+System.currentTimeMillis()+".wav";
+            path = Environment.getExternalStorageDirectory()+"/VoiceNote/"
+                    +DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime))+"/temp/"+System.currentTimeMillis()+".wav";
             pathList.add(path);
             mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, path);
         }
@@ -485,13 +415,18 @@ public class NoteActivity extends BaseActivity {
             }
         }
         for (String path : pathList){
-            fileList.add(new File(path));
+            File mf = new File(path);
+            if (mf.exists()){
+                fileList.add(new File(path));
+            }
         }
         final String path;
+        Logs.JLlog(""+fileList.size());
         if (fileList.size() == 1){
             file = fileList.get(0);
         }else {
-            file = new File(Environment.getExternalStorageDirectory()+"/msc/"+addTime+"/temp/"+"temp.wav");
+            file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/"
+                    +DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime))+"/temp/"+"temp.wav");
             try {
                 WavMergeUtil.mergeWav(fileList, file);
             } catch (IOException e) {
@@ -523,27 +458,69 @@ public class NoteActivity extends BaseActivity {
 
     }
 
-    private void merge(final List<String> filePathList, final String mergePath) {
-        Logs.JLlog("merge");
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<File> fileList = new ArrayList<>();
-                if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
-                    File f = new File(ObjUtils.objToStr(data.get("audioPath")));
-                    if (f.exists()){
-                        fileList.add(f);
-                    }
-                }
-                for (String path : filePathList){
-                    fileList.add(new File(path));
-                }
-                File file = new File(mergePath);
-                if (fileList.size() == 1){
-                    fileList.get(0).renameTo(file);
-                    Logs.JLlog("wav移动完成");
-                    return;
-                }
+//    private void merge(final List<String> filePathList, final String mergePath) {
+//        Logs.JLlog("merge");
+//        new Handler().post(new Runnable() {
+//            @Override
+//            public void run() {
+//                ArrayList<File> fileList = new ArrayList<>();
+//                if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
+//                    File f = new File(ObjUtils.objToStr(data.get("audioPath")));
+//                    if (f.exists()){
+//                        fileList.add(f);
+//                    }
+//                }
+//                for (String path : filePathList){
+//                    fileList.add(new File(path));
+//                }
+//                File file = new File(mergePath);
+//                if (fileList.size() == 1){
+//                    fileList.get(0).renameTo(file);
+//                    Logs.JLlog("wav移动完成");
+//                    return;
+//                }
+//                try {
+//                    WavMergeUtil.mergeWav(fileList, file);
+//                    for (File f : fileList){
+//                        f.delete();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                Logs.JLlog("wav合并完成");
+//            }
+//        });
+//    }
+
+
+    private void save() {
+        String title = title_edt.getText().toString().trim();
+        if (StringUtils.isEmpty(title)){
+            title = title_edt.getHint().toString();
+        }
+        String audioPath = ObjUtils.objToStr(data.get("audioPath"));
+        Logs.JLlog("save" + pathList.size());
+        if (pathList.size()>0){
+            audioPath = Environment.getExternalStorageDirectory()+"/VoiceNote/"
+                    +DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime))+"/"+System.currentTimeMillis()+".wav";
+        }
+        ArrayList<File> fileList = new ArrayList<>();
+        if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
+            File f = new File(ObjUtils.objToStr(data.get("audioPath")));
+            if (f.exists()){
+                fileList.add(f);
+            }
+        }
+        for (String path : pathList){
+            fileList.add(new File(path));
+        }
+        File file = null;
+        if (StringUtils.isNotEmpty(audioPath)){
+            file = new File(audioPath);
+            if (fileList.size() == 1){
+                fileList.get(0).renameTo(file);
+                Logs.JLlog("wav移动完成");
+            }else {
                 try {
                     WavMergeUtil.mergeWav(fileList, file);
                     for (File f : fileList){
@@ -554,6 +531,114 @@ public class NoteActivity extends BaseActivity {
                 }
                 Logs.JLlog("wav合并完成");
             }
-        });
+        }
+
+
+        if (isNewNote){
+            final Note note = new Note(null, HttpUtils.USER, title,result_edt.getText().toString(),
+                    audioPath, DateUtils.getNowTime(), null, Constant.FLAG_ADD);
+            if (!hasSignin()){
+                DaoUtils.insert(note);
+                setResult(Activity.RESULT_OK);
+                finish();
+                isSending = false;
+                return;
+            }
+            Map<String,Object> map = new HashMap<>();
+            map.put("data", JSON.toJSONString(note));
+            if (file!=null){
+                map.put("file", file);
+            }
+            HttpUtils.doPostFile("NoteAdd", map, new OnResponseListener() {
+                @Override
+                public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                    note.setFlag(Constant.FLAG_COMPLETE);
+                    DaoUtils.insert(note);
+                }
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    DaoUtils.insert(note);
+                }
+                @Override
+                public void OnFinal() {
+                    super.OnFinal();
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                    isSending = false;
+                    Logs.JLlog(note.toString());
+                }
+            });
+        }else {
+            final Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(Long.valueOf(ObjUtils.objToStr(data.get("id"))))).get(0);
+            note.setMessage(result_edt.getText().toString());
+            note.setTitle(title);
+            note.setEditTime(DateUtils.getNowTime());
+            note.setAudioPath(audioPath);
+            note.setFlag(Constant.FLAG_EDIT);
+            if (!hasSignin()){
+                DaoUtils.updata(note);
+                setResult(Activity.RESULT_OK);
+                finish();
+                isSending = false;
+                return;
+            }
+
+            Map<String,Object> map = new HashMap<>();
+            map.put("data", JSON.toJSONString(note));
+            if (file!=null){
+                map.put("file", file);
+            }
+            HttpUtils.doPostFile("NoteUpdate", map, new OnResponseListener() {
+                @Override
+                public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                    note.setFlag(Constant.FLAG_COMPLETE);
+                    DaoUtils.updata(note);
+                }
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+                @Override
+                public void OnFinal() {
+                    super.OnFinal();
+                    isSending = false;
+                    Logs.JLlog(note.toString());
+                }
+            });
+            DaoUtils.updata(note);
+            setResult(Activity.RESULT_OK);
+            finish();
+        }
+    }
+
+
+    private void checkAudio(){
+
+        if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
+            File file = new File(ObjUtils.objToStr(data.get("audioPath")));
+            Logs.JLlog("1"+ file.getAbsolutePath());
+            if (!file.exists()){
+                Map<String, Object> map = new HashMap<>();
+                map.putAll(data);
+                HttpUtils.doDomnLoad("NoteGetAudio", data, file.getAbsolutePath(), new OnResponseListener() {
+                    @Override
+                    public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+
+                    }
+
+                    @Override
+                    public void OnFinal() {
+                        super.OnFinal();
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                    }
+                });
+
+            }
+
+        }
     }
 }
