@@ -81,7 +81,7 @@ public class SigninActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SigninActivity.this, MainActivity.class);
-                HttpUtils.USER  = "";
+                HttpUtils.USER  = Constant.Default_User;
                 startActivity(intent);
                 finish();
             }
@@ -137,36 +137,11 @@ public class SigninActivity extends BaseActivity {
                 dismissProgressDialog();
             }
         });
-
-//        Map<String, Object>  map = new HashMap<>();
-//        map.put("a.wav",new File(Environment.getExternalStorageDirectory()+"/msc/iat.wav"));
-//        HttpUtils.doPostFile("Signin", map, new OnResponseListener() {
-//            @Override
-//            public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
-//                Intent intent = new Intent(SigninActivity.this, MainActivity.class);
-//                startActivity(intent);
-//                finish();
-//                App.spUtils.put(Constant.IsLogin, true);
-//                App.spUtils.put(Constant.Name, user);
-//                App.spUtils.put(Constant.Password, password);
-//            }
-//
-//            @Override
-//            public void OnFinal() {
-//                super.OnFinal();
-//                dismissProgressDialog();
-//            }
-//        });
-
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Logs.JLlog("start");
-
         requestPermissions();
     }
 

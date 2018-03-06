@@ -1,5 +1,7 @@
 package com.zero.voicenote;
 
+import com.zero.voicenote.util.Constant;
+
 import zero.com.utillib.Activity.BaseToolbarActivity;
 import zero.com.utillib.http.HttpUtils;
 import zero.com.utillib.utils.Logs;
@@ -22,7 +24,7 @@ public class BaseActivity extends BaseToolbarActivity {
     }
 
     protected boolean hasSignin(){
-        if (!StringUtils.isEmpty(HttpUtils.USER)){
+        if (!HttpUtils.USER.equals(Constant.Default_User)){
             Logs.JLlog("true"+HttpUtils.USER);
             return true;
         }

@@ -5,6 +5,8 @@ package com.zero.voicenote.util;
  */
 
 public class Constant {
+    public static String Default_User = "noUser";
+
     public static String Name = "name";
     public static String Password = "password";
     public static String IsLogin = "is_login";
@@ -15,4 +17,6 @@ public class Constant {
     public static String FLAG_EDIT = "2";
     public static String FLAG_DELETE = "3";
 
+    public static String Select_Position = "select_position";
+    public static String Select_Language = "select_language";
 }

@@ -91,7 +91,6 @@
                     android:padding="3dp"
                     android:id="@+id/skip_bt"/>
             </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 

@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
 import com.alibaba.fastjson.JSON;
 import com.yydcdut.sdlv.Menu;
@@ -125,7 +126,6 @@ public class MainActivity extends BaseActivity {
                 HttpUtils.doPost("NoteRefresh", map, new OnResponseListener() {
                     @Override
                     public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
-                        Logs.JLlog("data:"+data.toString());
                         DaoUtils.getDao(Note.class).deleteAll();
                         DaoUtils.insert(Note.class, data);
                         Alert.toast("同步完成");
@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity {
                                         final long id = ObjUtils.objToLong(data.get(itemPosition).get("id"));
                                         Note note = DaoUtils.query(Note.class, NoteDao.Properties.Id.eq(id)).get(0);
                                         note.setFlag(Constant.FLAG_DELETE);
-                                        File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/"
+                                        File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/" + HttpUtils.USER + "/"
                                                 + DateUtils.getFileNameByDate(DateUtils.StringDateTime(note.getAddTime())));
                                         deleteFile(file);
                                         DaoUtils.updata(note);
@@ -276,8 +276,8 @@ public class MainActivity extends BaseActivity {
             data.add(note.toMap());
         }
         adapter.notifyDataSetChanged();
-        Logs.JLlog(data.toString());
-        Logs.JLlog(DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER)).toString());
+//        Logs.JLlog(data.toString());
+//        Logs.JLlog(DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER)).toString());
     }
 
     private void deleteFile(File file) {

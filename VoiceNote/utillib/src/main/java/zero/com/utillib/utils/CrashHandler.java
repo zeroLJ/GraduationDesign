@@ -35,8 +35,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         return threadClassName;
     }
 
+    private static Class c;
+
     public static CrashHandler getInstance(String threadClassName) {
         CrashHandler.threadClassName = threadClassName;
+        return INSTANCE;
+    }
+
+    //发生异常后启动的页面
+    public static CrashHandler getInstance(Class c) {
+        CrashHandler.c = c;
         return INSTANCE;
     }
 
@@ -77,9 +85,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                         MApplication.stopWarn();
                         MApplication.finishAllActivity();
                         Class loginClass = null;
-                        try {
-                            loginClass = Class.forName(threadClassName);//"com.ub_wms.activity.LoginActivity");
-                        }catch (Exception e){}
+                        if (c!=null){
+                            loginClass = c;
+                        }else {
+                            try {
+                                loginClass = Class.forName(threadClassName);//"com.ub_wms.activity.LoginActivity");
+                            }catch (Exception e){}
+                        }
                         Intent intent = new Intent(mContext, loginClass);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);

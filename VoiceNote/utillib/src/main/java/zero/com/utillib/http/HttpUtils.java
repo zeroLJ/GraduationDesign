@@ -36,7 +36,7 @@ import zero.com.utillib.utils.object.ObjUtils;
 
 public class HttpUtils {
     public static String URL = "http://192.168.0.188:8081/VoiceNote/";
-    public static String USER = "";
+    public static String USER = "noUser";
     public static String PASSWORD = "";
     public static void doPost(String url, Map<String,Object> map, final OnResponseListener onResponseListener){
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -76,8 +76,6 @@ public class HttpUtils {
                 Logs.JLlog(("服务器返回代码：  " + response.code()));
                 String s = response.body().string();
                 Logs.JLlog("json:"+s);
-                Map map = JSON.parseObject(s, Map.class);
-                Logs.JLlog("map:"+map.toString());
                 final ResultData resultData = new ResultData(s);
                 if (resultData.isSuccess()){
                     Logs.JLlog("成功");
@@ -189,7 +187,7 @@ public class HttpUtils {
                 formBodyBuild.add(key, ObjUtils.objToStr(map.get(key)));
             }
         }
-        Logs.JLlog("u" + URL);
+        Logs.JLlog("url:" + URL);
         url = URL + url;
         Request request=new Request.Builder().url(url)
                 .post(formBodyBuild.build())

@@ -16,7 +16,8 @@ public class App extends MApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        CrashHandler.getInstance("com.zero.voicenote.SigninActivity").init(this);  //传入参数必须为Activity，否则无法回到登录页面。
+//        CrashHandler.getInstance("com.zero.voicenote.SigninActivity").init(this);  //传入参数必须为Activity，否则无法回到登录页面。
+        CrashHandler.getInstance(SigninActivity.class).init(this);
         spUtils = SPUtils.getInstance();
         HttpUtils.URL = spUtils.getString(Constant.Url, HttpUtils.URL);
     }

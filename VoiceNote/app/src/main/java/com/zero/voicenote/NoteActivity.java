@@ -3,14 +3,21 @@ package com.zero.voicenote;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.TimedText;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.KeyboardUtils;
@@ -42,9 +49,13 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import jaygoo.widget.wlv.WaveLineView;
 import okhttp3.Call;
+import zero.com.utillib.adapter.CommoAdapter;
+import zero.com.utillib.adapter.ViewHolder;
 import zero.com.utillib.http.HttpUtils;
 import zero.com.utillib.http.OnResponseListener;
 import zero.com.utillib.http.ResultData;
@@ -70,6 +81,11 @@ public class NoteActivity extends BaseActivity {
     private RelativeLayout tab_layout;
     private String path;
     private List<String> pathList = new ArrayList<>();
+    private Spinner spinner;
+    private SpinnerAdapter spinnerAdapter;
+    private Timer timer;
+    private RelativeLayout input_layout;
+    private SeekBar seekBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +96,10 @@ public class NoteActivity extends BaseActivity {
         result_edt = findViewById(R.id.result_edt);
         title_edt = findViewById(R.id.title_edt);
         tab_layout = findViewById(R.id.tab_layout);
+        input_layout = findViewById(R.id.input_layout);
+        seekBar = findViewById(R.id.seekBar);
+        spinner = findViewById(R.id.spinner);
+        initSpinner();
         Intent intent = getIntent();
         if (intent.getSerializableExtra("data") != null){
             data = (Map<String, Object>) intent.getSerializableExtra("data");
@@ -107,6 +127,67 @@ public class NoteActivity extends BaseActivity {
         if (!file.exists()){
             file.mkdirs();
         }
+    }
+
+    private List<Map<String,String>> spinnerList = new ArrayList<>();
+    private void initSpinner() {
+        Map<String,String> map = new HashMap<String,String>();
+        map.put("language", "mandarin");
+        map.put("text", "普通话");
+        spinnerList.add(map);
+        map = new HashMap<String,String>();
+        map.put("language", "cantonese");
+        map.put("text", "粤语");
+        spinnerList.add(map);
+        map = new HashMap<String,String>();
+        map.put("language", "lmz");
+        map.put("text", "四川话");
+        spinnerList.add(map);
+        map = new HashMap<String,String>();
+        map.put("language", "henanese");
+        map.put("text", "河南话");
+        spinnerList.add(map);
+        map = new HashMap<String,String>();
+        map.put("language", "en_us");
+        map.put("text", "英语");
+        spinnerList.add(map);
+        map = new HashMap<String,String>();
+        map.put("language", null);
+        map.put("text", "其他");
+        spinnerList.add(map);
+        spinnerAdapter = new CommoAdapter<Map<String, String>>(this, spinnerList, R.layout.support_simple_spinner_dropdown_item) {
+
+            @Override
+            public void convert(ViewHolder holder, Map<String, String> data, int position) {
+                holder.setTextView(android.R.id.text1, data.get("text"));
+            }
+        };
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(App.spUtils.getInt(Constant.Select_Position, 0));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Map<String, String> map = spinnerList.get(position);
+                String lag = map.get("language");
+                if (lag.equals("en_us")) {
+                    // 设置语言
+                    mIat.setParameter(SpeechConstant.LANGUAGE, "en_us");
+                    mIat.setParameter(SpeechConstant.ACCENT, null);
+                } else {
+                    // 设置语言
+                    mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                    // 设置语言区域
+                    mIat.setParameter(SpeechConstant.ACCENT, lag);
+                }
+                App.spUtils.put(Constant.Select_Position, position);
+                App.spUtils.put(Constant.Select_Language, lag);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private boolean isSending = false;
@@ -153,9 +234,6 @@ public class NoteActivity extends BaseActivity {
                 waveLineView.setVisibility(View.VISIBLE);
                 tab_layout.setVisibility(View.GONE);
                 waveLineView.startAnim();
-                if (mediaPlayer!=null){
-                    play_bt.performClick();
-                }
                 play_bt.setVisibility(View.GONE);
                 getNewPath();
                 ret = mIat.startListening(mRecognizerListener);
@@ -182,21 +260,6 @@ public class NoteActivity extends BaseActivity {
         findViewById(R.id.set_iv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Logs.JLlog("s:"+result_edt.getSelectionStart());
-//                Logs.JLlog("e:"+result_edt.getSelectionEnd());
-//
-//                PopupWindow popupWindow = new PopupWindow(NoteActivity.this);
-//                View view = View.inflate(NoteActivity.this,R.layout.item_data,null);
-//                popupWindow.setContentView(view);
-//                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-//                popupWindow.setFocusable(true);
-//                popupWindow.setOutsideTouchable(true);
-//                int[] location = new int[2];
-//                v.getLocationOnScreen(location);
-//                Logs.JLlog(""+location[0]);
-//                Logs.JLlog(""+location[1]);
-//                Logs.JLlog(""+v.getHeight());
-//                popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1]-v.getHeight()-view.getHeight());
             }
         });
 
@@ -204,8 +267,13 @@ public class NoteActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mediaPlayer != null){
+                    if (timer!=null){
+                        timer.cancel();
+                    }
                     mediaPlayer.release();
                     mediaPlayer = null;
+                    input_layout.setVisibility(View.VISIBLE);
+                    seekBar.setVisibility(View.GONE);
                     play_bt.setBackgroundResource(R.mipmap.play);
                 }else {
                     play();
@@ -336,7 +404,7 @@ public class NoteActivity extends BaseActivity {
 //            mIat.setParameter( SpeechConstant.TRS_SRC, "its" );
 //        }
 
-        String lag = "mandarin";
+        String lag = App.spUtils.getString(Constant.Select_Language, "mandarin");
         if (lag.equals("en_us")) {
             // 设置语言
             mIat.setParameter(SpeechConstant.LANGUAGE, "en_us");
@@ -376,7 +444,7 @@ public class NoteActivity extends BaseActivity {
 
     private void getNewPath(){
         if (path == null || new File(path).exists()){
-            path = Environment.getExternalStorageDirectory()+"/VoiceNote/"
+            path = Environment.getExternalStorageDirectory()+"/VoiceNote/"  + HttpUtils.USER + "/"
                     +DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime))+"/temp/"+System.currentTimeMillis()+".wav";
             pathList.add(path);
             mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, path);
@@ -425,7 +493,7 @@ public class NoteActivity extends BaseActivity {
         if (fileList.size() == 1){
             file = fileList.get(0);
         }else {
-            file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/"
+            file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/" + HttpUtils.USER + "/"
                     +DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime))+"/temp/"+"temp.wav");
             try {
                 WavMergeUtil.mergeWav(fileList, file);
@@ -439,15 +507,52 @@ public class NoteActivity extends BaseActivity {
             fis = new FileInputStream(file);
             mediaPlayer.setDataSource(fis.getFD());
             mediaPlayer.prepare();
+            Logs.JLlog("long:"+mediaPlayer.getDuration());
+            input_layout.setVisibility(View.GONE);
+            seekBar.setVisibility(View.VISIBLE);
+            seekBar.setMax(mediaPlayer.getDuration());
+            seekBar.setProgress(0);
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser){
+                        mediaPlayer.seekTo(progress);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
+                    if (timer!=null){
+                        timer.cancel();
+                    }
+                    input_layout.setVisibility(View.VISIBLE);
+                    seekBar.setVisibility(View.GONE);
                     mediaPlayer.release();
                     mediaPlayer = null;
                     play_bt.setBackgroundResource(R.mipmap.play);
-                    new File(path).delete();
+                    if (!path.equals(ObjUtils.objToStr(data.get("audioPath")))){
+                        new File(path).delete();
+                    }
                 }
             });
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                   seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                }
+            },100,100);
             mediaPlayer.start();
             play_bt.setBackgroundResource(R.mipmap.stop);
         } catch (FileNotFoundException e) {
@@ -501,7 +606,7 @@ public class NoteActivity extends BaseActivity {
         String audioPath = ObjUtils.objToStr(data.get("audioPath"));
         Logs.JLlog("save" + pathList.size());
         if (pathList.size()>0){
-            audioPath = Environment.getExternalStorageDirectory()+"/VoiceNote/"
+            audioPath = Environment.getExternalStorageDirectory()+"/VoiceNote/"  + HttpUtils.USER + "/"
                     +DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime))+"/"+System.currentTimeMillis()+".wav";
         }
         ArrayList<File> fileList = new ArrayList<>();
