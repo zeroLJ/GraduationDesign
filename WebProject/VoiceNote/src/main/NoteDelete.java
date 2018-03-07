@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +26,22 @@ public class NoteDelete extends BaseServlet{
 		String s = "delete from dbo.[note] where addTime='"+addTime+"' and name='"+name+"'";
 		System.out.println("执行sql语句:"+s);
 		sql.execute(s); 
+		String filepath = "D:\\VoiceNote\\" + name + "\\" 
+		+ DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime));
+		
 		ResponseUtil.response(response, "删除成功");
 	}
 
+	private void deleteFile(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File f = files[i];
+                deleteFile(f);
+            }
+            file.delete();//如要保留文件夹，只删除文件，请注释这行
+        } else if (file.exists()) {
+            file.delete();
+        }
+    }
 }

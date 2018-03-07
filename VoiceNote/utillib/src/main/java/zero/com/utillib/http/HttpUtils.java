@@ -143,6 +143,7 @@ public class HttpUtils {
 
             @Override
             public void onResponse(final okhttp3.Call call, Response response) throws IOException {
+                Logs.JLlog(("服务器返回代码：  " + response.code()));
                 String s = response.body().string();
                 Logs.JLlog("json:"+s);
                 Map map = JSON.parseObject(s, Map.class);
@@ -209,6 +210,7 @@ public class HttpUtils {
 
             @Override
             public void onResponse(final okhttp3.Call call, Response response) throws IOException {
+                Logs.JLlog(("服务器返回代码：  " + response.code()));
                 final ResultData resultData;
                 if (response.code()==300){
                     resultData = new ResultData(response.body().toString());
@@ -225,7 +227,6 @@ public class HttpUtils {
                     });
                     return;
                 }
-                Logs.JLlog(("服务器返回代码：  " + response.code()));
                 Logs.JLlog(("Content-Length:   " + response.header("Content-Length")));
                 Logs.JLlog(("文件名:   " + response.header("FileName")));
                 InputStream is = null;

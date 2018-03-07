@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.ActivityUtils;
-
 import zero.com.utillib.Activity.MApplication;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.StringUtils;
@@ -14,7 +12,7 @@ import zero.com.utillib.utils.object.StringUtils;
  * Created by ws on 2017/7/27.
  */
 
-public class Alert {
+public class AlertCopy {
 
     public static void alertDialogOneBtnWarn(String mag) {
         MApplication.playWarn(-1);
@@ -49,7 +47,7 @@ public class Alert {
 
     public static void setBtnDg(AlertDialog.Builder btnDg) {
         Logs.wslog("-setBtnDg-");
-        Alert.btnDg = btnDg;
+        AlertCopy.btnDg = btnDg;
     }
 
 
@@ -71,9 +69,9 @@ public class Alert {
     private static DialogInterface.OnClickListener mCancelListener = null;*/
     public synchronized static void alertDialogTowBtn(String mag,String title,String confirmName,final DialogInterface.OnClickListener confirmListener,String cancelName,final DialogInterface.OnClickListener cancelListener) {
         //Logs.wslog("--"+btnDg);
-        if(btnDg==null && !ActivityUtils.getTopActivity().isFinishing()){
+        if(btnDg==null && !MApplication.currentActivity().isFinishing()){
             //Logs.wslog("--"+BvpApplication.currentActivity());
-            btnDg = new AlertDialog.Builder(ActivityUtils.getTopActivity());
+            btnDg = new AlertDialog.Builder(MApplication.currentActivity());
 
             if(StringUtils.isEmpty(confirmName)){
                 confirmName = "确定";
@@ -161,7 +159,7 @@ public class Alert {
      * @param mag
      */
     public static void toast(String mag) {
-        Toast.makeText(ActivityUtils.getTopActivity(), mag, Toast.LENGTH_LONG).show();
+        Toast.makeText(MApplication.currentActivity(), mag, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -170,7 +168,7 @@ public class Alert {
      * @param mag
      */
     public static void toastShort(String mag) {
-        Toast.makeText(ActivityUtils.getTopActivity(), mag, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MApplication.currentActivity(), mag, Toast.LENGTH_SHORT).show();
     }
 
 }

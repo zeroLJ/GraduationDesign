@@ -35,7 +35,8 @@
         android:maxLines="2"
         android:textColor="#aeadae"
         android:id="@+id/message"
-        android:text="呵呵哈啊啊哈哈和哈好好发挥恒香茶缩短恢复安神茶啥四大行下次还hi啊哈阿叔吹哈三次哈斯崔啊是次啊松弛"
+        android:ellipsize="end"
+        android:text="正文"
         />
 
     <TextView

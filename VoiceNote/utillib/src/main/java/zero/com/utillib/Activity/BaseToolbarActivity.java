@@ -66,10 +66,13 @@ public class BaseToolbarActivity extends BaseCommonActivity {
                 @Override
                 public void onClick(View v) {
                     finish();
+                    onBackClick();
                 }
             });
+//            top_left_tv.setVisibility(View.GONE);
         }else {
-            back_iv.setVisibility(View.INVISIBLE);
+            back_iv.setVisibility(View.GONE);
+//            top_left_tv.setVisibility(View.VISIBLE);
         }
     }
 
@@ -77,5 +80,8 @@ public class BaseToolbarActivity extends BaseCommonActivity {
         top_center_tv.setText(title);
     }
 
+    protected void onBackClick(){
+
+    }
 
 }

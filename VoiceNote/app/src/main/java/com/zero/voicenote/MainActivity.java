@@ -40,6 +40,7 @@ import zero.com.utillib.http.ResultData;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.DateUtils;
 import zero.com.utillib.utils.object.ObjUtils;
+import zero.com.utillib.utils.object.StringUtils;
 import zero.com.utillib.utils.view.Alert;
 
 
@@ -145,11 +146,11 @@ public class MainActivity extends BaseActivity {
     private void initListview() {
         final Menu menu = new Menu(false, 0);//第1个参数表示滑动 item 是否能滑的过头，像弹簧那样( true 表示过头，就像 Gif 中显示的那样；false 表示不过头，就像 Android QQ 中的那样)
         menu.addItem(new MenuItem.Builder().setWidth(400)
-                .setBackground(new ColorDrawable(Color.RED))
-                .setText("删除")
+                .setBackground(new ColorDrawable(getResources().getColor((R.color.red_delete))))
+//                .setText("删除")
                 .setTextColor(Color.WHITE)
                 .setDirection(MenuItem.DIRECTION_RIGHT)//设置方向 (默认方向为 DIRECTION_LEFT )
-//                .setIcon(getResources().getDrawable(R.mipmap.back))// set icon
+                .setIcon(getResources().getDrawable(R.mipmap.delete))// set icon
                 .build());
 
         listView.setMenu(menu);
@@ -242,7 +243,11 @@ public class MainActivity extends BaseActivity {
         @Override
         public void convert(ViewHolder holder, Map<String, Object> map, int position) {
             holder.setTextView(R.id.title, ObjUtils.objToStr(map.get("title")));
-            holder.setTextView(R.id.message, ObjUtils.objToStr(map.get("message")));
+            if (StringUtils.isEmpty(ObjUtils.objToStr(map.get("message")))){
+                holder.setTextView(R.id.message, "点击进行编辑");
+            }else {
+                holder.setTextView(R.id.message, ObjUtils.objToStr(map.get("message")));
+            }
             holder.setTextView(R.id.time, ObjUtils.objToStr(map.get("addTime")).substring(0,16));
         }
     }

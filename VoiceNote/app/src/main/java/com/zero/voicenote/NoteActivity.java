@@ -7,6 +7,7 @@ import android.media.TimedText;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -169,7 +170,7 @@ public class NoteActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Map<String, String> map = spinnerList.get(position);
                 String lag = map.get("language");
-                if (lag.equals("en_us")) {
+                if (lag != null && lag.equals("en_us")) {
                     // 设置语言
                     mIat.setParameter(SpeechConstant.LANGUAGE, "en_us");
                     mIat.setParameter(SpeechConstant.ACCENT, null);
@@ -469,6 +470,23 @@ public class NoteActivity extends BaseActivity {
         waveLineView.release();
     }
 
+    @Override
+    protected void onBackClick() {
+        for (String path : pathList){
+            File mf = new File(path);
+            if (mf.exists()){
+                mf.delete();
+            }
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            onBackClick();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     private MediaPlayer mediaPlayer;
     private void play(){
@@ -490,7 +508,14 @@ public class NoteActivity extends BaseActivity {
         }
         final String path;
         Logs.JLlog(""+fileList.size());
-        if (fileList.size() == 1){
+        if (fileList.size() <= 0){
+            if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
+                Alert.toast("找不到音频文件！");
+            }else {
+                Alert.toast("尚未录音，音频不存在！");
+            }
+            return;
+        }else if (fileList.size() == 1){
             file = fileList.get(0);
         }else {
             file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/" + HttpUtils.USER + "/"
@@ -664,6 +689,7 @@ public class NoteActivity extends BaseActivity {
                 public void onFailure(Call call, IOException e) {
                     DaoUtils.insert(note);
                 }
+
                 @Override
                 public void OnFinal() {
                     super.OnFinal();
@@ -704,6 +730,7 @@ public class NoteActivity extends BaseActivity {
                 public void onFailure(Call call, IOException e) {
 
                 }
+
                 @Override
                 public void OnFinal() {
                     super.OnFinal();

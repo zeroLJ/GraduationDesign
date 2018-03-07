@@ -42,7 +42,7 @@ public class ResponseUtil{
 	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String msg,boolean success) throws IOException {
 		Map<String, Object> map = new HashMap();
 		map.put("success", success);
-		map.put("extendStr", msg);
+		map.put("msg", msg);
 		if (resultList!=null) {
 //			map.put("resultList", JSON.toJSONString(resultList));
 			map.put("resultList", resultList);

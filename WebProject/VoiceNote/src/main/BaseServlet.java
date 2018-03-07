@@ -143,9 +143,11 @@ public abstract class BaseServlet extends HttpServlet {
 			}      
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
+			ResponseUtil.response(response, e.getMessage(), false);
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			ResponseUtil.response(response, e.getMessage(), false);
 			e.printStackTrace();
 		}
 	}
@@ -159,138 +161,4 @@ public abstract class BaseServlet extends HttpServlet {
 	
 	abstract void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params) throws  SQLException, IOException;
 
-	
-	
-	
-	/**
-
-     * 字节数组中的indexOf函数，与String类中的indexOf类似
-
-     * b 要搜索的字节数组
-
-     * s 要找的字符串
-
-     * start 搜索的起始位置
-
-     * 如果找到，返回s的第一个字节在b中的下标，没有则返回-1
-
-     */
-
-    private static int byteIndexOf(byte[] b, String s, int start) {
-
-            return byteIndexOf(b, s.getBytes(), start);
-
-    }
-
-    /**
-
-     * 字节数组中的indexOf函数，与String类中的indexOf类似
-
-     * b 要搜索的字节数组
-
-     * s 要找的字节数组
-
-     * start 搜索的起始位置
-
-     * 如果找到，返回s的第一个字节在b中的下标，没有则返回-1
-
-     */
-
-    private static int byteIndexOf(byte[] b, byte[] s, int start) {
-
-            int i;
-
-            if (s.length == 0) {
-
-                    return 0;
-
-            }
-
-            int max = b.length - s.length;
-
-            if (max < 0) {
-
-                    return -1;
-
-            }
-
-            if (start > max) {
-
-                    return -1;
-
-            }
-
-            if (start < 0) {
-
-                    start = 0;
-
-            }
-
-            // 在b中找到s的第一个元素
-
-    search:
-
-            for (i = start; i <= max; i++) {
-
-                    if (b[i] == s[0]) {
-
-                            // 找到了s中的第一个元素后，比较剩余的部分是否相等
-
-                            int k = 1;
-
-                            while (k < s.length) {
-
-                                    if (b[k + i] != s[k]) {
-
-                                            continue search;
-
-                                    }
-
-                                    k++;
-
-                            }
-
-                            return i;
-
-                    }
-
-            }
-
-            return -1;
-
-    }
-
-    /**
-
-     * 用于从一个字节数组中提取一个字节数组
-
-     * 类似于String 类的substring()
-
-     */
-
-    private static byte[] subBytes(byte[] b, int from ,int end) {
-
-            byte[] result = new byte[end - from];
-
-            System.arraycopy(b, from, result, 0, end - from);
-
-            return result;
-
-    }
-
-    
-
-    /**
-
-     * 用于从一个字节数组中提取一个字符串
-
-     * 类似于String类的substring()
-
-     */
-
-    private static String subBytesString(byte[] b, int from, int end) {
-
-            return new String(subBytes(b, from, end));
-
-    }
 }
