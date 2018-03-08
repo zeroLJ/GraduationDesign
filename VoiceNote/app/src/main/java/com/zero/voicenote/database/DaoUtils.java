@@ -184,7 +184,22 @@ public class DaoUtils {
             e.printStackTrace();
         }
         return flag;
+    }
 
+    /**
+     * 删除指定表所有数据
+     * @param c
+     * @return
+     */
+    public static boolean deleteAll(Class c){
+        boolean flag = false;
+        try {
+            DaoUtils.getDao(c).deleteAll();
+            flag = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return flag;
     }
 
     /**
