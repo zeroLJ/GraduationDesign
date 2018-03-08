@@ -29,16 +29,20 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    //recycleView、drawerlayout等控件需要添加
     implementation 'com.android.support:design:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':utillib')
     compile 'org.greenrobot:greendao:3.2.2'
-    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.4.0'
     //数据库升级辅助
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.4.0'
+    //可拖动&&侧滑listview
     compile 'com.yydcdut.sdlv:sdlv:0.7.0'
     compile 'com.github.Jay-Goo:WaveLineView:v1.0.3'
     //组件间的消息通信
     compile 'org.greenrobot:eventbus:3.1.1'
+    //自定义形状view
+    compile 'com.github.florent37:shapeofview:1.0.6'
 }

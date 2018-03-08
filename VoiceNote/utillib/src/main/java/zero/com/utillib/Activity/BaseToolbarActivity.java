@@ -1,7 +1,10 @@
 package zero.com.utillib.Activity;
 
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,23 +18,64 @@ import zero.com.utillib.R;
 public class BaseToolbarActivity extends BaseCommonActivity {
     protected RelativeLayout toolbar_layout;
     private Toolbar mToolbar;
-    private ToolBarHelper mToolBarHelper;
     protected ImageView back_iv;
     protected TextView top_left_tv, top_center_tv, top_right_tv;
+    //是否有侧滑栏
+    protected boolean hasNavigationView = false;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+    private View mView;
     @Override
     protected void initView() {
         super.initView();
         setToolBar(layoutResID);
     }
 
+    //设置侧滑栏内容,必须在setContentView前调用,若要侧滑栏不遮盖toolbar，自行在布局文件使用NavigationView
+    protected void setNavigationView(int layoutResID){
+        hasNavigationView = true;
+        mView = View.inflate(this, layoutResID, null);
+    }
+
     protected void setToolBar(int mLayoutResID) {
-        mToolBarHelper = new ToolBarHelper(this, mLayoutResID);
-        mToolbar = mToolBarHelper.getToolBar();
-        setContentView(mToolBarHelper.getContentView());
-        /*把 toolbar 设置到Activity 中*/
+        View view;
+        if (hasNavigationView){
+            view = View.inflate(this, R.layout.default_layout_toolbar_navigationview, null);
+            navigationView = view.findViewById(R.id.navigationView);
+            navigationView.addView(mView);
+            drawerLayout = view.findViewById(R.id.drawerLayout);
+        }else {
+            view = View.inflate(this, R.layout.default_layout_toolbar, null);
+        }
+        mToolbar = view.findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-         /*自定义的一些操作*/
         onCreateCustomToolBar(mToolbar);
+        if (hasNavigationView){
+//            getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, mToolbar, R.string.app_name, R.string.bottom_sheet_behavior);
+//            mDrawerToggle.syncState();
+//            drawerLayout.setDrawerListener(mDrawerToggle);
+
+            back_iv.setImageResource(R.mipmap.menu_icon);
+            back_iv.setVisibility(View.VISIBLE);
+            back_iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isOpenNavigationView()){
+                        openNavigationView();
+                    }else {
+                        closeNavigationView();
+                    }
+
+                }
+            });
+        }
+        View contentView = View.inflate(this, mLayoutResID, null);
+        FrameLayout center_layout = view.findViewById(R.id.center_layout);
+        center_layout.addView(contentView);
+        setContentView(view);
+
     }
 
     protected void onCreateCustomToolBar(Toolbar toolbar) {
@@ -48,19 +92,8 @@ public class BaseToolbarActivity extends BaseCommonActivity {
     }
 
     protected void setReturnEnable(boolean enable){
-//        if (enable){
-//            top_left_tv.setText("返回");
-//            top_left_tv.setVisibility(View.VISIBLE);
-//            top_left_tv.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    finish();
-//                }
-//            });
-//        }else {
-//            top_left_tv.setVisibility(View.GONE);
-//        }
         if (enable){
+            back_iv.setImageResource(R.mipmap.back);
             back_iv.setVisibility(View.VISIBLE);
             back_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,5 +116,24 @@ public class BaseToolbarActivity extends BaseCommonActivity {
     protected void onBackClick(){
 
     }
+
+    protected void closeNavigationView(){
+        if (drawerLayout!=null){
+            drawerLayout.closeDrawer(navigationView);
+//            navigationView.addView();
+        }
+    }
+
+    protected void openNavigationView(){
+        if (drawerLayout!=null){
+            drawerLayout.openDrawer(navigationView);
+//            navigationView.addView();
+        }
+    }
+
+    protected boolean isOpenNavigationView(){
+        return drawerLayout.isDrawerOpen(navigationView);
+    }
+
 
 }

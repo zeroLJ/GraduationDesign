@@ -6,4 +6,5 @@
     <color name="line_gray">#c1c0c0</color>
     <color name="white_bg">#fcfcfc</color>
     <color name="red_delete">#fdd5d7</color>
+    <color name="red">#ff3741</color>
 </resources>

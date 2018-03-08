@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         >
-
         <TextView
             android:id="@+id/left_tv"
             android:layout_width="wrap_content"
@@ -34,7 +33,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
             android:layout_centerVertical="true"
             >
 

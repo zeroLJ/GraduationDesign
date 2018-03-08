@@ -6,14 +6,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ActivityUtils;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
@@ -48,16 +59,17 @@ public class MainActivity extends BaseActivity {
     private Adapter adapter;
     private List<Map<String, Object>> data = new ArrayList<>();;
     private SlideAndDragListView listView;
+    private TextView name_tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setNavigationView(R.layout.navigationview_main);
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.listview);
+        name_tv = findViewById(R.id.name_tv);
         if (hasSignin()){
-            top_left_tv.setText(HttpUtils.USER);
             top_right_tv.setText("同步");
-        }else {
-            top_left_tv.setText("登录");
+            name_tv.setText(HttpUtils.USER);
         }
 
 //        recyclerView = findViewById(R.id.recyclerView);
@@ -94,21 +106,8 @@ public class MainActivity extends BaseActivity {
         top_left_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasSignin()){
-                    Alert.alertDialogTowBtn("是否要退出登录？", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(MainActivity.this, SigninActivity.class);
-                            startActivity(intent);
-                            App.spUtils.put(Constant.IsLogin, false);
-                            finish();
-                        }
-                    });
-                }else {
-                   Intent intent = new Intent(MainActivity.this, SigninActivity.class);
-                   startActivity(intent);
-                   finish();
-                }
+                    openNavigationView();
+
             }
         });
 
@@ -137,6 +136,21 @@ public class MainActivity extends BaseActivity {
                     public void OnFinal() {
                         super.OnFinal();
                         dismissProgressDialog();
+                    }
+                });
+            }
+        });
+
+        findViewById(R.id.logout_bt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Alert.alertDialogTowBtn("是否要退出当前帐号？", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(MainActivity.this, SigninActivity.class);
+                        startActivity(intent);
+                        App.spUtils.put(Constant.IsLogin, false);
+                        finish();
                     }
                 });
             }
@@ -255,12 +269,16 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
-            Alert.alertDialogTowBtn("是否要退出？", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    App.appExit();
-                }
-            });
+            if (isOpenNavigationView()){
+                closeNavigationView();
+            }else {
+                Alert.alertDialogTowBtn("是否要退出？", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityUtils.finishAllActivities();
+                    }
+                });
+            }
             return false;
         }
         return super.onKeyDown(keyCode, event);

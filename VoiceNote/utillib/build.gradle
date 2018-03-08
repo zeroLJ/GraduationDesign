@@ -29,6 +29,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
     testCompile 'junit:junit:4.12'
     compile 'com.yanzhenjie:sofia:1.0.4'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'

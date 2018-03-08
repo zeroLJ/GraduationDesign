@@ -6,6 +6,7 @@
 
     <color name="white">#FFFFFF</color>
     <color name="black">#2B2B2B</color>
+    <color name="line">#e6e6e6</color>
 
     <color name="fragment_a">#90AB31</color>
     <color name="fragment_a_status">#FF9000</color>

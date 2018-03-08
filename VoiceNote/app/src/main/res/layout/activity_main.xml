@@ -1,29 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#fcfcfc"
+    android:id="@+id/drawerLayout"
     tools:context="com.zero.voicenote.MainActivity">
     <!--<android.support.v7.widget.RecyclerView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:id="@+id/recyclerView"/>-->
-    <com.yydcdut.sdlv.SlideAndDragListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listview">
-    </com.yydcdut.sdlv.SlideAndDragListView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.yydcdut.sdlv.SlideAndDragListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/listview">
+            </com.yydcdut.sdlv.SlideAndDragListView>
 
-    <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
-        android:id="@+id/add_bt"
-        android:background="@mipmap/add" />
-</RelativeLayout>
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="30dp"
+                android:id="@+id/add_bt"
+                android:background="@mipmap/add" />
+        </RelativeLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="left"-->
+        <!--android:onClick="c"-->
+        <!--android:id="@+id/layout"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--android:orientation="vertical">-->
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+    <!--</LinearLayout>-->
+
+
+</LinearLayout>
