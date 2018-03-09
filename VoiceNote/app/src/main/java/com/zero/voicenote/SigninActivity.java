@@ -174,7 +174,8 @@ public class SigninActivity extends BaseActivity {
                                 Manifest.permission.WRITE_SETTINGS,Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS,
                                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                                 Manifest.permission.ACCESS_FINE_LOCATION},0x0010);
+                                 Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.CAMERA},0x0010);
             }
         } catch (Exception e) {
             e.printStackTrace();

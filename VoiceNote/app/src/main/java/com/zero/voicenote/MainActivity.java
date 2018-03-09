@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,7 +34,10 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ConvertUtils;
-import com.blankj.utilcode.util.Utils;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
@@ -66,6 +73,7 @@ public class MainActivity extends BaseActivity {
     private List<Map<String, Object>> data = new ArrayList<>();;
     private SlideAndDragListView listView;
     private TextView name_tv;
+    private ImageView head_icon_iv;
     private int rotation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.listview);
         name_tv = findViewById(R.id.name_tv);
+        head_icon_iv = findViewById(R.id.head_icon_iv);
         if (hasSignin()){
 //            top_right_tv.setText("同步");
 //            top_right_tv.setBackground(getResources().getDrawable(R.drawable.refresh_white));
@@ -100,6 +109,25 @@ public class MainActivity extends BaseActivity {
 //            }
 //        });
 
+        final File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/" + HttpUtils.USER + "icon.jpg");
+        if (file.exists()){
+            head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+        }
+        HttpUtils.doDomnLoad("HeadIconGet",null, file.getAbsolutePath(), new OnResponseListener() {
+            @Override
+            public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+            }
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void OnFinal() {
+                super.OnFinal();
+            }
+        });
         initListview();
     }
 
@@ -173,6 +201,28 @@ public class MainActivity extends BaseActivity {
                         finish();
                     }
                 });
+            }
+        });
+
+        head_icon_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PictureSelector.create(MainActivity.this)
+                        .openGallery(PictureMimeType.ofImage())
+                        .theme(R.style.default_style)
+                        .selectionMode(PictureConfig.SINGLE)
+                        .enableCrop(true)// 是否裁剪 true or false
+                        .circleDimmedLayer(true)// 是否圆形裁剪 true or false
+                        .scaleEnabled(true)// 裁剪是否可放大缩小图片 true or false
+                        .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
+                        .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
+                        .previewVideo(false)// 是否可预览视频 true or false
+                        .withAspectRatio(1,1)//裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                        .enablePreviewAudio(false) // 是否可播放音频 true or false
+                        .rotateEnabled(false)// 裁剪是否可旋转图片 true or false
+                        .compress(true)// 是否压缩 true or false
+                        .minimumCompressSize(100)// 小于100kb的图片不压缩
+                        .forResult(PictureConfig.CHOOSE_REQUEST);
             }
         });
     }
@@ -307,8 +357,55 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        if (resultCode == Activity.RESULT_OK){
-            refreshData();
+//        if (resultCode == Activity.RESULT_OK){
+//            refreshData();
+//        }
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 100:
+                    refreshData();
+                    break;
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片选择结果回调
+                    List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(intent);
+                    // 例如 LocalMedia 里面返回三种path
+                    // 1.media.getPath(); 为原图path
+                    // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
+                    // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
+                    // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
+                    LocalMedia media = selectList.get(0);
+                    String path = media.getPath();
+                    String path_cut = path;
+                    if (media.isCut()){
+                        path_cut = media.getCutPath();
+                    }
+                    if (media.isCompressed()){
+                        path_cut = media.getCompressPath();
+                    }
+                    head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(path_cut));
+                    Logs.JLlog(path);
+                    Logs.JLlog(path_cut);
+                    Map<String,Object> map = new HashMap<>();
+                    File file = new File(path_cut);
+                    if (file!=null){
+                        map.put("file", file);
+                    }
+                    HttpUtils.doPostFile("HeadIconChange", map, new OnResponseListener() {
+                        @Override
+                        public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                        }
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+
+                        }
+
+                        @Override
+                        public void OnFinal() {
+                            super.OnFinal();
+                        }
+                    });
+                    break;
+            }
         }
     }
 

@@ -45,4 +45,6 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.1.1'
     //自定义形状view
     compile 'com.github.florent37:shapeofview:1.0.6'
+    //图片选择器
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.0'
 }

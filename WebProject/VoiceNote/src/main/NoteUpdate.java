@@ -32,6 +32,9 @@ public class NoteUpdate extends BaseServlet{
 			System.out.println("文件从:" + file.getAbsolutePath());  
 			File toFile = new File("D:\\VoiceNote\\" + name + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime)) + "\\iat.wav");
 			toFile.getParentFile().mkdirs();
+			if (toFile.exists()) {
+				toFile.delete();
+			}
 			file.renameTo(toFile);
 			System.out.println("文件到:" + toFile.getAbsolutePath());  
 		}

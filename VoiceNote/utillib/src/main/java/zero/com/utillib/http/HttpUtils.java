@@ -255,6 +255,7 @@ public class HttpUtils {
 //                    fos.write(response.body().bytes());
 
                     fos.flush();
+                    onResponseListener.onSuccess(resultData.getResultList(), resultData);
                     Logs.JLlog( "文件下载成功");
                 } catch (Exception e) {
                 } finally {

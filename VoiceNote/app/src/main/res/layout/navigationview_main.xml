@@ -21,7 +21,7 @@
             app:circle_borderWidth="1dp">
 
             <ImageView
-                android:id="@+id/person"
+                android:id="@+id/head_icon_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@mipmap/ic_launcher"/>
