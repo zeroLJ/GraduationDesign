@@ -1,15 +1,18 @@
 package zero.com.utillib.Activity;
 
+import android.graphics.Matrix;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import zero.com.utillib.R;
+import zero.com.utillib.utils.Logs;
 
 /**
  * 只可控制toolbar（activity必须无ActionBar）
@@ -18,7 +21,7 @@ import zero.com.utillib.R;
 public class BaseToolbarActivity extends BaseCommonActivity {
     protected RelativeLayout toolbar_layout;
     private Toolbar mToolbar;
-    protected ImageView back_iv;
+    protected ImageView back_iv, top_right_iv;
     protected TextView top_left_tv, top_center_tv, top_right_tv;
     //是否有侧滑栏
     protected boolean hasNavigationView = false;
@@ -38,12 +41,22 @@ public class BaseToolbarActivity extends BaseCommonActivity {
     }
 
     protected void setToolBar(int mLayoutResID) {
-        View view;
+        final View view;
         if (hasNavigationView){
             view = View.inflate(this, R.layout.default_layout_toolbar_navigationview, null);
             navigationView = view.findViewById(R.id.navigationView);
             navigationView.addView(mView);
             drawerLayout = view.findViewById(R.id.drawerLayout);
+            final LinearLayout mainLayout = view.findViewById(R.id.main_layout);
+            //实现打开侧滑栏时，页面也随着移动效果
+            drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+                    super.onDrawerSlide(drawerView, slideOffset);
+                    back_iv.setRotation(slideOffset*90);
+                    mainLayout.setTranslationX(drawerView.getMeasuredWidth()*slideOffset);
+                }
+            });
         }else {
             view = View.inflate(this, R.layout.default_layout_toolbar, null);
         }
@@ -85,6 +98,7 @@ public class BaseToolbarActivity extends BaseCommonActivity {
         top_left_tv = (TextView) toolbar.findViewById(R.id.left_tv);
         top_right_tv = (TextView) toolbar.findViewById(R.id.right_tv);
         top_center_tv = (TextView) toolbar.findViewById(R.id.center_tv);
+        top_right_iv = (ImageView) toolbar.findViewById(R.id.right_iv);
         back_iv = (ImageView) toolbar.findViewById(R.id.back_iv);
         toolbar_layout = (RelativeLayout) toolbar.findViewById(R.id.toolbar_layout);
 //        top_center_tv.setText(getString(R.string.app_name));
@@ -134,6 +148,4 @@ public class BaseToolbarActivity extends BaseCommonActivity {
     protected boolean isOpenNavigationView(){
         return drawerLayout.isDrawerOpen(navigationView);
     }
-
-
 }

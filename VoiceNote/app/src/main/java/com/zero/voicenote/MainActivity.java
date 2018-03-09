@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,6 +29,8 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.ConvertUtils;
+import com.blankj.utilcode.util.Utils;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
@@ -60,6 +66,7 @@ public class MainActivity extends BaseActivity {
     private List<Map<String, Object>> data = new ArrayList<>();;
     private SlideAndDragListView listView;
     private TextView name_tv;
+    private int rotation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +75,10 @@ public class MainActivity extends BaseActivity {
         listView = findViewById(R.id.listview);
         name_tv = findViewById(R.id.name_tv);
         if (hasSignin()){
-            top_right_tv.setText("同步");
+//            top_right_tv.setText("同步");
+//            top_right_tv.setBackground(getResources().getDrawable(R.drawable.refresh_white));
+            top_right_iv.setImageResource(R.drawable.refresh_white);
+            top_right_iv.setPadding(ConvertUtils.dp2px(8),ConvertUtils.dp2px(8),ConvertUtils.dp2px(8),ConvertUtils.dp2px(8));
             name_tv.setText(HttpUtils.USER);
         }
 
@@ -111,9 +121,19 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        top_right_tv.setOnClickListener(new View.OnClickListener() {
+        top_right_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                AnimationDrawable animationDrawable = (AnimationDrawable) top_right_iv.getDrawable();
+//                animationDrawable.start();
+//                rotation = rotation + 90;
+//                top_right_iv.animate().rotation(rotation);
+                Animation rotateAnimation  = new RotateAnimation(0,360,Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotateAnimation.setFillAfter(true);
+                rotateAnimation.setDuration(1000);
+                rotateAnimation.setRepeatCount(0);
+                rotateAnimation.setInterpolator(new LinearInterpolator());
+                top_right_iv.startAnimation(rotateAnimation);
                 List<Map<String, Object>> list = new ArrayList<>();
                 final List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_COMPLETE));
                 for (Note note : notes){
