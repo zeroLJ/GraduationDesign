@@ -187,6 +187,7 @@ public class NoteActivity extends BaseActivity {
     }
 
     private boolean isSending = false;
+
     @Override
     protected void initListener() {
         super.initListener();
@@ -199,16 +200,20 @@ public class NoteActivity extends BaseActivity {
             }
         });
 
+
         findViewById(R.id.note_layout).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                KeyboardUtils.showSoftInput(result_edt);
-                if (!result_edt.hasFocus()){
-                    result_edt.setSelection(result_edt.getText().toString().length());
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    KeyboardUtils.showSoftInput(result_edt);
+                    if (!result_edt.hasFocus()){
+                        result_edt.setSelection(result_edt.getText().toString().length());
+                    }
                 }
                 return false;
             }
         });
+
 
         waveLineView.setOnClickListener(new View.OnClickListener() {
             @Override
