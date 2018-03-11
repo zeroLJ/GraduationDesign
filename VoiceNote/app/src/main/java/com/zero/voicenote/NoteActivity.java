@@ -3,18 +3,14 @@ package com.zero.voicenote;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.TimedText;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -36,7 +32,6 @@ import com.zero.voicenote.database.NoteDao;
 import com.zero.voicenote.util.Constant;
 import com.zero.voicenote.util.JsonParser;
 import com.zero.voicenote.util.WavMergeUtil;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -493,7 +488,7 @@ public class NoteActivity extends BaseActivity {
         mediaPlayer = new MediaPlayer();
 //        File file = new File(Environment.getExternalStorageDirectory()+"/msc/"+ObjUtils.objToStr(data.get("addTime")),"1"+".wav");
         File file = null;
-        ArrayList<File> fileList = new ArrayList<>();
+        final ArrayList<File> fileList = new ArrayList<>();
         if (StringUtils.isNotEmpty(ObjUtils.objToStr(data.get("audioPath")))){
             File f = new File(ObjUtils.objToStr(data.get("audioPath")));
             if (f.exists()){
@@ -566,9 +561,10 @@ public class NoteActivity extends BaseActivity {
                     mediaPlayer.release();
                     mediaPlayer = null;
                     play_bt.setBackgroundResource(R.mipmap.play);
-                    if (!path.equals(ObjUtils.objToStr(data.get("audioPath")))){
+                    if (fileList.size() > 1 && !path.equals(ObjUtils.objToStr(data.get("audioPath")))){
                         new File(path).delete();
                     }
+                    fileList.clear();
                 }
             });
             timer = new Timer();

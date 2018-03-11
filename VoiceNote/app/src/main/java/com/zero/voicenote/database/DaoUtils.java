@@ -1,9 +1,10 @@
 package com.zero.voicenote.database;
 
+import com.alibaba.fastjson.JSON;
+
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.query.WhereCondition;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,8 +128,7 @@ public class DaoUtils {
             for (Map<String, Object> note : list){
                 mList.add(DaoUtils.mapToEntity(c, note));
             }
-            insert(mList);
-            flag = true;
+            flag = insert(mList);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -144,27 +144,28 @@ public class DaoUtils {
      */
     public static <T> T mapToEntity(Class<T> c, Map<String, ?> map){
         T t;
-        try {
-            t = c.newInstance();
-            for (Field field : c.getDeclaredFields()){
-                boolean a = field.isAccessible();
-                if (!a) field.setAccessible(true);
-                field.set(t, map.get(field.getName()));
-                field.setAccessible(a);
-//                if (field.getType().isAssignableFrom(Long.class)){
-//                    invokeMethod2(t,field.getName(), ObjUtils.objToInt(map.get(field.getName())),null);
+        t = JSON.parseObject( JSON.toJSONString(map), c);
+        return t;
+//        try {
+//            t = c.newInstance();
+//            for (Field field : c.getDeclaredFields()){
+//                boolean a = field.isAccessible();
+//                if (!a) field.setAccessible(true);
+//                Logs.JLlog(field.getName());
+//                if (!field.getName().equals("serialVersionUID")){
+//                    field.set(t, map.get(field.getName()));
 //                }
-//                invokeMethod2(t,field.getName(),map.get(field.getName()),null);
-            }
-            return t;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+//                field.setAccessible(a);
+//            }
+//            return t;
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
     }
 
     /**

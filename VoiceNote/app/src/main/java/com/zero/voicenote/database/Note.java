@@ -1,10 +1,10 @@
 package com.zero.voicenote.database;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Unique;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by zero on 2018/2/13.
@@ -87,5 +87,4 @@ public class Note extends BaseEntity {
     public void setFlag(String flag) {
         this.flag = flag;
     }
-   
 }
