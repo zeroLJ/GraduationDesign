@@ -12,6 +12,7 @@ import java.util.Map;
 import zero.com.utillib.http.HttpUtils;
 import zero.com.utillib.http.OnResponseListener;
 import zero.com.utillib.http.ResultData;
+import zero.com.utillib.utils.object.StringUtils;
 import zero.com.utillib.utils.view.Alert;
 
 public class LoginActivity extends BaseActivity {
@@ -39,8 +40,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login(String user, String password, String checkPassword){
+        if (StringUtils.isEmpty(user) || StringUtils.isEmpty(password)){
+            Alert.toast("密码不能为空！");
+            return;
+        }
         if (!password.equals(checkPassword)){
             Alert.toast("两次输入的密码不一致！");
+            return;
         }
 //        Map<String,Object> map = new HashMap<>();
 //        map.put("name", user);
@@ -50,7 +56,8 @@ public class LoginActivity extends BaseActivity {
         HttpUtils.doPost("Login", new OnResponseListener() {
             @Override
             public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
-
+                Alert.toast("注册成功");
+                finish();
             }
         });
     }
