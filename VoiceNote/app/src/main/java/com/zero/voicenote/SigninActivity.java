@@ -1,30 +1,20 @@
 package com.zero.voicenote;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 
-import com.tencent.bugly.crashreport.CrashReport;
 import com.zero.voicenote.util.Constant;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -122,6 +112,14 @@ public class SigninActivity extends BaseActivity {
     }
 
     private void signIn(final String user,final String password){
+        if (StringUtils.isEmpty(user)){
+            Alert.toast("用户名不能为空！");
+            return;
+        }
+        if (StringUtils.isEmpty(password)){
+            Alert.toast("密码不能为空！");
+            return;
+        }
         showProgressDialog("登录中");
         HttpUtils.USER = user;
         HttpUtils.PASSWORD = password;
