@@ -27,7 +27,7 @@ public class NoteGetAudio extends BaseServlet{
 			throws SQLException, IOException {
 		// TODO Auto-generated method stub
 	        // must be linux path(not \\)   
-	        String filepath = "D:\\VoiceNote\\" + name + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(params.get("addTime"))) + "\\iat.wav";
+	        String filepath = "C:\\VoiceNote\\" + name + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(params.get("addTime"))) + "\\iat.wav";
 	        File file = new File(filepath);  
 	        if (!file.exists()) {
 	        	ResponseUtil.response(response, "下载文件不存在！！", false);

@@ -20,7 +20,7 @@ public class HeadIconGet extends BaseServlet{
 	@Override
 	void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
 			throws SQLException, IOException {
-		 String filepath = "D:\\VoiceNote\\" + name + "\\icon.jpg";
+		 String filepath = "C:\\VoiceNote\\" + name + "\\icon.jpg";
 	        File file = new File(filepath);  
 	        if (!file.exists()) {
 	        	ResponseUtil.response(response, "下载头像不存在！！", false);

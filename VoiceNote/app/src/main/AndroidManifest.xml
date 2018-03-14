@@ -34,6 +34,8 @@
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
 
+    <!--安装apk所需权限-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name="com.zero.voicenote.App"
@@ -74,6 +76,24 @@
             android:enabled="true"
             android:exported="true"
             android:process=":OtherService" />
+
+        <!-- Bugly升级SDK配置开始  -->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:theme="@android:style/Theme.Translucent"/>
+
+        <!--com.zero.voicenote.fileProvider-->
+        <provider
+            android:name=".util.BaseFileProvider"
+            android:authorities="com.tencent.bugly.hotfix.easy.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <!-- Bugly升级SDK配置结束-->
     </application>
 
 </manifest>

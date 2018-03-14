@@ -71,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:text="检测更新"
                     android:textSize="16sp"
+                    android:id="@+id/checkUpgrade_bt"
                     android:textColor="@color/black"
                     android:paddingLeft="30dp"
                     android:paddingTop="7dp"

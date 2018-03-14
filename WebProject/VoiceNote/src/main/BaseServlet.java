@@ -46,7 +46,7 @@ public abstract class BaseServlet extends HttpServlet {
 	protected String connectionUrl = 
     		"jdbc:sqlserver://localhost:1433;" 
 //    		"jdbc:sqlserver://192.168.0.188:1433;"
-               +"databaseName=Demo;"
+               +"databaseName=demo;"
                + "user=940034240;"
                + "password=pp123456;";   
 	protected String name;
@@ -103,7 +103,7 @@ public abstract class BaseServlet extends HttpServlet {
 	                            File fullFile = new File(item.getName());  
 //	                            File saveFile = new File(System.getProperty("user.dir"), fullFile.getName()); 
 	                            String[] strings = item.getFieldName().split("_0_");// userName + _0_ + key
-	                            File file = new File("D:\\VoiceNote\\"+strings[0]);
+	                            File file = new File("C:\\VoiceNote\\"+strings[0]);
 	                            if (!file.exists()) {
 									file.mkdirs();
 								}
@@ -117,6 +117,8 @@ public abstract class BaseServlet extends HttpServlet {
 	                }  
 	            } catch (Exception e) {  
 	                e.printStackTrace();  
+	                ResponseUtil.response(response, e.getMessage(), false);
+	                return;
 	            }  
 	        }else {
 	        	Map<String, String[]> map =  request.getParameterMap();
@@ -145,10 +147,12 @@ public abstract class BaseServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			ResponseUtil.response(response, e.getMessage(), false);
 			e.printStackTrace();
+			return;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			ResponseUtil.response(response, e.getMessage(), false);
 			e.printStackTrace();
+			return;
 		}
 	}
 

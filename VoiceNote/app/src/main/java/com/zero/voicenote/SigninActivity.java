@@ -20,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.zero.voicenote.util.Constant;
 
 import java.io.File;

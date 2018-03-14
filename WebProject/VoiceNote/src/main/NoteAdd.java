@@ -29,7 +29,7 @@ public class NoteAdd extends BaseServlet{
 		if (params.get("file") != null && !params.get("file").equals("") ) {
 			File file = new File(params.get("file"));
 			System.out.println("文件从:" + file.getAbsolutePath());  
-			File toFile = new File("D:\\VoiceNote\\" + name + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime)) + "\\iat.wav");
+			File toFile = new File("C:\\VoiceNote\\" + name + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime)) + "\\iat.wav");
 			toFile.getParentFile().mkdirs();
 			file.renameTo(toFile);
 			System.out.println("文件到:" + toFile.getAbsolutePath());  

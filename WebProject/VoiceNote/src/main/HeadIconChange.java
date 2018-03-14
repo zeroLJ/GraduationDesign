@@ -24,7 +24,7 @@ public class HeadIconChange extends BaseServlet{
 		if (params.get("file") != null && !params.get("file").equals("") ) {
 			File file = new File(params.get("file"));
 			System.out.println("ÎÄ¼þ´Ó:" + file.getAbsolutePath());  
-			File toFile = new File("D:\\VoiceNote\\" + name + "\\icon.jpg");
+			File toFile = new File("C:\\VoiceNote\\" + name + "\\icon.jpg");
 			toFile.getParentFile().mkdirs();
 			if (toFile.exists()) {
 				toFile.delete();

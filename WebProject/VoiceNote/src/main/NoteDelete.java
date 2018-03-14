@@ -26,7 +26,7 @@ public class NoteDelete extends BaseServlet{
 		String s = "delete from dbo.[note] where addTime='"+addTime+"' and name='"+name+"'";
 		System.out.println("Ö´ÐÐsqlÓï¾ä:"+s);
 		sql.execute(s); 
-		String filepath = "D:\\VoiceNote\\" + name + "\\" 
+		String filepath = "C:\\VoiceNote\\" + name + "\\" 
 		+ DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime));
 		
 		ResponseUtil.response(response, "É¾³ý³É¹¦");

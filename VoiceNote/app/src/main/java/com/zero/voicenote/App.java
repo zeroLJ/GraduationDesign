@@ -1,6 +1,8 @@
 package com.zero.voicenote;
 
 import com.blankj.utilcode.util.SPUtils;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.zero.voicenote.util.Constant;
 
 import zero.com.utillib.Activity.MApplication;
@@ -20,5 +22,8 @@ public class App extends MApplication {
         CrashHandler.getInstance(SigninActivity.class).init(this);
         spUtils = SPUtils.getInstance();
         HttpUtils.URL = spUtils.getString(Constant.Url, HttpUtils.URL);
+        Beta.autoCheckUpgrade = false;
+        Bugly.init(getApplicationContext(), "f605fa12cd", false);
+
     }
 }
