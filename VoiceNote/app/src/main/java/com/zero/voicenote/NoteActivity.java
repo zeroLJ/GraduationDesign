@@ -8,13 +8,10 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.KeyboardUtils;
@@ -50,8 +47,6 @@ import java.util.TimerTask;
 
 import jaygoo.widget.wlv.WaveLineView;
 import okhttp3.Call;
-import zero.com.utillib.adapter.CommoAdapter;
-import zero.com.utillib.adapter.ViewHolder;
 import zero.com.utillib.http.HttpUtils;
 import zero.com.utillib.http.OnResponseListener;
 import zero.com.utillib.http.ResultData;
@@ -77,8 +72,7 @@ public class NoteActivity extends BaseActivity {
     private RelativeLayout tab_layout;
     private String path;
     private List<String> pathList = new ArrayList<>();
-    private Spinner spinner;
-    private SpinnerAdapter spinnerAdapter;
+    private LanguageSpinner spinner;
     private Timer timer;
     private RelativeLayout input_layout;
     private SeekBar seekBar;
@@ -95,7 +89,6 @@ public class NoteActivity extends BaseActivity {
         input_layout = findViewById(R.id.input_layout);
         seekBar = findViewById(R.id.seekBar);
         spinner = findViewById(R.id.spinner);
-        initSpinner();
         Intent intent = getIntent();
         if (intent.getSerializableExtra("data") != null){
             data = (Map<String, Object>) intent.getSerializableExtra("data");
@@ -123,67 +116,6 @@ public class NoteActivity extends BaseActivity {
         if (!file.exists()){
             file.mkdirs();
         }
-    }
-
-    private List<Map<String,String>> spinnerList = new ArrayList<>();
-    private void initSpinner() {
-        Map<String,String> map = new HashMap<String,String>();
-        map.put("language", "mandarin");
-        map.put("text", "普通话");
-        spinnerList.add(map);
-        map = new HashMap<String,String>();
-        map.put("language", "cantonese");
-        map.put("text", "粤语");
-        spinnerList.add(map);
-        map = new HashMap<String,String>();
-        map.put("language", "lmz");
-        map.put("text", "四川话");
-        spinnerList.add(map);
-        map = new HashMap<String,String>();
-        map.put("language", "henanese");
-        map.put("text", "河南话");
-        spinnerList.add(map);
-        map = new HashMap<String,String>();
-        map.put("language", "en_us");
-        map.put("text", "英语");
-        spinnerList.add(map);
-        map = new HashMap<String,String>();
-        map.put("language", null);
-        map.put("text", "其他");
-        spinnerList.add(map);
-        spinnerAdapter = new CommoAdapter<Map<String, String>>(this, spinnerList, R.layout.support_simple_spinner_dropdown_item) {
-
-            @Override
-            public void convert(ViewHolder holder, Map<String, String> data, int position) {
-                holder.setTextView(android.R.id.text1, data.get("text"));
-            }
-        };
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setSelection(App.spUtils.getInt(Constant.Select_Position, 0));
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Map<String, String> map = spinnerList.get(position);
-                String lag = map.get("language");
-                if (lag != null && lag.equals("en_us")) {
-                    // 设置语言
-                    mIat.setParameter(SpeechConstant.LANGUAGE, "en_us");
-                    mIat.setParameter(SpeechConstant.ACCENT, null);
-                } else {
-                    // 设置语言
-                    mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-                    // 设置语言区域
-                    mIat.setParameter(SpeechConstant.ACCENT, lag);
-                }
-                App.spUtils.put(Constant.Select_Position, position);
-                App.spUtils.put(Constant.Select_Language, lag);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private boolean isSending = false;
@@ -278,6 +210,22 @@ public class NoteActivity extends BaseActivity {
                     play_bt.setBackgroundResource(R.mipmap.play);
                 }else {
                     play();
+                }
+            }
+        });
+        spinner.setOnItemSelectedListener(new LanguageSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(Map<String, String> item, int position) {
+                String lag = item.get("language");
+                if (lag != null && lag.equals("en_us")) {
+                    // 设置语言
+                    mIat.setParameter(SpeechConstant.LANGUAGE, "en_us");
+                    mIat.setParameter(SpeechConstant.ACCENT, null);
+                } else {
+                    // 设置语言
+                    mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                    // 设置语言区域
+                    mIat.setParameter(SpeechConstant.ACCENT, lag);
                 }
             }
         });

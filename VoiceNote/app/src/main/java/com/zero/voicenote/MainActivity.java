@@ -1,36 +1,21 @@
 package com.zero.voicenote;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ActivityUtils;
@@ -40,8 +25,6 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.beta.UpgradeInfo;
-import com.tencent.bugly.beta.ui.UILifecycleListener;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
@@ -49,7 +32,6 @@ import com.zero.voicenote.database.DaoUtils;
 import com.zero.voicenote.database.Note;
 import com.zero.voicenote.database.NoteDao;
 import com.zero.voicenote.util.Constant;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -113,25 +95,27 @@ public class MainActivity extends BaseActivity {
 //            }
 //        });
 
-        final File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/" + HttpUtils.USER + "icon.jpg");
-        if (file.exists()){
-            head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
-        }
-        HttpUtils.doDomnLoad("HeadIconGet",null, file.getAbsolutePath(), new OnResponseListener() {
-            @Override
-            public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+        if (hasSignin()){
+            final File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/" + HttpUtils.USER + "icon.jpg");
+            if (file.exists()){
                 head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
             }
-            @Override
-            public void onFailure(Call call, IOException e) {
+            HttpUtils.doDomnLoad("HeadIconGet",null, file.getAbsolutePath(), new OnResponseListener() {
+                @Override
+                public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                    head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                }
+                @Override
+                public void onFailure(Call call, IOException e) {
 
-            }
+                }
 
-            @Override
-            public void OnFinal() {
-                super.OnFinal();
-            }
-        });
+                @Override
+                public void OnFinal() {
+                    super.OnFinal();
+                }
+            });
+        }
         initListview();
     }
 
@@ -230,14 +214,18 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        final String TAG = "ljl";
-        findViewById(R.id.checkUpgrade_bt).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.checkUpgrade).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Beta.checkUpgrade();
             }
         });
-    }
+        findViewById(R.id.languageSet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.spinner).performClick();
+            }
+        });}
 
     private void initListview() {
         final Menu menu = new Menu(false, 0);//第1个参数表示滑动 item 是否能滑的过头，像弹簧那样( true 表示过头，就像 Gif 中显示的那样；false 表示不过头，就像 Android QQ 中的那样)
@@ -423,7 +411,11 @@ public class MainActivity extends BaseActivity {
 
     private void refreshData(){
         data.clear();
-        List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_DELETE));
+//        List<Note> notes = DaoUtils.query(Note.class, NoteDao.Properties.Name.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_DELETE));
+        List<Note> notes = DaoUtils.getDao(Note.class).queryBuilder()
+                .where( NoteDao.Properties.Name.eq(HttpUtils.USER), NoteDao.Properties.Flag.notEq(Constant.FLAG_DELETE))
+                .orderDesc(NoteDao.Properties.EditTime, NoteDao.Properties.AddTime)
+                .list();
         for (Note note : notes){
             data.add(note.toMap());
         }

@@ -53,25 +53,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_marginTop="15dp"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="默认语言"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:paddingLeft="30dp"
                     android:paddingTop="7dp"
                     android:paddingBottom="7dp"
-                    />
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/languageSet"
+                   >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="默认语言"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/black"
+                        android:layout_marginLeft="30dp"
+                        />
 
+                    <com.zero.voicenote.LanguageSpinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="16sp"
+                        android:id="@+id/spinner"
+                        android:background="@null"
+                        android:spinnerMode="dialog"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="30dp"
+                        android:nextFocusLeft="@mipmap/set" />
+                </RelativeLayout>
                 <TextView
                     android:layout_marginTop="7dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="检测更新"
                     android:textSize="16sp"
-                    android:id="@+id/checkUpgrade_bt"
+                    android:id="@+id/checkUpgrade"
                     android:textColor="@color/black"
                     android:paddingLeft="30dp"
                     android:paddingTop="7dp"

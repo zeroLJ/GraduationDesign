@@ -1,21 +1,12 @@
 package zero.com.utillib.http;
 
-import android.os.Environment;
-import android.os.Message;
-import android.util.Log;
-
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ActivityUtils;
-import com.blankj.utilcode.util.EncodeUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +17,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.ObjUtils;
 
@@ -38,6 +28,7 @@ public class HttpUtils {
 
 //    public static String URL = "http://2u02538w57.imwork.net:36920/VoiceNote/";//花生壳内网穿透用
 //    public static String URL = "http://192.168.0.188:8081/VoiceNote/";//内网用
+//    public static String URL = "http://192.168.0.111:8080/VoiceNote/";//内网用
     public static String URL = "http://120.78.74.225:80/VoiceNote/";//服务器公网用
     public static String USER = "noUser";
     public static String PASSWORD = "";
@@ -220,6 +211,10 @@ public class HttpUtils {
                 }else {
                     resultData = new ResultData();
                 }
+                Logs.JLlog(resultData.isSuccess()+"");
+                Logs.JLlog(resultData.getMsg());
+                Logs.JLlog(resultData.getResultList().toString());
+                Logs.JLlog(resultData.getResultMap().toString());
                 if (!resultData.isSuccess()) {
                     ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
                         @Override

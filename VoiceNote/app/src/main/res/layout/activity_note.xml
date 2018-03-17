@@ -93,7 +93,7 @@
                         android:padding="5dp"
                         android:visibility="gone"
                         android:id="@+id/set_iv"/>
-                    <Spinner
+                    <com.zero.voicenote.LanguageSpinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/spinner"
