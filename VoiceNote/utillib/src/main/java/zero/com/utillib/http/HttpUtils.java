@@ -34,8 +34,8 @@ public class HttpUtils {
 //    public static String URL = "http://2u02538w57.imwork.net:36920/VoiceNote/";//花生壳内网穿透用
 //    public static String URL = "http://192.168.0.188:8081/VoiceNote/";//内网用
 //    public static String URL = "http://192.168.0.111:8080/VoiceNote/";//内网用
-    public static String URL = "http://120.78.74.225:80/VoiceNote/";//阿里云服务器公网
-//    public static String URL = "http://193.112.132.83:8080/VoiceNote/";//腾讯云服务器公网
+//    public static String URL = "http://120.78.74.225:80/VoiceNote/";//阿里云服务器公网
+    public static String URL = "http://193.112.132.83:8080/VoiceNote/";//腾讯云服务器公网
     public static String USER = "noUser";
     public static String PASSWORD = "";
     public static void doPost(String url, Map<String,Object> map, final OnResponseListener onResponseListener){
