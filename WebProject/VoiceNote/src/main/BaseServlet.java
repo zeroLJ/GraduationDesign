@@ -45,9 +45,8 @@ public abstract class BaseServlet extends HttpServlet {
 	protected static final long serialVersionUID = 1L;
 	protected String connectionUrl = 
     		"jdbc:sqlserver://localhost:1433;" 
-//    		"jdbc:sqlserver://192.168.0.188:1433;"
                +"databaseName=demo;"
-               + "user=940034240;"
+               + "user=ljl;"
                + "password=pp123456;";   
 	protected String name;
 	protected String password;

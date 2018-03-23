@@ -74,7 +74,7 @@ public class ResponseUtil{
         try {
         	bis = new BufferedInputStream(new FileInputStream(file));
  	        bos = new BufferedOutputStream(out);
-        	byte[] bytes = new byte[2048];  
+        	byte[] bytes = new byte[2048]; 
  	        int read;
  	        while ((read = bis.read(bytes,0,bytes.length)) != -1) {
  	        	length = length + read;
@@ -94,5 +94,65 @@ public class ResponseUtil{
        
         System.out.println("size:" + length);   
 		
+	}
+	
+	public static void responseFile(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String msg,File file) throws IOException {
+		Map<String, Object> map = new HashMap();
+		map.put("success", true);
+		map.put("msg", msg);
+		if (resultList!=null) {
+			map.put("resultList", resultList);
+		}else {
+			map.put("resultList", new ArrayList<>());
+		}
+		if (resultMap!=null) {
+			map.put("resultMap", resultMap);
+		}else {
+			map.put("resultMap", new HashMap<>());
+		}
+		String resultStr = JSON.toJSONString(map);
+		
+		OutputStream out = response.getOutputStream();  
+        response.addHeader("Content-Disposition", "attachment;filename="  
+                + file.getName()); 
+        response.setContentType("application/octet-stream"); 
+        response.addHeader("Content-Length", "" + file.length()); 
+        response.addHeader("FileName", "" + file.getName()); 
+        //除了文件之外，是否在数据头部添加了数据
+        response.addHeader("HasData", "true"); 
+        System.out.println("FileName:" + file.getName());  
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        int length = 0;   
+        try {
+        	bis = new BufferedInputStream(new FileInputStream(file));
+ 	        bos = new BufferedOutputStream(out);
+        	byte[] bytes = new byte[2048]; 
+        	
+        	
+			byte[] bs = resultStr.getBytes();
+		    for(int i = 0; i<bs.length; i++) {
+		    	bytes[i] = bs[i];
+		    }
+			bos.write(bytes,0, 2048);
+			
+ 	        int read;
+ 	        while ((read = bis.read(bytes,0,bytes.length)) != -1) {
+ 	        	length = length + read;
+ 				bos.write(bytes, 0, read);
+ 			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();;
+		}finally {
+			if (bis!=null) {
+				bis.close();
+			}
+			if (bos!=null) {
+				bos.close();
+			}
+		}
+       
+        System.out.println("size:" + length);   
 	}
 }

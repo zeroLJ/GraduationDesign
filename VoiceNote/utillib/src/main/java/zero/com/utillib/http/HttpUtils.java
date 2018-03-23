@@ -1,5 +1,9 @@
 package zero.com.utillib.http;
 
+import android.os.Environment;
+import android.os.Message;
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ActivityUtils;
 
@@ -17,19 +21,21 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import zero.com.utillib.BuildConfig;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.ObjUtils;
+import zero.com.utillib.utils.object.StringUtils;
 
 /**
  * Created by zero on 2018/2/11.
  */
 
 public class HttpUtils {
-
 //    public static String URL = "http://2u02538w57.imwork.net:36920/VoiceNote/";//花生壳内网穿透用
 //    public static String URL = "http://192.168.0.188:8081/VoiceNote/";//内网用
 //    public static String URL = "http://192.168.0.111:8080/VoiceNote/";//内网用
-    public static String URL = "http://120.78.74.225:80/VoiceNote/";//服务器公网用
+    public static String URL = "http://120.78.74.225:80/VoiceNote/";//阿里云服务器公网
+//    public static String URL = "http://193.112.132.83:8080/VoiceNote/";//腾讯云服务器公网
     public static String USER = "noUser";
     public static String PASSWORD = "";
     public static void doPost(String url, Map<String,Object> map, final OnResponseListener onResponseListener){
@@ -95,6 +101,7 @@ public class HttpUtils {
         });
     }
 
+    //向服务器上传文件
     public static void doPostFile(String url, Map<String, Object> map, final OnResponseListener onResponseListener){
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newBuilder()
@@ -167,7 +174,13 @@ public class HttpUtils {
             }
         });
     }
-    private ResultData resultData;
+
+//    //只需下载文件，没有返回数据
+//    public static void doDomnLoad(String url, Map<String,Object> map, final String filePath, final OnResponseListener onResponseListener){
+//        doDomnLoad(url, map, filePath, onResponseListener,false);
+//    }
+
+    //在服务器下载文件
     public static void doDomnLoad(String url, Map<String,Object> map, final String filePath, final OnResponseListener onResponseListener){
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.newBuilder()
@@ -205,17 +218,13 @@ public class HttpUtils {
             @Override
             public void onResponse(final okhttp3.Call call, Response response) throws IOException {
                 Logs.JLlog(("服务器返回代码：  " + response.code()));
+                Logs.JLlog(("Content-Length:   " + response.header("Content-Length")));
+                Logs.JLlog(("文件名:   " + response.header("FileName")));
+                Logs.JLlog(("HasData：  " + response.header("HasData")));
                 final ResultData resultData;
-                if (response.code()==300){
-                    resultData = new ResultData(response.body().toString());
-                }else {
-                    resultData = new ResultData();
-                }
-                Logs.JLlog(resultData.isSuccess()+"");
-                Logs.JLlog(resultData.getMsg());
-                Logs.JLlog(resultData.getResultList().toString());
-                Logs.JLlog(resultData.getResultMap().toString());
-                if (!resultData.isSuccess()) {
+                //如果没有返回文件名，即服务器不存在所需文件
+                if (StringUtils.isEmpty(response.header("FileName"))){
+                    resultData = new ResultData(response.body().string());
                     ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -225,8 +234,7 @@ public class HttpUtils {
                     });
                     return;
                 }
-                Logs.JLlog(("Content-Length:   " + response.header("Content-Length")));
-                Logs.JLlog(("文件名:   " + response.header("FileName")));
+
                 InputStream is = null;
                 byte[] buf = new byte[2048];
                 int len = 0;
@@ -240,22 +248,33 @@ public class HttpUtils {
                     }
                     fos = new FileOutputStream(file);
                     long sum = 0;
+
+                    //判断是否有返回json数据，若有，先接收前2048byte的数据，之后的才是文件数据
+                    if (StringUtils.isNotEmpty(response.header("HasData"))){
+                        //前2048byte为返回数据
+                        len = is.read(buf);
+                        String s = new String(buf,0,len,"GBK");
+                        Logs.JLlog("s:"+s);
+                        String json = s.substring(0,s.lastIndexOf("}") + 1);
+                        Logs.JLlog(json+":"+ json.getBytes().length);
+                        resultData = new ResultData(json);
+                    }else {
+                        resultData = new ResultData();
+                    }
+
+
+                    //获取文件
                     while ((len = is.read(buf)) != -1) {
                         fos.write(buf, 0, len);
                         sum += len;
-                        int progress = (int) (sum * 1.0f / total * 100);
-                        Logs.JLlog("progress=" + progress);
+//                        int progress = (int) (sum * 1.0f / total * 100);
+//                        Logs.JLlog("progress=" + progress);
                     }
-
-//                    fos.flush();
-//                    File file = new File(path, fileName);
-//                    fos = new FileOutputStream(file);
-//                    fos.write(response.body().bytes());
-
                     fos.flush();
                     onResponseListener.onSuccess(resultData.getResultList(), resultData);
                     Logs.JLlog( "文件下载成功");
                 } catch (Exception e) {
+                    Logs.JLlog( "文件下载失败");
                 } finally {
                     try {
                         if (is != null)
@@ -276,5 +295,71 @@ public class HttpUtils {
 
     public static void doPost(String url, final OnResponseListener onResponseListener){
         doPost(url, null, onResponseListener);
+    }
+
+    //不需传参时，下载文件用
+    public static void domnLoadFile(String url, final OnDomnLoadListener onDomnLoadListener){
+        final String TAG = "ljl";
+        Log.d(TAG, "开始下载");
+        final String fileName = url.substring(url.lastIndexOf("/"));
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                Log.d(TAG, "下载失败");
+                onDomnLoadListener.onFailure(call,e);
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                onDomnLoadListener.onStart();
+                InputStream is = null;
+                byte[] buf = new byte[2048];
+                int len = 0;
+                FileOutputStream fos = null;
+                File file = new File(Environment.getExternalStorageDirectory()+"/VoiceNote/" + fileName);
+                if (!file.getParentFile().exists()){
+                    file.getParentFile().mkdirs();
+                }
+                try {
+                    is = response.body().byteStream();
+                    long total = response.body().contentLength();
+                    fos = new FileOutputStream(file);
+                    long sum = 0;
+                    while ((len = is.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                        sum += len;
+                        int progress = (int) (sum * 1.0f / total * 100);
+                        onDomnLoadListener.onDownLoad(progress);
+                        Log.d(TAG, "progress=" + progress);
+                    }
+                    fos.flush();
+                    onDomnLoadListener.onComplete(file);
+                    Log.i(TAG, "文件下载成功");
+                } catch (Exception e) {
+                    onDomnLoadListener.onError(e);
+                } finally {
+                    try {
+                        if (is != null)
+                            is.close();
+                    } catch (IOException e) {
+                    }
+                    try {
+                        if (fos != null)
+                            fos.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
+        });
+    }
+
+    public interface OnDomnLoadListener{
+        void onDownLoad(int progress);//正在下载，刷新进度
+        void onStart();//开始下载前执行
+        void onComplete(File file);//下载完成
+        void onFailure(okhttp3.Call call, IOException e);//文件所在服务器返回错误
+        void onError(Exception e);//文件下载中途发生错误
     }
 }

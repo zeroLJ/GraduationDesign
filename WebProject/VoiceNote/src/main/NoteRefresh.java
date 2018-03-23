@@ -98,7 +98,7 @@ public class NoteRefresh extends BaseServlet{
 			}
 		}
 		
-		s = "select * from dbo.[note] where name='"+name+"'" + " order by editTime, addtime DESC";
+		s = "select * from dbo.[note] where name='"+name+"'";
 		System.out.println("÷¥––sql”Ôæ‰:"+s);
 		ResultSet rs = sql.executeQuery(s);
 		List<Map<String, Object>> mList = new ArrayList<>();

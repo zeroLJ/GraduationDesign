@@ -40,12 +40,28 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login(String user, String password, String checkPassword){
-        if (StringUtils.isEmpty(user) || StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(user)){
+            Alert.toast("用户名不能为空！");
+            return;
+        }
+        if (StringUtils.isChinese(user)){
+            Alert.toast("用户名不能含有中文！");
+            return;
+        }
+        if (StringUtils.isEmpty(password)){
             Alert.toast("密码不能为空！");
+            return;
+        }
+        if (user.equals("noUser")){
+            Alert.toast("该用户名已存在！");
             return;
         }
         if (!password.equals(checkPassword)){
             Alert.toast("两次输入的密码不一致！");
+            return;
+        }
+        if (password.length()<6){
+            Alert.toast("至少设置6位密码！");
             return;
         }
 //        Map<String,Object> map = new HashMap<>();

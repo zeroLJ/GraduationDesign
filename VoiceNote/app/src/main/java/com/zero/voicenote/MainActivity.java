@@ -104,6 +104,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                     head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                    Logs.JLlog("设置");
                 }
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -111,8 +112,8 @@ public class MainActivity extends BaseActivity {
                 }
 
                 @Override
-                public void OnFinal() {
-                    super.OnFinal();
+                public void OnError(String error) {
+
                 }
             });
         }

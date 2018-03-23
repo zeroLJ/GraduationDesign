@@ -17,7 +17,7 @@ import zero.com.utillib.utils.view.Alert;
 public abstract class OnResponseListener {
     //服务器返回失败信息
     public void OnError(String error){
-        Alert.alertDialogOneBtn(error, "服务器发生错误", new DialogInterface.OnClickListener() {
+        Alert.alertDialogOneBtn(error, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

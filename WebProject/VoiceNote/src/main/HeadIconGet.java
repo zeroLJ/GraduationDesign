@@ -24,7 +24,6 @@ public class HeadIconGet extends BaseServlet{
 	        File file = new File(filepath);  
 	        if (!file.exists()) {
 	        	ResponseUtil.response(response, "下载头像不存在！！", false);
-	        	response.sendError(300);
 	        	return;
 			}
 	        

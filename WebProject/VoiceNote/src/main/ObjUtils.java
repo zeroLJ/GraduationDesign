@@ -16,11 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjUtils {
-	  /**
-     * 原来用的4但是cwk提出用8位会以0补足.
-     * 原因是数据库保存的是八位小数，如果出现八位就是数据库保存数据的问题
-     */
-    public static DecimalFormat mDecimalFormat=new DecimalFormat("#.########");
+    public static DecimalFormat mDecimalFormat=new DecimalFormat("#.####");
     /**
      * 对象转String
      *

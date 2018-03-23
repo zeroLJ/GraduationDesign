@@ -615,7 +615,7 @@ public class NoteActivity extends BaseActivity {
 
         if (isNewNote){
             final Note note = new Note(null, HttpUtils.USER, title,result_edt.getText().toString(),
-                    audioPath, DateUtils.getNowTime(), null, Constant.FLAG_ADD);
+                    audioPath, DateUtils.getNowTime(), DateUtils.getNowTime(), Constant.FLAG_ADD);
             if (!hasSignin()){
                 DaoUtils.insert(note);
                 setResult(Activity.RESULT_OK);
