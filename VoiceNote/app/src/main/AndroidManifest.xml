@@ -71,11 +71,6 @@
             android:name="com.zero.voicenote.MyService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name="com.zero.voicenote.MyService2"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":OtherService" />
 
         <!-- Bugly升级SDK配置开始  -->
         <activity

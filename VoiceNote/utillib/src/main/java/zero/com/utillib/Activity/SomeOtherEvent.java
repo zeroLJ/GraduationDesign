@@ -1,12 +1,12 @@
 package zero.com.utillib.Activity;
 
 /**
- * Created by jj on 2017/12/29.
+ * Created by ljl on 2017/12/29.
  */
 
-public class SomeOtherEventEvent {
+public class SomeOtherEvent {
     public final String message;
-    public SomeOtherEventEvent(String message) {
+    public SomeOtherEvent(String message) {
         this.message = message;
     }
 }

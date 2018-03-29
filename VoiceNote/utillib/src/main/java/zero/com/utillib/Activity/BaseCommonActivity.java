@@ -1,13 +1,9 @@
 package zero.com.utillib.Activity;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.yanzhenjie.sofia.Sofia;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -57,7 +53,7 @@ public class BaseCommonActivity extends AppCompatActivity {
 
     // This method will be called when a SomeOtherEvent is posted
     @Subscribe
-    public void handleSomethingElse(SomeOtherEventEvent event) {
+    public void handleSomethingElse(SomeOtherEvent event) {
         Toast.makeText(this, event.message + "2", Toast.LENGTH_SHORT).show();
     }
 

@@ -3,6 +3,7 @@ package zero.com.utillib.Activity;
 import android.graphics.Matrix;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -147,5 +148,11 @@ public class BaseToolbarActivity extends BaseCommonActivity {
 
     protected boolean isOpenNavigationView(){
         return drawerLayout.isDrawerOpen(navigationView);
+    }
+
+
+    protected void hideToolBar(){
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
     }
 }
