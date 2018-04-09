@@ -36,10 +36,11 @@ android {
 
     //apk文件名生成
     android.applicationVariants.all {
-        variant -> variant.outputs.all {
-            outputFileName = "VoiceNote"+  "_v" + defaultConfig.versionName + "."+ defaultConfig.versionCode +".apk"
+        variant ->
+            variant.outputs.all {
+                outputFileName = "VoiceNote" + "_v" + defaultConfig.versionName + "." + defaultConfig.versionCode + ".apk"
 //            outputFileName = "VoiceNote"+  "_v" + defaultConfig.versionName + "."+ defaultConfig.versionCode +"_"+buildType.name+ ".apk"
-        }
+            }
     }
 
     //greendao配置

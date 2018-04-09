@@ -5,6 +5,8 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.BarUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -18,6 +20,7 @@ public class BaseCommonActivity extends AppCompatActivity {
         super.setContentView(layoutResID);
         this.layoutResID = layoutResID;
         initView();
+        BarUtils.setStatusBarAlpha(this,50);//设置状态栏透明
     }
 
     protected void initView(){
