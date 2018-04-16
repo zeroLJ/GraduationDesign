@@ -1,21 +1,29 @@
 package com.zero.voicenote;
 
+import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ActivityUtils;
@@ -24,7 +32,12 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.sina.weibo.sdk.share.WbShareCallback;
+import com.sina.weibo.sdk.share.WbShareHandler;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
@@ -32,10 +45,12 @@ import com.zero.voicenote.database.DaoUtils;
 import com.zero.voicenote.database.Note;
 import com.zero.voicenote.database.NoteDao;
 import com.zero.voicenote.util.Constant;
+import com.zero.voicenote.util.ShareUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,13 +69,19 @@ import zero.com.utillib.utils.object.StringUtils;
 import zero.com.utillib.utils.view.Alert;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements WbShareCallback {
     private Adapter adapter;
     private List<Map<String, Object>> data = new ArrayList<>();;
     private SlideAndDragListView listView;
     private TextView name_tv;
     private ImageView head_icon_iv;
     private int rotation;
+    //接收QQ授权结果
+    private IUiListener iUiListener;
+    //新浪分享接口实例，用于接收返回数据
+    private WbShareHandler shareHandler;
+    //新浪授权接口实例，用于接收返回数据
+    SsoHandler mSsoHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +217,14 @@ public class MainActivity extends BaseActivity {
         head_icon_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*if(true){
+//                    ShareUtil.saveCurrentImage(MainActivity.this);
+//                    iUiListener = ShareUtil.shareToQQ_image(MainActivity.this, ShareUtil.getImagePath(MainActivity.this));
+//                    return;
+                    shareHandler = ShareUtil.shareToSINA(MainActivity.this,ShareUtil.getImagePath(MainActivity.this));
+                    return;
+                }*/
+
                 PictureSelector.create(MainActivity.this)
                         .openGallery(PictureMimeType.ofImage())
                         .theme(R.style.default_style)
@@ -226,7 +255,53 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 findViewById(R.id.spinner).performClick();
             }
-        });}
+        });
+
+        findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(MainActivity.this,R.style.dialog);
+                View view = View.inflate(MainActivity.this, R.layout.dialog_share, null);
+                view.findViewById(R.id.wechat).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShareUtil.shareToWeChat_web(MainActivity.this, ShareUtil.url);
+                    }
+                });
+                view.findViewById(R.id.timeline).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShareUtil.shareToTimeline_web(MainActivity.this, ShareUtil.url);
+                    }
+                });
+                view.findViewById(R.id.qq).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        iUiListener = ShareUtil.shareToQQ_web(MainActivity.this,ShareUtil.getMipmapPath(MainActivity.this, R.mipmap.note), ShareUtil.url);
+                        return;
+                    }
+                });
+                view.findViewById(R.id.weibo).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShareUtil.saveCurrentImage(MainActivity.this);
+                        shareHandler = ShareUtil.shareToSINA_web(MainActivity.this, ShareUtil.url);
+                    }
+                });
+                dialog.setContentView(view);
+                Window window = dialog.getWindow();
+                //设置弹出窗口大小
+                window.setLayout(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                //设置显示位置
+                window.setGravity(Gravity.BOTTOM);
+                //设置动画效果
+                window.setWindowAnimations(R.style.AnimBottom);
+                dialog.show();
+            }
+        });
+
+
+    }
 
     private void initListview() {
         final Menu menu = new Menu(false, 0);//第1个参数表示滑动 item 是否能滑的过头，像弹簧那样( true 表示过头，就像 Gif 中显示的那样；false 表示不过头，就像 Android QQ 中的那样)
@@ -361,6 +436,12 @@ public class MainActivity extends BaseActivity {
 //        if (resultCode == Activity.RESULT_OK){
 //            refreshData();
 //        }
+
+        if (iUiListener!= null){
+            //此句很关键，不写此句则无法获取QQ授权后返回的信息
+            Tencent.onActivityResultData(requestCode,resultCode,intent,iUiListener);
+            iUiListener = null;
+        }
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 100:
@@ -437,5 +518,32 @@ public class MainActivity extends BaseActivity {
         } else if (file.exists()) {
             file.delete();
         }
+    }
+
+
+    //以下方法都是新浪微博分享相关
+    @Override
+    public void onWbShareSuccess() {
+        Toast.makeText(this,"分享成功",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onWbShareCancel() {
+        Toast.makeText(this,"取消分享",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onWbShareFail() {
+        Toast.makeText(this,"分享失败",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (shareHandler!= null){
+            shareHandler.doResultIntent(intent,this);
+            shareHandler = null;
+        }
+
     }
 }

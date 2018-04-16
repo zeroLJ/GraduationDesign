@@ -13,7 +13,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
 import com.zero.voicenote.util.Constant;
+import com.zero.voicenote.util.LoginUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -107,9 +110,29 @@ public class SigninActivity extends BaseActivity {
                 });
             }
         });
+
+        findViewById(R.id.qq_login).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iUiListener = LoginUtil.LoginQQ(SigninActivity.this);
+            }
+        });
     }
 
-    private void signIn(final String user,final String password){
+
+    //接收QQ授权结果
+    private IUiListener iUiListener;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (iUiListener!= null){
+            //此句很关键，不写此句则无法获取QQ授权后返回的信息
+            Tencent.onActivityResultData(requestCode,resultCode,data,iUiListener);
+            iUiListener = null;
+        }
+    }
+
+    private void signIn(final String user, final String password){
         if (StringUtils.isEmpty(user)){
             Alert.toast("用户名不能为空！");
             return;

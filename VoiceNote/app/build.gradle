@@ -17,6 +17,7 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.voicenote.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -78,4 +79,8 @@ dependencies {
     // 多dex配置
     compile 'com.android.support:multidex:1.0.2'
     //    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+
+    compile 'com.sina.weibo.sdk:core:4.2.7:openDefaultRelease@aar'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+
 }
