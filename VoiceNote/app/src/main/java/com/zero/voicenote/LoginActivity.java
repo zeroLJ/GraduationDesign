@@ -15,6 +15,9 @@ import zero.com.utillib.http.ResultData;
 import zero.com.utillib.utils.object.StringUtils;
 import zero.com.utillib.utils.view.Alert;
 
+/**
+ * 注册界面
+ */
 public class LoginActivity extends BaseActivity {
     private EditText password_et, check_password_et;
     private AutoCompleteTextView user_et;
@@ -48,8 +51,12 @@ public class LoginActivity extends BaseActivity {
             Alert.toast("用户名不能含有中文！");
             return;
         }
-        if (StringUtils.isEmpty(password)){
-            Alert.toast("密码不能为空！");
+        if (StringUtils.isChinese(user)){
+            Alert.toast("用户名不能含有中文！");
+            return;
+        }
+        if (user.endsWith("_qq") || user.endsWith("_sina") || user.endsWith("_wx")){
+            Alert.toast("用户名非法！");
             return;
         }
         if (user.equals("noUser")){

@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
 //            top_right_tv.setBackground(getResources().getDrawable(R.drawable.refresh_white));
             top_right_iv.setImageResource(R.drawable.refresh_white);
             top_right_iv.setPadding(ConvertUtils.dp2px(8),ConvertUtils.dp2px(8),ConvertUtils.dp2px(8),ConvertUtils.dp2px(8));
-            name_tv.setText(HttpUtils.USER);
+            name_tv.setText(App.spUtils.getString(Constant.Nickname,HttpUtils.USER));
         }
 
 //        recyclerView = findViewById(R.id.recyclerView);

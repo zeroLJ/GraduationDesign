@@ -131,11 +131,20 @@ public abstract class BaseServlet extends HttpServlet {
 	        name = params.get("name");
 	        password = params.get("password");
 	        System.out.println("name:"+name+" password:"+password);
-	        if (getClass().isAssignableFrom(Login.class)) {
+	        if (getClass().isAssignableFrom(Login.class) || getClass().isAssignableFrom(SigninOther.class)) {
 				doSQL(request, response, stmt, params);
 				return;
 			}
-	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where name='"+ name +"' and password='" + password + "'");
+	        
+	        
+	        String key = "name";
+	        if (name.endsWith("_qq")) {
+				key = "name_qq";
+			}else if(name.endsWith("_sina")) {
+				key = "name_sina";
+			}	        
+	        
+	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ key + "='"+ name +"' and password='" + password + "'");
 	        if (rs.next()) {
 	        	System.out.println("有此用户");
 	        	doSQL(request, response, stmt, params);

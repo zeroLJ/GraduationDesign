@@ -1,6 +1,7 @@
 package com.zero.voicenote.util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AccessTokenKeeper;
 import com.sina.weibo.sdk.auth.AuthInfo;
@@ -20,6 +22,9 @@ import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.zero.voicenote.App;
+import com.zero.voicenote.MainActivity;
+import com.zero.voicenote.SigninActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +38,20 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import zero.com.utillib.http.HttpUtils;
+import zero.com.utillib.http.OnResponseListener;
+import zero.com.utillib.http.ResultData;
+import zero.com.utillib.utils.Logs;
 
 import static android.content.ContentValues.TAG;
 
@@ -42,11 +61,14 @@ import static android.content.ContentValues.TAG;
 
 public class LoginUtil {
     private static String QQ_APP_ID="1106149243";
-    private static String WEIXIN_APP_ID ="wx8954b928da52c490";
+    private static String WEIXIN_APP_ID ="wx1e85cd54ea568031";
     private static String SINA_APP_ID ="2063241755";
 
     private static Tencent mTencent;
 
+    public static Tencent getTencent(){
+        return mTencent;
+    }
 
     /**
      * 用于新浪微博授权，使用时务必在activity中的onActivityResult方法中调用
@@ -81,23 +103,69 @@ public class LoginUtil {
 
                             //获取用户信息
 //                            //url后的键值对查看官网api接口按需要修改
-//                            OkHttpClient client = new OkHttpClient();
-//                            Request request = new Request.Builder()
-//                                    .url("https://api.weibo.com/2/eps/user/info.json"+"?access_token="+mAccessToken.getToken()+"&uid="+mAccessToken.getUid())
-//                                    .build();
-//                            Call call = client.newCall(request);
-//                            call.enqueue(new Callback() {
-//                                @Override
-//                                public void onFailure(Call call, IOException e) {
-//
-//                                }
-//
-//                                @Override
-//                                public void onResponse(Call call, Response response) throws IOException {
-//                                    ResponseBody body = response.body();
+                            OkHttpClient client = new OkHttpClient();
+                            Request request = new Request.Builder()
+                                    .url("https://api.weibo.com/2/users/show.json"+"?access_token="+mAccessToken.getToken()+"&uid="+mAccessToken.getUid())
+                                    .build();
+                            Call call = client.newCall(request);
+                            call.enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    ResponseBody body = response.body();
 //                                    Log.i("ssss",body.string());
-//                                }
-//                            });
+                                    try {
+                                        Logs.JLlog("ssss1");
+                                        String bodyStr = body.string();
+                                        JSONObject jsonObject = new JSONObject(bodyStr);
+                                        final String nickname = jsonObject.getString("screen_name");
+                                        Log.i("ssss","screen_name:"+ jsonObject.getString("screen_name"));
+                                        Logs.JLlog(jsonObject.toString());
+                                        if(jsonObject.has("avatar_hd")){
+                                            Bitmap bitmap = null;
+
+                                            //获取头像
+                                            bitmap = getbitmap(jsonObject.getString("avatar_hd"));
+                                            saveBitmap(bitmap, getStorePath(activity));
+
+                                            HttpUtils.USER = oauth2AccessToken.getUid() + "_sina";
+                                            HttpUtils.PASSWORD = oauth2AccessToken.getUid() + "_sina";
+                                            int length = HttpUtils.PASSWORD.length();
+                                            if (length > 16){
+                                                HttpUtils.PASSWORD = HttpUtils.PASSWORD.substring(length-16, length);
+                                            }
+                                            Map<String,Object> map = new HashMap<>();
+                                            map.put("nickname", nickname);
+                                            File file = new File(getStorePath(activity));
+                                            if (file!=null){
+                                                map.put("file", file);
+                                            }
+                                            HttpUtils.doPostFile("SigninOther", map, new OnResponseListener() {
+                                                @Override
+                                                public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                                                    App.spUtils.put(Constant.IsLogin, true);
+                                                    App.spUtils.put(Constant.Name, HttpUtils.USER);
+                                                    App.spUtils.put(Constant.Password,  HttpUtils.PASSWORD);
+                                                    App.spUtils.put(Constant.Nickname,  nickname);
+                                                    Intent intent = new Intent(activity, MainActivity.class);
+                                                    activity.startActivity(intent);
+                                                    activity.finish();
+                                                }
+                                            });
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+//                                    Map<String, Object> map =  (Map<String, Object>)JSON.parseObject(body.toString(), Map.class);
+//                                    Logs.JLlog(map.toString());
+
+
+                                }
+                            });
                         }
                     }
                 });
@@ -117,6 +185,9 @@ public class LoginUtil {
     }
 
     public static IUiListener LoginQQ(final Activity activity){
+        if (mTencent!=null){
+            mTencent.logout(activity);
+        }
         mTencent = Tencent.createInstance(QQ_APP_ID,activity);
         IUiListener iUiListener = new IUiListener() {
             @Override
@@ -173,7 +244,7 @@ public class LoginUtil {
                         String nickname = json.getString("nickname");//获取昵称
                         String sex = json.getString("gender");//获取性别
                         Log.i("ssss",nickname+sex);
-                        Toast.makeText(activity,nickname+sex, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(activity,nickname+sex, Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
