@@ -2,14 +2,17 @@ package com.zero.voicenote;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -64,6 +67,7 @@ public class NoteActivity extends BaseActivity {
     // 用HashMap存储听写结果
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
     private EditText result_edt, title_edt;
+    private ImageView keyboard_iv;
     private Button play_bt;
     private Map<String, Object> data = new HashMap<>();
     private String addTime;
@@ -83,6 +87,7 @@ public class NoteActivity extends BaseActivity {
         setReturnEnable(true);
         waveLineView = findViewById(R.id.waveLineView);
         play_bt = findViewById(R.id.play_bt);
+        keyboard_iv = findViewById(R.id.keyboard_iv);
         result_edt = findViewById(R.id.result_edt);
         title_edt = findViewById(R.id.title_edt);
         tab_layout = findViewById(R.id.tab_layout);
@@ -123,6 +128,7 @@ public class NoteActivity extends BaseActivity {
     @Override
     protected void initListener() {
         super.initListener();
+        addSoftInputListener();
         top_right_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,7 +185,7 @@ public class NoteActivity extends BaseActivity {
             }
         });
 
-        findViewById(R.id.keyboard_iv).setOnClickListener(new View.OnClickListener() {
+        keyboard_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 KeyboardUtils.toggleSoftInput();
@@ -721,5 +727,35 @@ public class NoteActivity extends BaseActivity {
             }
 
         }
+    }
+
+
+    private boolean isHide =  true;
+    /**
+     * 监听软键盘显示隐藏
+     */
+    private void addSoftInputListener() {
+        final View decorView = getWindow().getDecorView();
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                decorView.getWindowVisibleDisplayFrame(rect);
+                int displayHight = rect.bottom - rect.top;
+                int hight = decorView.getHeight();
+
+                if (displayHight > hight / 3 * 2) {
+                    if(!isHide){  //此参数可防止多次执行打印“键盘隐藏”
+                        keyboard_iv.setImageResource(R.mipmap.keyboard_up);
+                    }
+                    isHide = true;
+                } else {
+                    if (isHide){
+                        keyboard_iv.setImageResource(R.mipmap.keyboard_dowm);
+                    }
+                    isHide = false;
+                }
+            }
+        });
     }
 }

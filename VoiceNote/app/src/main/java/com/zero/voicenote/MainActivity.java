@@ -418,7 +418,7 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
             if (isOpenNavigationView()){
                 closeNavigationView();
             }else {
-                Alert.alertDialogTowBtn("是否要退出？", new DialogInterface.OnClickListener() {
+                Alert.alertDialogTowBtn("是否要退出" + getString(R.string.app_name) + "?", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ActivityUtils.finishAllActivities();

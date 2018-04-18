@@ -32,19 +32,19 @@ public class SigninOther extends BaseServlet {
 			key = "name_sina";
 		}	    
         String nickname = params.get("nickname");
-        if (params.get("file") != null && !params.get("file").equals("") ) {
-			File file = new File(params.get("file"));
-			System.out.println("文件从:" + file.getAbsolutePath());  
-			File toFile = new File("C:\\VoiceNote\\" + name + "\\icon.jpg");
-			toFile.getParentFile().mkdirs();
-			if (toFile.exists()) {
-				toFile.delete();
-			}
-			file.renameTo(toFile);
-			System.out.println("文件到:" + toFile.getAbsolutePath());
-		}
         ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ key +"='"+ name +"'");
         if (!rs.next()) {
+        	 if (params.get("file") != null && !params.get("file").equals("") ) {
+     			File file = new File(params.get("file"));
+     			System.out.println("文件从:" + file.getAbsolutePath());  
+     			File toFile = new File("C:\\VoiceNote\\" + name + "\\icon.jpg");
+     			toFile.getParentFile().mkdirs();
+     			if (toFile.exists()) {
+     				toFile.delete();
+     			}
+     			file.renameTo(toFile);
+     			System.out.println("文件到:" + toFile.getAbsolutePath());
+     		}
 			stmt.execute("insert into dbo.[user]("+ key +",password, nickname) values('"+name+"','"+password+"','" + nickname +"')"); 
 			Map<String, Object> map = new HashMap<>();
 			map.put("newUser", "true");

@@ -87,7 +87,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="注册"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_margin="5dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@drawable/bt_bg_blue"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

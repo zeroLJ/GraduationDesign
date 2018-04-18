@@ -61,15 +61,28 @@
                     android:layout_marginTop="15dp"
                     android:id="@+id/languageSet"
                    >
-                    <TextView
+                    <LinearLayout
+                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="默认语言"
-                        android:textSize="16sp"
                         android:layout_centerVertical="true"
-                        android:textColor="@color/black"
-                        android:layout_marginLeft="30dp"
-                        />
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="16sp"
+                            android:layout_height="16sp"
+                            android:layout_gravity="center"
+                            android:src="@mipmap/icon_language"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="默认语言"
+                            android:textSize="16sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:layout_marginLeft="10dp"
+                            />
+                    </LinearLayout>
+
 
                     <com.zero.voicenote.LanguageSpinner
                         android:layout_width="wrap_content"
@@ -82,31 +95,60 @@
                         android:layout_marginRight="30dp"
                         android:nextFocusLeft="@mipmap/set" />
                 </RelativeLayout>
-                <TextView
-                    android:layout_marginTop="7dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="检测更新"
-                    android:textSize="16sp"
-                    android:id="@+id/checkUpgrade"
-                    android:textColor="@color/black"
-                    android:paddingLeft="30dp"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    />
 
-                <TextView
-                    android:layout_marginTop="7dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="分享"
-                    android:textSize="16sp"
-                    android:id="@+id/share"
-                    android:textColor="@color/black"
-                    android:paddingLeft="30dp"
+                <LinearLayout
+                    android:paddingLeft="20dp"
                     android:paddingTop="7dp"
                     android:paddingBottom="7dp"
-                    />
+                    android:layout_marginTop="7dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/checkUpgrade"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="16sp"
+                        android:layout_height="16sp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/icon_upgrade"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="检测更新"
+                        android:textSize="16sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_marginLeft="10dp"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:paddingLeft="20dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/share"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/icon_share" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分        享"
+                        android:textSize="16sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_marginLeft="10dp"
+                        />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 
