@@ -23,3 +23,10 @@
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
 -keep class com.sina.weibo.sdk.** { *; }
+-keep class com.alibaba.fastjson.** { *; }
+-keep class org.greenrobot.greendao.** { *; }
+-keep class okhttp3.** { *; }
+-keep class org.greenrobot.greendao.** { *; }
+-keep class org.greenrobot.greendao.rx.** { *; }
+-keep class javax.annotation.** { *; }
+#-keep class com.iflytek.cloud.** { *; }

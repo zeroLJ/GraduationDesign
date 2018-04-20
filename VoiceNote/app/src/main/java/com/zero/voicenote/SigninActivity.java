@@ -246,8 +246,9 @@ public class SigninActivity extends BaseActivity {
             @Override
             public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                 App.spUtils.put(Constant.IsLogin, true);
-                App.spUtils.put(Constant.Name, user);
-                App.spUtils.put(Constant.Password, password);
+                App.spUtils.put(Constant.Name, HttpUtils.USER);
+                App.spUtils.put(Constant.Password,  HttpUtils.PASSWORD);
+                App.spUtils.put(Constant.Nickname,  ObjUtils.objToStr(resultData.getResultMap().get("nickname")));
                 Intent intent = new Intent(SigninActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

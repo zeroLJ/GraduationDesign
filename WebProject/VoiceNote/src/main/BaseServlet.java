@@ -142,11 +142,14 @@ public abstract class BaseServlet extends HttpServlet {
 				nameKey = "name_qq";
 			}else if(name.endsWith("_sina")) {
 				nameKey = "name_sina";
+			}else {
+				nameKey = "name";
 			}	        
-	        
+//	        System.out.println(nameKey);
 	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ nameKey + "='"+ name +"' and password='" + password + "'");
 	        if (rs.next()) {
 	        	System.out.println("有此用户");
+	        	params.put("nickname", rs.getString("nickname"));
 	        	doSQL(request, response, stmt, params);
 			}else {
 				ResponseUtil.response(response, "用户名或密码错误！！", false);

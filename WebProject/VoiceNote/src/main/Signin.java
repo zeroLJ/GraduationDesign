@@ -3,11 +3,14 @@ package main;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.sun.xml.internal.ws.util.StringUtils;
 
 @WebServlet("/Signin")
 public class Signin extends BaseServlet {
@@ -16,6 +19,12 @@ public class Signin extends BaseServlet {
     protected void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
     		throws SQLException, IOException {
     	// TODO Auto-generated method stub
-    	ResponseUtil.response(response, "登录成功！！", true);
+		Map<String, Object> map = new HashMap<>();
+		String nickname = ObjUtils.objToStr(params.get("nickname"));
+		if (nickname.equals("")) {
+			nickname = ObjUtils.objToStr(params.get("name"));
+		}
+		map.put("nickname",nickname);
+    	ResponseUtil.response(response, null, map, "登录成功！！");
 	}
 }

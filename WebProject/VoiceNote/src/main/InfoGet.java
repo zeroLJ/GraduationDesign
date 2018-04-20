@@ -34,7 +34,11 @@ public class InfoGet extends BaseServlet{
 		}
 		List<Map<String, Object>> mList = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();
-		map.put("nickname", rs.getString("nickname"));
+		String nickname = ObjUtils.objToStr(rs.getString("nickname"));
+		if (nickname.equals("")) {
+			nickname = name;
+		}
+		map.put("nickname", nickname);
 		map.put("sex", rs.getString("sex"));
 		Date date = rs.getDate("birthday");
 		String birthday = "";
