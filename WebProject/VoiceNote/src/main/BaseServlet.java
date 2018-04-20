@@ -50,6 +50,7 @@ public abstract class BaseServlet extends HttpServlet {
                + "password=pp123456;";   
 	protected String name;
 	protected String password;
+	protected String nameKey = "name";
 	protected Connection con;
 	protected Statement stmt;
 	protected Map<String, String> params = new HashMap<>();
@@ -137,14 +138,13 @@ public abstract class BaseServlet extends HttpServlet {
 			}
 	        
 	        
-	        String key = "name";
 	        if (name.endsWith("_qq")) {
-				key = "name_qq";
+				nameKey = "name_qq";
 			}else if(name.endsWith("_sina")) {
-				key = "name_sina";
+				nameKey = "name_sina";
 			}	        
 	        
-	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ key + "='"+ name +"' and password='" + password + "'");
+	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ nameKey + "='"+ name +"' and password='" + password + "'");
 	        if (rs.next()) {
 	        	System.out.println("有此用户");
 	        	doSQL(request, response, stmt, params);

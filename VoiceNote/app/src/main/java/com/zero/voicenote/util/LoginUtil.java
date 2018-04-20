@@ -99,7 +99,7 @@ public class LoginUtil {
 
                             // 保存 Token 到 SharedPreferences
                             AccessTokenKeeper.writeAccessToken(activity, mAccessToken);
-                            Toast.makeText(activity,"登陆成功", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(activity,"登陆成功", Toast.LENGTH_SHORT).show();
 
                             //获取用户信息
 //                            //url后的键值对查看官网api接口按需要修改

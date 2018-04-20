@@ -72,7 +72,7 @@ public class HttpUtils {
             }
 
             @Override
-            public void onResponse(final okhttp3.Call call, Response response) throws IOException {
+            public void onResponse(final okhttp3.Call call, final Response response) throws IOException {
                 Logs.JLlog(("服务器返回代码：  " + response.code()));
                 String s = response.body().string();
                 Logs.JLlog("json:"+s);
@@ -91,7 +91,12 @@ public class HttpUtils {
                     ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            onResponseListener.OnError(resultData.getMsg());
+                            if (!resultData.getMsg().equals("")){
+                                onResponseListener.OnError(resultData.getMsg());
+                            }else {
+                                onResponseListener.OnError("错误码：" + response.code());
+                            }
+
                             onResponseListener.OnFinal();
                         }
                     });
@@ -143,7 +148,7 @@ public class HttpUtils {
             }
 
             @Override
-            public void onResponse(final okhttp3.Call call, Response response) throws IOException {
+            public void onResponse(final okhttp3.Call call, final Response response) throws IOException {
                 Logs.JLlog(("服务器返回代码：  " + response.code()));
                 String s = response.body().string();
                 Logs.JLlog("json:"+s);
@@ -165,7 +170,11 @@ public class HttpUtils {
                     ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            onResponseListener.OnError(resultData.getMsg());
+                            if (!resultData.getMsg().equals("")){
+                                onResponseListener.OnError(resultData.getMsg());
+                            }else {
+                                onResponseListener.OnError("错误码：" + response.code());
+                            }
                             onResponseListener.OnFinal();
                         }
                     });

@@ -47,7 +47,7 @@ public class ResultData {
             setResultMap(resultMap);
             setResultList(resultList);
         }catch (Exception e){
-            setSuccess(true);
+            setSuccess(false);
             setMsg("");
             setResultMap(new HashMap<String, Object>());
             setResultList(new ArrayList<Map<String, Object>>());

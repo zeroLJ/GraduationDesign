@@ -23,6 +23,7 @@ public class BaseCommonActivity extends AppCompatActivity {
         BarUtils.setStatusBarAlpha(this,50);//设置状态栏透明
     }
 
+
     protected void initView(){
     }
 

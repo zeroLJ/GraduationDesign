@@ -244,6 +244,14 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
             }
         });
 
+        findViewById(R.id.info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, InfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
         findViewById(R.id.checkUpgrade).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
