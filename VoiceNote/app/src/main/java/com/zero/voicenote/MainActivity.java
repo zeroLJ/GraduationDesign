@@ -133,6 +133,7 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
                             String nickname = ObjUtils.objToStr(resultData.getResultMap().get("nickname"));
                             if (StringUtils.isNotEmpty(nickname)){
                                 name_tv.setText(nickname);
+                                App.spUtils.put(Constant.Nickname,  nickname);
                             }
                             Logs.JLlog("设置");
                         }
