@@ -298,7 +298,7 @@ public class ShareUtil {
         WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
         //设置描述
         TextObject textObject = new TextObject();
-        textObject.text =  "给大家分享一款使用的云笔记app，下载地址：" + "" ;
+        textObject.text =  "给大家分享一款实用的云笔记app，下载地址：" + "" ;
         weiboMultiMessage.textObject = textObject;
 
         WebpageObject webpageObject = new WebpageObject();

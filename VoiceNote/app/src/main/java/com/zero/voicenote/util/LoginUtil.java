@@ -206,7 +206,7 @@ public class LoginUtil {
                         mTencent.setAccessToken(token, expires);
                         mTencent.setOpenId(openId);
                     }
-                    getQQInfo(activity);//可以在此处直接获取用户资料
+                    getQQInfo(activity);//在此处直接获取用户资料
                 } catch(Exception e) {
                 }
             }
@@ -241,10 +241,33 @@ public class LoginUtil {
                     try {
                         //tips 可以在此处用SharedPreferences把要用到的变量存起来
                         //还有qq等级等其他信息可以获取，按需要查看官方文档获取或打印json.toString查看
-                        String nickname = json.getString("nickname");//获取昵称
+                        final String nickname = json.getString("nickname");//获取昵称
                         String sex = json.getString("gender");//获取性别
                         Log.i("ssss",nickname+sex);
-//                        Toast.makeText(activity,nickname+sex, Toast.LENGTH_SHORT).show();
+                        HttpUtils.USER = LoginUtil.getTencent().getOpenId() + "_qq";
+                        HttpUtils.PASSWORD = LoginUtil.getTencent().getOpenId() + "_qq";
+                        int length = HttpUtils.PASSWORD.length();
+                        if (length > 16){
+                            HttpUtils.PASSWORD = HttpUtils.PASSWORD.substring(length-16, length);
+                        }
+                        Map<String,Object> map = new HashMap<>();
+                        map.put("nickname", nickname);
+                        File file = new File(getStorePath(activity));
+                        if (file!=null){
+                            map.put("file", file);
+                        }
+                        HttpUtils.doPostFile("SigninOther", map, new OnResponseListener() {
+                            @Override
+                            public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
+                                App.spUtils.put(Constant.IsLogin, true);
+                                App.spUtils.put(Constant.Name, HttpUtils.USER);
+                                App.spUtils.put(Constant.Password,  HttpUtils.PASSWORD);
+                                App.spUtils.put(Constant.Nickname,  nickname);
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                activity.startActivity(intent);
+                                activity.finish();
+                            }
+                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

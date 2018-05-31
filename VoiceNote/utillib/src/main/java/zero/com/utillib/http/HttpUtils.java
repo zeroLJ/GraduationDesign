@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +35,6 @@ public class HttpUtils {
 //    public static String URL = "http://2u02538w57.imwork.net:36920/VoiceNote/";//花生壳内网穿透用
 //    public static String URL = "http://192.168.0.188:8081/VoiceNote/";//内网用
 //    public static String URL = "http://192.168.0.111:8080/VoiceNote/";//内网用
-//    public static String URL = "http://120.78.74.225:80/VoiceNote/";//阿里云服务器公网
     public static String URL = "http://193.112.132.83:8080/VoiceNote/";//腾讯云服务器公网
     public static String USER = "noUser";
     public static String PASSWORD = "";
@@ -184,10 +184,6 @@ public class HttpUtils {
         });
     }
 
-//    //只需下载文件，没有返回数据
-//    public static void doDomnLoad(String url, Map<String,Object> map, final String filePath, final OnResponseListener onResponseListener){
-//        doDomnLoad(url, map, filePath, onResponseListener,false);
-//    }
 
     //在服务器下载文件
     public static void doDomnLoad(String url, Map<String,Object> map, final String filePath, final OnResponseListener onResponseListener){
@@ -230,76 +226,171 @@ public class HttpUtils {
                 Logs.JLlog(("Content-Length:   " + response.header("Content-Length")));
                 Logs.JLlog(("文件名:   " + response.header("FileName")));
                 Logs.JLlog(("HasData：  " + response.header("HasData")));
-                final ResultData resultData;
-                //如果没有返回文件名，即服务器不存在所需文件
-                if (StringUtils.isEmpty(response.header("FileName"))){
-                    resultData = new ResultData(response.body().string());
-                    ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            onResponseListener.OnError(resultData.getMsg());
-                            onResponseListener.OnFinal();
-                        }
-                    });
-                    return;
-                }
-
+                Logs.JLlog(("data：  " + response.header("data")));
+//
+                final ResultData resultData = new ResultData( URLDecoder.decode(ObjUtils.objToStr(response.header("data")), "UTF-8"));
                 InputStream is = null;
                 byte[] buf = new byte[2048];
                 int len = 0;
                 FileOutputStream fos = null;
-                try {
-                    is = response.body().byteStream();
-                    long total = response.body().contentLength();
-                    File file = new File(filePath);
-                    if (!file.getParentFile().exists()){
-                        file.getParentFile().mkdirs();
-                    }
-                    fos = new FileOutputStream(file);
-                    long sum = 0;
 
-                    //判断是否有返回json数据，若有，先接收前2048byte的数据，之后的才是文件数据
-                    if (StringUtils.isNotEmpty(response.header("HasData"))){
-                        //前2048byte为返回数据
-                        len = is.read(buf);
-                        String s = new String(buf,0,len,"GBK");
-                        Logs.JLlog("s:"+s);
-                        String json = s.substring(0,s.lastIndexOf("}") + 1);
-                        Logs.JLlog(json+":"+ json.getBytes().length);
-                        resultData = new ResultData(json);
-                    }else {
-                        resultData = new ResultData();
-                    }
-
-
-                    //获取文件
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
-                        sum += len;
+                if (StringUtils.isNotEmpty(response.header("FileName"))) {
+                    try {
+                        is = response.body().byteStream();
+                        long total = response.body().contentLength();
+                        File file = new File(filePath);
+                        if (!file.getParentFile().exists()) {
+                            file.getParentFile().mkdirs();
+                        }
+                        fos = new FileOutputStream(file);
+                        long sum = 0;
+                        //获取文件
+                        while ((len = is.read(buf)) != -1) {
+                            fos.write(buf, 0, len);
+                            sum += len;
 //                        int progress = (int) (sum * 1.0f / total * 100);
 //                        Logs.JLlog("progress=" + progress);
+                        }
+                        fos.flush();
+                        Logs.JLlog("写入完成");
+                        Logs.JLlog("文件下载成功");
+
+                    } catch (Exception e) {
+                        Logs.JLlog("文件下载失败");
+                    } finally {
+                        try {
+                            if (is != null)
+                                is.close();
+                        } catch (IOException e) {
+                        }
+                        try {
+                            if (fos != null)
+                                fos.close();
+                        } catch (IOException e) {
+                        }
                     }
-                    fos.flush();
-                    onResponseListener.onSuccess(resultData.getResultList(), resultData);
-                    Logs.JLlog( "文件下载成功");
-                } catch (Exception e) {
-                    Logs.JLlog( "文件下载失败");
-                } finally {
-                    try {
-                        if (is != null)
-                            is.close();
-                    } catch (IOException e) {
-                    }
-                    try {
-                        if (fos != null)
-                            fos.close();
-                    } catch (IOException e) {
-                    }
-                    onResponseListener.OnFinal();
                 }
+                onResponseListener.onSuccess(resultData.getResultList(), resultData);
+                onResponseListener.OnFinal();
             }
         });
     }
+
+
+
+//    //在服务器下载文件
+//    public static void doDomnLoad(String url, Map<String,Object> map, final String filePath, final OnResponseListener onResponseListener){
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        okHttpClient.newBuilder()
+//                .connectTimeout(10, TimeUnit.SECONDS)//设置连接超时时间
+//                .readTimeout(20,TimeUnit.SECONDS);
+//        FormBody.Builder formBodyBuild=new FormBody.Builder();
+//        formBodyBuild.add("name", USER);
+//        formBodyBuild.add("password", PASSWORD);
+//        //此处添加所需要的键值对
+//        if (map!=null){
+//            for (String key : map.keySet()){
+//                formBodyBuild.add(key, ObjUtils.objToStr(map.get(key)));
+//            }
+//        }
+//        Logs.JLlog("url:" + URL);
+//        url = URL + url;
+//        Request request=new Request.Builder().url(url)
+//                .post(formBodyBuild.build())
+//                .addHeader("Accept-Encoding", "identity")
+//                .build();
+//        okHttpClient.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(final okhttp3.Call call, final IOException e) {
+//                Logs.JLlog("失败");
+//                Logs.JLlog(e.getMessage());
+//                ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        onResponseListener.onFailure(call, e);
+//                        onResponseListener.OnFinal();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onResponse(final okhttp3.Call call, Response response) throws IOException {
+//                Logs.JLlog(("服务器返回代码：  " + response.code()));
+//                Logs.JLlog(("Content-Length:   " + response.header("Content-Length")));
+//                Logs.JLlog(("文件名:   " + response.header("FileName")));
+//                Logs.JLlog(("HasData：  " + response.header("HasData")));
+//                Logs.JLlog(("data：  " + response.header("data")));
+//                final ResultData resultData;
+//                //如果没有返回文件名，即服务器不存在所需文件
+//                if (StringUtils.isEmpty(response.header("FileName"))){
+//                    resultData = new ResultData(response.body().string());
+//                    ActivityUtils.getTopActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            onResponseListener.OnError(resultData.getMsg());
+//                            onResponseListener.OnFinal();
+//                        }
+//                    });
+//                    return;
+//                }
+//
+//                InputStream is = null;
+//                byte[] buf = new byte[2048];
+//                int len = 0;
+//                FileOutputStream fos = null;
+//                try {
+//                    is = response.body().byteStream();
+//                    long total = response.body().contentLength();
+//                    File file = new File(filePath);
+//                    if (!file.getParentFile().exists()){
+//                        file.getParentFile().mkdirs();
+//                    }
+//                    fos = new FileOutputStream(file);
+//                    long sum = 0;
+//
+//                    //判断是否有返回json数据，若有，先接收前2048byte的数据，之后的才是文件数据
+//                    if (StringUtils.isNotEmpty(response.header("HasData"))){
+//                        //前2048byte为返回数据
+//                        len = is.read(buf);
+//                        String s = new String(buf,0,len,"GBK");
+//                        Logs.JLlog("s:"+s);
+//                        String json = s.substring(0,s.lastIndexOf("}") + 1);
+//                        Logs.JLlog(json+":"+ json.getBytes().length);
+//                        resultData = new ResultData(json);
+//                    }else {
+//                        resultData = new ResultData();
+//                    }
+//
+//
+//                    //获取文件
+//                    while ((len = is.read(buf)) != -1) {
+//                        fos.write(buf, 0, len);
+//                        sum += len;
+////                        int progress = (int) (sum * 1.0f / total * 100);
+////                        Logs.JLlog("progress=" + progress);
+//                    }
+//                    fos.flush();
+//                    Logs.JLlog( "写入完成");
+//                    onResponseListener.onSuccess(resultData.getResultList(), resultData);
+//                    Logs.JLlog( "文件下载成功");
+//                } catch (Exception e) {
+//                    Logs.JLlog( "文件下载失败");
+//                    onResponseListener.OnFinal();
+//                } finally {
+//                    try {
+//                        if (is != null)
+//                            is.close();
+//                    } catch (IOException e) {
+//                    }
+//                    try {
+//                        if (fos != null)
+//                            fos.close();
+//                    } catch (IOException e) {
+//                    }
+//                }
+//            }
+//        });
+//    }
 
 
     public static void doPost(String url, final OnResponseListener onResponseListener){

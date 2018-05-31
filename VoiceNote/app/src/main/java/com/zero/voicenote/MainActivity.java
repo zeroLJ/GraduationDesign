@@ -123,9 +123,21 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
             }
             HttpUtils.doDomnLoad("HeadIconGet",null, file.getAbsolutePath(), new OnResponseListener() {
                 @Override
-                public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
-                    head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
-                    Logs.JLlog("设置");
+                public void onSuccess(List<Map<String, Object>> data, final ResultData resultData) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (ObjUtils.objToBoolean(resultData.getResultMap().get("hasFile"))){
+                                head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                            }
+                            String nickname = ObjUtils.objToStr(resultData.getResultMap().get("nickname"));
+                            if (StringUtils.isNotEmpty(nickname)){
+                                name_tv.setText(nickname);
+                            }
+                            Logs.JLlog("设置");
+                        }
+                    });
+
                 }
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -139,6 +151,14 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
             });
         }
         initListview();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (hasSignin()){
+            name_tv.setText(App.spUtils.getString(Constant.Nickname,HttpUtils.USER));
+        }
     }
 
     @Override
@@ -217,14 +237,6 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
         head_icon_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if(true){
-//                    ShareUtil.saveCurrentImage(MainActivity.this);
-//                    iUiListener = ShareUtil.shareToQQ_image(MainActivity.this, ShareUtil.getImagePath(MainActivity.this));
-//                    return;
-                    shareHandler = ShareUtil.shareToSINA(MainActivity.this,ShareUtil.getImagePath(MainActivity.this));
-                    return;
-                }*/
-
                 PictureSelector.create(MainActivity.this)
                         .openGallery(PictureMimeType.ofImage())
                         .theme(R.style.default_style)
@@ -286,13 +298,11 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
                     @Override
                     public void onClick(View v) {
                         iUiListener = ShareUtil.shareToQQ_web(MainActivity.this,ShareUtil.getMipmapPath(MainActivity.this, R.mipmap.note), ShareUtil.url);
-                        return;
                     }
                 });
                 view.findViewById(R.id.weibo).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ShareUtil.saveCurrentImage(MainActivity.this);
                         shareHandler = ShareUtil.shareToSINA_web(MainActivity.this, ShareUtil.url);
                     }
                 });

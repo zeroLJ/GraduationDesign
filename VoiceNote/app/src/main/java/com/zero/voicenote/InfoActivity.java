@@ -158,7 +158,7 @@ public class InfoActivity extends BaseActivity {
         top_right_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nickName = nickname_et.getText().toString().trim();
+                final String nickName = nickname_et.getText().toString().trim();
                 if (StringUtils.isEmpty(nickName)){
                     nickname_et.requestFocus();
                     nickname_et.setSelection(nickname_et.getText().toString().length());
@@ -197,6 +197,7 @@ public class InfoActivity extends BaseActivity {
                     @Override
                     public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                         Alert.toast("保存成功");
+                        App.spUtils.put(Constant.Nickname, nickName);
 //                        finish();
                     }
 

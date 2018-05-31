@@ -1,6 +1,8 @@
 package com.zero.voicenote;
 
+import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.blankj.utilcode.util.SPUtils;
@@ -31,5 +33,11 @@ public class App extends BaseApplication {
         Beta.autoCheckUpgrade = false;
         Bugly.init(getApplicationContext(), "f605fa12cd", false);
 //        CrashReport.closeCrashReport();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

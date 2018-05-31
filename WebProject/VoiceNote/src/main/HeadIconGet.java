@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
@@ -21,13 +22,23 @@ public class HeadIconGet extends BaseServlet{
 	void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
 			throws SQLException, IOException {
 		 String filepath = "C:\\VoiceNote\\" + name + "\\icon.jpg";
-	        File file = new File(filepath);  
+	        File file = new File(filepath); 
+	        boolean hasFile = true;
 	        if (!file.exists()) {
-	        	ResponseUtil.response(response, "下载头像不存在！！", false);
-	        	return;
+	        	file = null;
+	        	hasFile = false;
 			}
-	        
-	        ResponseUtil.responseFile(response, file);
+	        String nickname = ObjUtils.objToStr(params.get("nickname"));
+			if (nickname.equals("")) {
+				nickname = ObjUtils.objToStr(params.get("name"));
+			}
+			System.out.println("nickname:"+nickname);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("nickname", nickname);
+			map.put("hasFile", hasFile);
+	        ResponseUtil.responseFile(response, null, map, nickname, file);
+//	        ResponseUtil.responseFile(response,file);
 	}
 
 }
