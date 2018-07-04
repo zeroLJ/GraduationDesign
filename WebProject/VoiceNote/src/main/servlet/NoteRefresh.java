@@ -1,10 +1,9 @@
-package main;
+package main.servlet;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,15 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 
-import jdk.nashorn.internal.ir.Flags;
+import main.util.DateUtils;
+import main.util.ObjUtils;
+import main.util.ResponseUtil;
 
 @WebServlet("/NoteRefresh")
 public class NoteRefresh extends BaseServlet{
-
+	private static final long serialVersionUID = 1L;
 	@Override
+	public
 	void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
 			throws SQLException, IOException {
 		// TODO Auto-generated method stub
+		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = JSON.parseObject(params.get("data"),List.class);
 		String s = "";
 		for(Map<String, Object> note : list) {
@@ -37,7 +40,7 @@ public class NoteRefresh extends BaseServlet{
 			switch (ObjUtils.objToStr(note.get("flag"))) {
 				case "1"://ÐÂÔö
 					s = "insert into dbo.[note](name,title,message,addTime,audioPath) values("
-							+"'"+name
+							+"'"+ ObjUtils.objToStr(params.get("name"))
 							+"','"+title
 							+"','"+message
 							+"','"+addTime
@@ -47,12 +50,12 @@ public class NoteRefresh extends BaseServlet{
 					sql.execute(s);
 					break;
 				case "2"://ÐÞ¸Ä
-					s =  "select * from dbo.[note] where addTime='"+addTime+"' and name='"+name+"'";
+					s =  "select * from dbo.[note] where addTime='"+addTime+"' and name='"+ ObjUtils.objToStr(params.get("name"))+"'";
 					System.out.println("Ö´ÐÐsqlÓï¾ä:"+s);
-					ResultSet rs = stmt.executeQuery(s);
+					ResultSet rs = sql.executeQuery(s);
 					if (!rs.next()) {
 						sql.execute("insert into dbo.[note](name,title,message,addTime,editTime,audioPath) values("
-								+"'"+name
+								+"'"+ ObjUtils.objToStr(params.get("name"))
 								+"','"+title
 								+"','"+message
 								+"','"+addTime
@@ -71,7 +74,7 @@ public class NoteRefresh extends BaseServlet{
 										+ "editTime='"+editTime+"',"
 										+ "audioPath='"+audioPath+"' "
 										+ "where addTime='"+addTime+"' "
-										+ "and name='"+name+"'";
+										+ "and name='"+ObjUtils.objToStr(params.get("name"))+"'";
 								System.out.println("Ö´ÐÐsqlÓï¾ä:"+s);
 								sql.execute(s);
 							}
@@ -82,14 +85,14 @@ public class NoteRefresh extends BaseServlet{
 									+ "editTime='"+editTime+"',"
 									+ "audioPath='"+audioPath+"' "
 									+ "where addTime='"+addTime+"' "
-									+ "and name='"+name+"'";
+									+ "and name='"+ObjUtils.objToStr(params.get("name"))+"'";
 							System.out.println("Ö´ÐÐsqlÓï¾ä:"+s);
 							sql.execute(s); 
 						}
 					}
 					break;
 				case "3"://É¾³ý
-					s = "delete from dbo.[note] where addTime='"+addTime+"' and name='"+name+"'";
+					s = "delete from dbo.[note] where addTime='"+addTime+"' and name='"+ObjUtils.objToStr(params.get("name"))+"'";
 					System.out.println("Ö´ÐÐsqlÓï¾ä:"+s);
 					sql.execute(s); 
 					break;
@@ -98,14 +101,14 @@ public class NoteRefresh extends BaseServlet{
 			}
 		}
 		
-		s = "select * from dbo.[note] where name='"+name+"'";
+		s = "select * from dbo.[note] where name='"+ObjUtils.objToStr(params.get("name"))+"'";
 		System.out.println("Ö´ÐÐsqlÓï¾ä:"+s);
 		ResultSet rs = sql.executeQuery(s);
 		List<Map<String, Object>> mList = new ArrayList<>();
 		while (rs.next()) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", null);
-			map.put("name", name);
+			map.put("name", ObjUtils.objToStr(params.get("name")));
 			map.put("flag", "0");
 			map.put("title", rs.getString(rs.findColumn("title")));
 			map.put("message", rs.getString(rs.findColumn("message")));

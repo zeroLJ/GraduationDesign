@@ -1,8 +1,7 @@
-package main;
+package main.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
@@ -12,23 +11,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.xpath.internal.operations.And;
+
+import main.util.DateUtils;
+import main.util.ObjUtils;
+import main.util.ResponseUtil;
 
 @WebServlet("/NoteDelete")
 public class NoteDelete extends BaseServlet{
-
+	private static final long serialVersionUID = 1L;
 	@Override
-	void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
+	public void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
 			throws SQLException, IOException {
 		// TODO Auto-generated method stub
+		@SuppressWarnings("unchecked")
 		Map<String, Object> map = JSON.parseObject(params.get("data"),Map.class);
 		String addTime = ObjUtils.objToStr(map.get("addTime"));
-		String s = "delete from dbo.[note] where addTime='"+addTime+"' and name='"+name+"'";
+		String s = "delete from dbo.[note] where addTime='"+addTime+"' and name='"+ObjUtils.objToStr(params.get("name"))+"'";
 		System.out.println("Ö´ÐÐsqlÓï¾ä:"+s);
 		sql.execute(s); 
-		String filepath = "C:\\VoiceNote\\" + name + "\\" 
+		String filepath = "C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\" 
 		+ DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime));
-		
+		deleteFile(new File(filepath));
 		ResponseUtil.response(response, "É¾³ý³É¹¦");
 	}
 

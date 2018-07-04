@@ -1,28 +1,18 @@
-package main;
+package main.servlet;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +21,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
+
+import main.util.ObjUtils;
+import main.util.ResponseUtil;
 
 
 
@@ -48,12 +40,6 @@ public abstract class BaseServlet extends HttpServlet {
                +"databaseName=demo;"
                + "user=ljl;"
                + "password=pp123456;";   
-	protected String name;
-	protected String password;
-	protected String nameKey = "name";
-	protected Connection con;
-	protected Statement stmt;
-	protected Map<String, String> params = new HashMap<>();
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -69,6 +55,12 @@ public abstract class BaseServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String name;
+		String password;
+		String nameKey = "name";
+		Connection con;
+		Statement stmt;
+		Map<String, String> params = new HashMap<>();
 		System.out.println("Served at: "+request.getContextPath() + "  Class:" + getClass().getName());
         String uploadFileName = ""; // 上传的文件名  
         String fieldName = ""; // 表单字段元素的name属性值  
@@ -86,7 +78,8 @@ public abstract class BaseServlet extends HttpServlet {
 	            ServletFileUpload upload = new ServletFileUpload(factory);  
 	            try {  
 	                // 解析form表单中所有文件  
-	                List<FileItem> items = upload.parseRequest(request);  
+	                @SuppressWarnings("unchecked")
+					List<FileItem> items = upload.parseRequest(request);  
 	                Iterator<FileItem> iter = items.iterator();  
 	                while (iter.hasNext()) { // 依次处理每个文件  
 	                    FileItem item = (FileItem) iter.next();  
@@ -129,22 +122,24 @@ public abstract class BaseServlet extends HttpServlet {
 			System.out.println("参数列表："+params.toString());
 			
 		    stmt = con.createStatement();
-	        name = params.get("name");
-	        password = params.get("password");
+	        name = ObjUtils.objToStr(params.get("name"));
+	  
+	        password = ObjUtils.objToStr(params.get("password"));
 	        System.out.println("name:"+name+" password:"+password);
-	        if (getClass().isAssignableFrom(Login.class) || getClass().isAssignableFrom(SigninOther.class)) {
-				doSQL(request, response, stmt, params);
-				return;
-			}
-	        
-	        
 	        if (name.endsWith("_qq")) {
 				nameKey = "name_qq";
 			}else if(name.endsWith("_sina")) {
 				nameKey = "name_sina";
 			}else {
 				nameKey = "name";
-			}	        
+			}	
+	    	params.put("nameKey", nameKey);
+	        
+	        if (getClass().isAssignableFrom(Login.class) || getClass().isAssignableFrom(SigninOther.class)) {
+				doSQL(request, response, stmt, params);
+				return;
+			}
+	               
 //	        System.out.println(nameKey);
 	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ nameKey + "='"+ name +"' and password='" + password + "'");
 	        if (rs.next()) {
@@ -174,6 +169,5 @@ public abstract class BaseServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	abstract void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params) throws  SQLException, IOException;
-
+	public abstract void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params) throws  SQLException, IOException;
 }

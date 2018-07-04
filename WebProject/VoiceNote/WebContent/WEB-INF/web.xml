@@ -1,2 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5"/>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <!--  <servlet>
+    <servlet-name>main</servlet-name>
+    <servlet-class>main.MainServlet</servlet-class>
+    <init-param>
+      <param-name>UseDoubleQuote.outstring</param-name>
+      <param-value>1</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>main</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping> -->
+  
+  
+ <!--  <filter>
+      <description>this is the servlet filter example</description>
+      <filter-name>Filter</filter-name>
+      <filter-class>main.MainFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+      <filter-name>Filter</filter-name>
+      <url-pattern>/*</url-pattern>
+  </filter-mapping> -->
+</web-app>

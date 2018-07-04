@@ -1,4 +1,4 @@
-package main;
+package main.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -12,11 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class ResponseUtil{
 	public static void response(HttpServletResponse response)throws IOException {
@@ -28,20 +26,20 @@ public class ResponseUtil{
 	public static void response(HttpServletResponse response, String msg,boolean success)throws IOException {
 		response(response, null, null, msg, success);
 	}
-	public static void response(HttpServletResponse response, List resultList)throws IOException {
+	public static void response(HttpServletResponse response, List<?> resultList)throws IOException {
 		response(response, resultList, null, null, true);
 	}
-	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap)throws IOException {
+	public static void response(HttpServletResponse response, List<?> resultList, Map<String, Object> resultMap)throws IOException {
 		response(response, resultList, resultMap, null, true);
 	}
-	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap, boolean success)throws IOException {
+	public static void response(HttpServletResponse response, List<?> resultList, Map<String, Object> resultMap, boolean success)throws IOException {
 		response(response, resultList, resultMap, null, success);
 	}
-	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String msg)throws IOException {
+	public static void response(HttpServletResponse response, List<?> resultList, Map<String, Object> resultMap, String msg)throws IOException {
 		response(response, resultList, resultMap, msg, true);
 	}
-	public static void response(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String msg,boolean success) throws IOException {
-		Map<String, Object> map = new HashMap();
+	public static void response(HttpServletResponse response, List<?> resultList, Map<String, Object> resultMap, String msg,boolean success) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("success", success);
 		map.put("msg", msg);
 		if (resultList!=null) {
@@ -98,8 +96,8 @@ public class ResponseUtil{
 	}
 	
 	
-	public static void responseFile(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String msg,File file) throws IOException {
-		Map<String, Object> map = new HashMap();
+	public static void responseFile(HttpServletResponse response, List<?> resultList, Map<String, Object> resultMap, String msg,File file) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("success", true);
 		map.put("msg", msg);
 		if (resultList!=null) {

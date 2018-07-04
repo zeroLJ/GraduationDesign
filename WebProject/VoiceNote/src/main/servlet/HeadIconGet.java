@@ -1,4 +1,4 @@
-package main;
+package main.servlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,17 +11,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.codec.binary.StringUtils;
-
-import com.alibaba.fastjson.JSON;
+import main.util.ObjUtils;
+import main.util.ResponseUtil;
 
 @WebServlet("/HeadIconGet")
 public class HeadIconGet extends BaseServlet{
-
+	private static final long serialVersionUID = 1L;
 	@Override
-	void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
+	public void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
 			throws SQLException, IOException {
-		 String filepath = "C:\\VoiceNote\\" + name + "\\icon.jpg";
+		 	String filepath = "C:\\VoiceNote\\" +  ObjUtils.objToStr(params.get("name")) + "\\icon.jpg";
 	        File file = new File(filepath); 
 	        boolean hasFile = true;
 	        if (!file.exists()) {

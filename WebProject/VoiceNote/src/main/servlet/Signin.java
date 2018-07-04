@@ -1,4 +1,4 @@
-package main;
+package main.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,13 +10,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.xml.internal.ws.util.StringUtils;
+import main.util.ObjUtils;
+import main.util.ResponseUtil;
 
 @WebServlet("/Signin")
 public class Signin extends BaseServlet {
-//	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	@Override
-    protected void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
+	public void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
     		throws SQLException, IOException {
     	// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<>();

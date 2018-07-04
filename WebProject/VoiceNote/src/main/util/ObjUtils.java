@@ -1,4 +1,4 @@
-package main;
+package main.util;
 
 
 
@@ -237,7 +237,8 @@ public class ObjUtils {
     /**
      * ½µÐò
      */
-    public static void sortDESC(List bData,final String name){
+    @SuppressWarnings("unchecked")
+	public static void sortDESC(List bData,final String name){
         Collections.sort(bData, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
                 if(o1.get(name) instanceof Number){
@@ -252,6 +253,7 @@ public class ObjUtils {
     /**
      * ÉýÐò
      */
+    @SuppressWarnings("unchecked")
     public static void sortASC(List bData,final String name){
         Collections.sort(bData, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
