@@ -8,10 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//通过注解配置Servlet名称和部署路径，不需在web.xml配置
+//通过默认参数配置路径，缩短请求url的长度，比如在MainServlet为 http://localhost:8081/VoiceNote/main/servlet/InfoGet.do
+//在这里只需要http://localhost:8081/VoiceNote/InfoGet.do2
 @WebServlet(name="MainServlet2",urlPatterns={"*.do2"},
-		//默认参数，通过getInitParameter()方法获取，但注意通过反射访问的Servlet无法获取到
-	initParams= {@WebInitParam(name = "path", value = "main.servlet.")})
+	initParams= {@WebInitParam(name = "path", value = "main.servlet.")})//
 public class MainServlet2 extends MainServlet{
 	private static final long serialVersionUID = 1L;
 	@Override
