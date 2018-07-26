@@ -1,20 +1,25 @@
 package demo;
-import java.io.File;  
-import java.io.FileWriter;  
-import java.io.IOException;  
-import java.io.PrintWriter;  
-import java.sql.Connection;  
-import java.sql.DriverManager;  
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;  
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;  
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import datasourse.DBOperation;
   
 public class GenEntitySqlServer{  
       
-    private String packageOutPath = "main";//指定实体生成所在包的路径  
+    private String entityOutPath = "datasourse.entity";//指定实体生成所在包的路径
+    private String queryOutPath = "datasourse.query";//指定查询类生成所在包的路径
+    
     private String authorName = "ljl";//作者名字  
     private String tablename = "note";//表名  
     private String[] colnames; // 列名数组  
@@ -50,12 +55,11 @@ public class GenEntitySqlServer{
                 e1.printStackTrace();  
             }  
             con = DriverManager.getConnection(URL);  
-//            con = DriverManager.getConnection(URL, NAME, PASS);
             Statement stmt = con.createStatement();
 //            ResultSet rs = stmt.executeQuery(sql);
 //            ResultSetMetaData rsmd = rs.getMetaData();
             pStemt = con.prepareStatement(sql);  
-            ResultSetMetaData rsmd = pStemt.getMetaData();  
+            ResultSetMetaData rsmd = pStemt.getMetaData();
             int size = rsmd.getColumnCount();   //统计列  
             colnames = new String[size];  
             colTypes = new String[size];  
@@ -73,15 +77,16 @@ public class GenEntitySqlServer{
                 colSizes[i] = rsmd.getColumnDisplaySize(i + 1);  
             }  
               
-            String content = parse(colnames,colTypes,colSizes);  
-              
+            String classStr = parse(colnames,colTypes,colSizes);  
+            String queryClassStr = toQueryClassStr(colnames,colTypes,colSizes);  
+            //生成实体类文件
             try {  
                 File directory = new File("");  
                 //System.out.println("绝对路径："+directory.getAbsolutePath());  
                 //System.out.println("相对路径："+directory.getCanonicalPath());           
 //                System.out.println("src/?/"+path.substring(path.lastIndexOf("/com/", path.length())) );  
 //              String outputPath = directory.getAbsolutePath()+ "/src/"+path.substring(path.lastIndexOf("/com/", path.length()), path.length()) + initcap(tablename) + ".java";  
-                String outputPath = directory.getAbsolutePath()+ "/src/"+this.packageOutPath.replace(".", "/")+"/"+initcap(tablename) + ".java";  
+                String outputPath = directory.getAbsolutePath()+ "/src/"+this.entityOutPath.replace(".", "/")+"/"+initcap(tablename) + ".java";  
                 directory = new File(outputPath);
                 System.out.println(directory.getAbsolutePath());           
                 System.out.println(directory.getParentFile().getAbsolutePath());  
@@ -90,16 +95,67 @@ public class GenEntitySqlServer{
 				}
                 FileWriter fw = new FileWriter(outputPath);  
                 PrintWriter pw = new PrintWriter(fw);  
-                pw.println(content);  
+                pw.println(classStr);  
                 pw.flush();  
-                pw.close();  
+                pw.close(); 
+                
+                
             } catch (IOException e) {  
                 e.printStackTrace();  
             }  
+            
+            //生成查询类文件
+            try {  
+                File directory = new File("");  
+                String outputPath = directory.getAbsolutePath()+ "/src/"+this.queryOutPath.replace(".", "/")+"/"+initcap(tablename) + "Query" + ".java";  
+                directory = new File(outputPath);
+                if (!directory.getParentFile().exists()) {
+					directory.getParentFile().mkdirs();
+				}
+                FileWriter fw = new FileWriter(outputPath);  
+                PrintWriter pw = new PrintWriter(fw);  
+                pw.println(queryClassStr);  
+                pw.flush();  
+                pw.close(); 
+            } catch (IOException e) {  
+                e.printStackTrace();  
+            }  
+            //断开连接
             con.close();
         } catch (SQLException e) {  
             e.printStackTrace();  
         }
+    }  
+    
+    /** 
+     * 功能：生成查询类主体代码 
+     * @param colnames 
+     * @param colTypes 
+     * @param colSizes 
+     * @return 
+     */  
+    private String toQueryClassStr(String[] colnames, String[] colTypes, int[] colSizes) {  
+        StringBuffer sb = new StringBuffer();  
+        sb.append("package " + this.queryOutPath + ";\r\n");  
+        //判断是否导入工具包  
+        if(f_util){  
+            sb.append("import java.util.Date;\r\n");  
+        }  
+        if(f_sql){  
+            sb.append("import java.sql.*;\r\n");  
+        }  
+        sb.append("\r\n");  
+        //注释部分  
+        sb.append("/**\r\n");  
+        sb.append("* "+tablename+" 查询\r\n");  
+        sb.append("* "+new Date()+" "+this.authorName+"\r\n");  
+        sb.append("*/ \r\n");  
+        //实体部分  
+        sb.append("\r\n\r\npublic class " + initcap(tablename) + "Query" + " extends BaseQuery" + "{\r\n");  
+        processAllAttrs(sb);//属性  
+        processAllMethod(sb);//get set方法  
+        sb.append("}\r\n");  
+        return sb.toString();  
     }  
   
     /** 
@@ -111,7 +167,7 @@ public class GenEntitySqlServer{
      */  
     private String parse(String[] colnames, String[] colTypes, int[] colSizes) {  
         StringBuffer sb = new StringBuffer();  
-        sb.append("package " + this.packageOutPath + ";\r\n");  
+        sb.append("package " + this.entityOutPath + ";\r\n");  
         //判断是否导入工具包  
         if(f_util){  
             sb.append("import java.util.Date;\r\n");  
@@ -156,7 +212,7 @@ public class GenEntitySqlServer{
         for (int i = 0; i < colnames.length; i++) {  
             sb.append("\tpublic void set" + initcap(colnames[i]) + "(" + sqlType2JavaType(colTypes[i]) + " " +   
                     colnames[i] + "){\r\n");  
-            sb.append("\tthis." + colnames[i] + "=" + colnames[i] + ";\r\n");  
+            sb.append("\t\tthis." + colnames[i] + "=" + colnames[i] + ";\r\n");  
             sb.append("\t}\r\n");  
             sb.append("\tpublic " + sqlType2JavaType(colTypes[i]) + " get" + initcap(colnames[i]) + "(){\r\n");  
             sb.append("\t\treturn " + colnames[i] + ";\r\n");  
@@ -194,7 +250,7 @@ public class GenEntitySqlServer{
         }else if(sqlType.equalsIgnoreCase("smallint")){  
             return "short";  
         }else if(sqlType.equalsIgnoreCase("int")){  
-            return "int";  
+            return "Integer";  
         }else if(sqlType.equalsIgnoreCase("bigint")){  
             return "long";  
         }else if(sqlType.equalsIgnoreCase("float")){  
@@ -223,8 +279,16 @@ public class GenEntitySqlServer{
      */  
     public static void main(String[] args) {  
           
-        new GenEntitySqlServer();  
-          
+//        new GenEntitySqlServer();  
+    	
+//    	NoteQuery noteQuery = new NoteQuery();
+//    	noteQuery.setName("111");
+//        System.out.println(noteQuery.toSqlStr());
+        
+        List<Object> list = new ArrayList<>();
+        list.add("adsasdas");
+        DBOperation dbOperation = new DBOperation("select 1 where a = ?", list);
+//        System.out.println(dbOperation.getExecuteSQL());
     }  
   
 }  
