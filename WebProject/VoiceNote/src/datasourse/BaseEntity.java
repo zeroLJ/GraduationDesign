@@ -42,6 +42,7 @@ public abstract class BaseEntity extends DBOperation {
 	protected abstract List<String> getKeys();
 
 	protected abstract Map<String, Integer> getFieldPositionMap();
+	
 	//各字段值列表
 	private List<FieldValue> valueList = new ArrayList<>();
 	/**
@@ -183,7 +184,17 @@ public abstract class BaseEntity extends DBOperation {
 			return "";
 		}
 		StringBuilder sql = new StringBuilder();
-		if(isInsert()) {
+		if (isDelete()) {
+			sql.append("delete from ").append(getTableName()).append(" where ");;
+			for(int i = 0; i< getKeys().size(); i++) {
+				if (keyValues.get(i) == null) {
+					sql.append(getTableName() + "." + getKeys().get(i)).append(" is null and ");
+				}else {
+					sql.append(getTableName() + "." + getKeys().get(i)).append("=? and ");
+				}
+			}
+			sql.delete(sql.lastIndexOf("and"), sql.length());
+		}else if(isInsert()) {
 			sql.append("insert into ").append(getTableName()).append("(");
 			StringBuilder value = new StringBuilder();
 			for(String name : getFieldNames()) {
@@ -226,6 +237,9 @@ public abstract class BaseEntity extends DBOperation {
 				return true;
 			}
 		}
+		if (delete) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -234,6 +248,9 @@ public abstract class BaseEntity extends DBOperation {
 	 * @return
 	 */
 	public boolean isInsert() {
+		if (delete) {
+			return false;
+		}
 		if (keyTypes.isEmpty()) {
 			return true;
 		}else {
@@ -246,7 +263,27 @@ public abstract class BaseEntity extends DBOperation {
 	 * @return
 	 */
 	public boolean isUpdate() {
-		return !isInsert();
+		if (delete) {
+			return false;
+		}
+		if (keyTypes.isEmpty()) {
+			return false;
+		}else {
+			return true;
+		}
+	}
+	
+	private boolean delete = false;
+	/**
+	 * 是否为删除
+	 * @return
+	 */
+	public boolean isDelete() {
+		return delete;
+	}
+	
+	public void delete() {
+		this.delete = true;
 	}
 	
 	@Override
@@ -255,7 +292,14 @@ public abstract class BaseEntity extends DBOperation {
 		List<Object> params = new ArrayList<>();
 		List<FieldType> paramTypes = new ArrayList<>();
 		if (!sql.equals("")) {
-			if (isInsert()) {
+			if (isDelete()) {
+				for(int i = 0 ; i < keyValues.size(); i++) {
+					if (keyValues.get(i) != null) {
+						params.add(keyValues.get(i));
+						paramTypes.add(keyTypes.get(i));
+					}
+				}
+			}else if (isInsert()) {
 				for(FieldValue value : valueList) {
 					params.add(value.getValue());
 					paramTypes.add(value.getFieldType());

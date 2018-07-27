@@ -27,7 +27,7 @@ public class DBTest extends HttpServlet{
 	private void main(HttpServletRequest request, HttpServletResponse response){
 		DBUtils dbUtils = null;
 		try {
-			dbUtils = new DBUtils(request, response);
+			dbUtils = new DBUtils();
 //			List<DBOperation> list = new ArrayList<>();
 //			DBOperation dbOperation = new DBOperation("update dbo.[user] set password = '222' where name= 'zero'");
 //			list.add(dbOperation);

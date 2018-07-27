@@ -438,7 +438,7 @@ public class EntityCreateUtils{
      * @return 
      */  
     private FieldType sqlTypeToFieldType(String sqlType) {  
-          
+        System.out.println(sqlType);  
         if(sqlType.equalsIgnoreCase("bit")){  
             return FieldType.BOOLEAN;  
         }else if(sqlType.equalsIgnoreCase("tinyint")){  
@@ -460,7 +460,7 @@ public class EntityCreateUtils{
                 || sqlType.equalsIgnoreCase("nvarchar") || sqlType.equalsIgnoreCase("nchar")   
                 || sqlType.equalsIgnoreCase("text")){  
             return FieldType.STRING;  
-        }else if(sqlType.equalsIgnoreCase("datetime")){  
+        }else if(sqlType.equalsIgnoreCase("datetime") || sqlType.equalsIgnoreCase("date")){  
             return FieldType.DATETIME;  
         }else if(sqlType.equalsIgnoreCase("image")){
         	//´ý¶¨
@@ -481,18 +481,7 @@ public class EntityCreateUtils{
      * @param args 
      */  
     public static void main(String[] args) {  
-          
         new EntityCreateUtils();  
-    	
-//    	NoteQuery noteQuery = new NoteQuery();
-//    	noteQuery.setName("111");
-//        System.out.println(noteQuery.toSqlStr());
-        
-//        List<Object> list = new ArrayList<>();
-//        list.add("adsasdas");
-//        DBOperation dbOperation = new DBOperation("select 1 where a = ?", list);
-        
-//        System.out.println(dbOperation.getExecuteSQL());
     }  
   
 }  

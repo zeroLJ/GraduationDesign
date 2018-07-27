@@ -153,7 +153,6 @@ public abstract class BaseQuery extends DBOperation{
 		List<Object> params = new ArrayList<>();
 		List<FieldType> paramTypes = new ArrayList<>();
 		List<FieldQuery> whereList = getWhereList();
-		System.out.println("whereList£º"+whereList.size());
 		for (FieldQuery field : whereList) {
 			for (Object value : field.getValue()) {
 				params.add(value);

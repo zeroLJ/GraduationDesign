@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,26 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import datasourse.entityField.FieldValue;
-import datasourse.queryField.FieldQuery;
 import datasourse.type.FieldType;
 
 public class DBUtils {
-	private HttpServletRequest request;
-	private HttpServletResponse response;
-	private Statement statement;
 	private Connection connection;
 	private String connectionUrl = 
     		"jdbc:sqlserver://localhost:1433;" 
  	               +"databaseName=demo;"
  	               + "user=ljl;"
  	               + "password=pp123456;"; 
-	public DBUtils(HttpServletRequest request, HttpServletResponse response) throws SQLException {
-		this.response = response;
-		this.request = request;
+	public DBUtils() throws SQLException {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		} catch (ClassNotFoundException e) {
@@ -44,69 +33,73 @@ public class DBUtils {
 		connection = DriverManager.getConnection(connectionUrl);
 		//设置自动提交事务为false； 即需要手动使用connection.commit提交
 		connection.setAutoCommit(false);
-		this.statement = connection.createStatement();
-	}
-	
-	public HttpServletRequest getRequest() {
-		return request;
-	}
-	
-	public HttpServletResponse getResponse() {
-		return response;
 	}
 	
 	public Connection getConnection() {
 		return connection;
 	}
 	
-	public void saveToDB(DBOperation operation) throws SQLException {
-		saveToDB(Arrays.asList(new DBOperation[] {operation}));
+	public boolean saveToDB(DBOperation operation) {
+		return saveToDB(Arrays.asList(new DBOperation[] {operation}));
 	}
 	
-	public void saveToDB(BaseEntity entity) throws SQLException {
-		saveToDB(entity.toDBOperation());
+	public boolean saveToDB(BaseEntity entity) {
+		return saveToDB(entity.toDBOperation());
 	}	
 	
-	public void saveToDB(List<DBOperation> operations)throws SQLException{
-		for (DBOperation operation : operations) {
-			if (operation.getSQL().equals("")) {
-				continue;
+	public boolean saveToDB(List<? extends DBOperation> operations) {
+		try {
+			for (DBOperation operation : operations) {
+				if (operation.getSQL().equals("")) {
+					continue;
+				}
+				PreparedStatement pStatement = createStatement(operation.toDBOperation());
+				int a = pStatement.executeUpdate();
+				System.out.println("影响行数:" + a);
 			}
-			PreparedStatement pStatement = createStatement(operation.toDBOperation());
-			int a = pStatement.executeUpdate();
-			System.out.println("a:" + a);
+			connection.commit();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
-		connection.commit();
+		
 	}
 	
 	
-	public List<Map<String, Object>> queryList(BaseQuery query) throws SQLException {
+	public List<Map<String, Object>> queryList(BaseQuery query) {
 		return queryList(query.toDBOperation());
 	}
 	
-	public List<Map<String, Object>> queryList(DBOperation operation) throws SQLException {
+	public List<Map<String, Object>> queryList(DBOperation operation){
 		if (operation.getSQL().equals("")) {
 			return new ArrayList<>();
 		}
-		PreparedStatement pStatement = createStatement(operation);
-		ResultSet resultSet = pStatement.executeQuery();
-		List<Map<String, Object>> list = new ArrayList<>();
-		while (resultSet.next()) {
-			Map<String, Object> map = new HashMap<>();
-			ResultSetMetaData metaData = resultSet.getMetaData();
-			int count = metaData.getColumnCount();
-			for(int i = 1; i <= count; i++) {
-//				map.put(metaData.getColumnName(i), resultSet.getObject(i));		
-				Object object = resultSet.getObject(i);
-				map.put(metaData.getColumnLabel(i), object);
-//				if (object!=null) {
-//					System.out.println(i+":"+object.getClass());
-//				}
+		try {
+			PreparedStatement pStatement = createStatement(operation);
+			ResultSet resultSet = pStatement.executeQuery();
+			List<Map<String, Object>> list = new ArrayList<>();
+			while (resultSet.next()) {
+				Map<String, Object> map = new HashMap<>();
+				ResultSetMetaData metaData = resultSet.getMetaData();
+				int count = metaData.getColumnCount();
+				for(int i = 1; i <= count; i++) {
+//					map.put(metaData.getColumnName(i), resultSet.getObject(i));		
+					Object object = resultSet.getObject(i);
+					map.put(metaData.getColumnLabel(i), object);
+//					if (object!=null) {
+//						System.out.println(i+":"+object.getClass());
+//					}
+				}
+				list.add(map);
 			}
-			list.add(map);
+			System.out.println("result："+list.toString());
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("执行查询出错");
 		}
-		System.out.println("result："+list.toString());
-		return list;
+//		return new ArrayList<>();
 	}
 	
 	
@@ -116,7 +109,7 @@ public class DBUtils {
 	 * @return 符合查询条件的对应的实体类列表
 	 * @throws SQLException 
 	 */
-	public <T extends BaseEntity> List<T> queryEntity(BaseQuery query) throws SQLException {
+	public <T extends BaseEntity> List<T> queryEntity(BaseQuery query) {
 		return (List<T>) queryEntity(query, query.getEntityClass());
 	}
 	
@@ -125,7 +118,7 @@ public class DBUtils {
 	 * @return 符合查询条件的对应的实体类列表
 	 * @throws SQLException 
 	 */
-	private <T extends BaseEntity> List<T> queryEntity(BaseQuery query, Class<T> c) throws SQLException {
+	private <T extends BaseEntity> List<T> queryEntity(BaseQuery query, Class<T> c){
 		List<Map<String, Object>> list = queryList(query);
 		List<T> entityList = new ArrayList<>();
 		for(Map<String, Object> map : list) {
