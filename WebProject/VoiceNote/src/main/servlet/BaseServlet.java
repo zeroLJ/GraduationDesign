@@ -2,6 +2,7 @@ package main.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,11 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import database.entity.UserT;
+import database.query.UserTQuery;
+import datasourse.DBUtils;
+import main.ResponseParams;
+import main.User;
 import main.util.ObjUtils;
 import main.util.ResponseUtil;
 
@@ -35,12 +42,6 @@ import main.util.ResponseUtil;
 public abstract class BaseServlet extends HttpServlet {
 	//这个变量必须设置
 	protected static final long serialVersionUID = 1L;
-	protected String connectionUrl = 
-    		"jdbc:sqlserver://localhost:1433;" 
-               +"databaseName=demo;"
-               + "user=ljl;"
-               + "password=pp123456;";   
-
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -48,6 +49,104 @@ public abstract class BaseServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    private ResponseParams exec(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    	String name;
+		String password;
+		String nameKey = "name";
+		Map<String, String> params = new HashMap<>();
+		System.out.println("Served at: "+request.getContextPath() + "  Class:" + getClass().getName());
+        String uploadFileName = ""; // 上传的文件名  
+        String fieldName = ""; // 表单字段元素的name属性值  
+        
+        request.setCharacterEncoding("UTF-8"); 
+		// 请求信息中的内容是否是multipart类型  
+        boolean isMultipart = ServletFileUpload.isMultipartContent(request);  
+        if (isMultipart) {  
+            FileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);  
+            try {  
+                // 解析form表单中所有文件  
+                @SuppressWarnings("unchecked")
+				List<FileItem> items = upload.parseRequest(request);  
+                Iterator<FileItem> iter = items.iterator();  
+                while (iter.hasNext()) { // 依次处理每个文件  
+                    FileItem item = (FileItem) iter.next();  
+                    if (item.isFormField()) { // 普通表单字段  
+                        fieldName = item.getFieldName(); // 表单字段的name属性值  
+                        params.put(fieldName, item.getString("UTF-8"));
+                        if (fieldName.equals("name")) {  
+                            // 输出表单字段的值  
+                            System.out.println(item.getString("UTF-8") + "上传了文件.");  
+                        }  
+                    } else { // 文件表单字段  
+                        String fileName = item.getName();  
+                        if (fileName != null && !fileName.equals("")) {  
+                            File fullFile = new File(item.getName());  
+//                            File saveFile = new File(System.getProperty("user.dir"), fullFile.getName()); 
+                            String[] strings = item.getFieldName().split("_0_");// userName + _0_ + key
+                            File file = new File("C:\\VoiceNote\\"+strings[0]);
+                            if (!file.exists()) {
+								file.mkdirs();
+							}
+                            File saveFile = new File(file.getAbsolutePath(), fileName);  
+                            item.write(saveFile);  
+                            uploadFileName = fullFile.getName();  
+                            params.put(strings[1], saveFile.getAbsolutePath());//保存文件路径以备使用
+                            System.out.println("上传的文件名是:" + uploadFileName + " 存储路径：" + saveFile.getAbsolutePath());  
+                        }  
+                    }  
+                }  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+//                ResponseUtil.response(response, e.getMessage(), false);
+                return ResponseParams.failResult(e.getMessage());
+            }  
+        }else {
+        	Map<String, String[]> map =  request.getParameterMap();
+			for(String key : map.keySet()) {
+				params.put(key, map.get(key)[0]);
+			}
+		} 
+		System.out.println("参数列表："+params.toString());
+		
+        name = ObjUtils.objToStr(params.get("name"));
+        password = ObjUtils.objToStr(params.get("password"));
+        System.out.println("name:"+name+" password:"+password);
+        if (name.endsWith("_qq")) {
+			nameKey = "name_qq";
+		}else if(name.endsWith("_sina")) {
+			nameKey = "name_sina";
+		}else {
+			nameKey = "name";
+		}	
+    	params.put("nameKey", nameKey);
+ 
+    	DBUtils dbUtils = new DBUtils();
+    	
+        if (getClass().isAssignableFrom(Login.class) || getClass().isAssignableFrom(SigninOther.class)) {
+			return doSQL(params, dbUtils, new User(name, "", password));
+		}
+               
+        UserTQuery query = new UserTQuery();
+        query.Field_Password().setIs(password);
+        if (name.endsWith("_qq")) {
+			query.Field_Name_qq().setIs(name);
+		}else if(name.endsWith("_sina")) {
+			query.Field_Name_sina().setIs(name);
+		}else {
+			query.Field_Name().setIs(name);
+		}	
+        List<Map<String, Object>> list = dbUtils.queryList(query);
+        if (list.size() > 0) {
+        	System.out.println("有此用户");
+        	User user = new User(name, ObjUtils.objToStr(list.get(0).get("nickname")), password);
+        	return doSQL(params, dbUtils, user);
+		}else {
+//			ResponseUtil.response(response, "用户名或密码错误！！", false);
+			return ResponseParams.failResult("用户名或密码错误！！");
+		}  
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -55,111 +154,16 @@ public abstract class BaseServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
-		String name;
-		String password;
-		String nameKey = "name";
-		Connection con;
-		Statement stmt;
-		Map<String, String> params = new HashMap<>();
-		System.out.println("Served at: "+request.getContextPath() + "  Class:" + getClass().getName());
-        String uploadFileName = ""; // 上传的文件名  
-        String fieldName = ""; // 表单字段元素的name属性值  
-        
-		
 		try {
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			request.setCharacterEncoding("UTF-8"); 
-			con = DriverManager.getConnection(connectionUrl);
-			
-			// 请求信息中的内容是否是multipart类型  
-	        boolean isMultipart = ServletFileUpload.isMultipartContent(request);  
-	        if (isMultipart) {  
-	            FileItemFactory factory = new DiskFileItemFactory();
-	            ServletFileUpload upload = new ServletFileUpload(factory);  
-	            try {  
-	                // 解析form表单中所有文件  
-	                @SuppressWarnings("unchecked")
-					List<FileItem> items = upload.parseRequest(request);  
-	                Iterator<FileItem> iter = items.iterator();  
-	                while (iter.hasNext()) { // 依次处理每个文件  
-	                    FileItem item = (FileItem) iter.next();  
-	                    if (item.isFormField()) { // 普通表单字段  
-	                        fieldName = item.getFieldName(); // 表单字段的name属性值  
-	                        params.put(fieldName, item.getString("UTF-8"));
-	                        if (fieldName.equals("name")) {  
-	                            // 输出表单字段的值  
-	                            System.out.println(item.getString("UTF-8") + "上传了文件.");  
-	                        }  
-	                    } else { // 文件表单字段  
-	                        String fileName = item.getName();  
-	                        if (fileName != null && !fileName.equals("")) {  
-	                            File fullFile = new File(item.getName());  
-//	                            File saveFile = new File(System.getProperty("user.dir"), fullFile.getName()); 
-	                            String[] strings = item.getFieldName().split("_0_");// userName + _0_ + key
-	                            File file = new File("C:\\VoiceNote\\"+strings[0]);
-	                            if (!file.exists()) {
-									file.mkdirs();
-								}
-	                            File saveFile = new File(file.getAbsolutePath(), fileName);  
-	                            item.write(saveFile);  
-	                            uploadFileName = fullFile.getName();  
-	                            params.put(strings[1], saveFile.getAbsolutePath());//保存文件路径以备使用
-	                            System.out.println("上传的文件名是:" + uploadFileName + " 存储路径：" + saveFile.getAbsolutePath());  
-	                        }  
-	                    }  
-	                }  
-	            } catch (Exception e) {  
-	                e.printStackTrace();  
-	                ResponseUtil.response(response, e.getMessage(), false);
-	                return;
-	            }  
-	        }else {
-	        	Map<String, String[]> map =  request.getParameterMap();
-				for(String key : map.keySet()) {
-					params.put(key, map.get(key)[0]);
-				}
-			} 
-			System.out.println("参数列表："+params.toString());
-			
-		    stmt = con.createStatement();
-	        name = ObjUtils.objToStr(params.get("name"));
-	  
-	        password = ObjUtils.objToStr(params.get("password"));
-	        System.out.println("name:"+name+" password:"+password);
-	        if (name.endsWith("_qq")) {
-				nameKey = "name_qq";
-			}else if(name.endsWith("_sina")) {
-				nameKey = "name_sina";
-			}else {
-				nameKey = "name";
-			}	
-	    	params.put("nameKey", nameKey);
-	        
-	        if (getClass().isAssignableFrom(Login.class) || getClass().isAssignableFrom(SigninOther.class)) {
-				doSQL(request, response, stmt, params);
-				return;
-			}
-	               
-//	        System.out.println(nameKey);
-	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ nameKey + "='"+ name +"' and password='" + password + "'");
-	        if (rs.next()) {
-	        	System.out.println("有此用户");
-	        	params.put("nickname", rs.getString("nickname"));
-	        	doSQL(request, response, stmt, params);
-			}else {
-				ResponseUtil.response(response, "用户名或密码错误！！", false);
-			}      
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			ResponseUtil.response(response, e.getMessage(), false);
+			ResponseParams responseParams = exec(request, response);
+			ResponseUtil.responseFile(response, responseParams.resultList, responseParams.resultMap, responseParams.msg, responseParams.file , responseParams.success); 
+		} catch (RuntimeException e) {
 			e.printStackTrace();
-			return;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			ResponseUtil.response(response, e.getMessage(), false);
-			e.printStackTrace();
-			return;
+			System.out.println(e.getMessage());
+			ResponseUtil.responseFile(response, null, null, e.getMessage(), null, false);
 		}
+//		ResponseParams responseParams = exec(request, response);
+//		ResponseUtil.responseFile(response, responseParams.resultList, responseParams.resultMap, responseParams.msg, responseParams.file , responseParams.success); 
 	}
 
 	/**
@@ -169,5 +173,5 @@ public abstract class BaseServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public abstract void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params) throws  SQLException, IOException;
+	public abstract ResponseParams doSQL(Map<String, String> params, DBUtils db, User user);
 }

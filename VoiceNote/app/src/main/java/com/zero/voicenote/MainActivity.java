@@ -121,9 +121,9 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
             if (file.exists()){
                 head_icon_iv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
             }
-            HttpUtils.doDomnLoad("HeadIconGet",null, file.getAbsolutePath(), new OnResponseListener() {
+            HttpUtils.doDomnLoad("HeadIconGet", null, file.getAbsolutePath(), new OnResponseListener() {
                 @Override
-                public void onSuccess(List<Map<String, Object>> data, final ResultData resultData) {
+                public void onSuccess(List<Map<String, Object>> data,final ResultData resultData) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -138,16 +138,6 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
                             Logs.JLlog("设置");
                         }
                     });
-
-                }
-                @Override
-                public void onFailure(Call call, IOException e) {
-
-                }
-
-                @Override
-                public void OnError(String error) {
-
                 }
             });
         }

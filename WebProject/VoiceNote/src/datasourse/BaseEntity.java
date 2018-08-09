@@ -197,9 +197,12 @@ public abstract class BaseEntity extends DBOperation {
 		}else if(isInsert()) {
 			sql.append("insert into ").append(getTableName()).append("(");
 			StringBuilder value = new StringBuilder();
-			for(String name : getFieldNames()) {
-				sql.append(name).append(",");
-				value.append("?,");
+			for(int i = 0; i < getFieldNames().size(); i++) {
+				String name = getFieldNames().get(i);
+				if (getFieldValues().get(i).getValue()!=null) {
+					sql.append(name).append(",");
+					value.append("?,");
+				}
 			}
 			sql.deleteCharAt(sql.lastIndexOf(","));
 			value.deleteCharAt(value.lastIndexOf(","));
@@ -208,10 +211,11 @@ public abstract class BaseEntity extends DBOperation {
 			sql.append("update ").append(getTableName()).append(" set ");
 			for(FieldValue value : valueList) {
 				if (value.isChange()) {
-					sql.append(value.getFieldName()).append("=? ");
+					sql.append(value.getFieldName()).append("=?, ");
 				}
 			}
-			sql.append("where ");
+			sql.delete(sql.lastIndexOf(","), sql.length());
+			sql.append(" where ");
 			for(int i = 0; i< getKeys().size(); i++) {
 				if (keyValues.get(i) == null) {
 					sql.append(getTableName() + "." + getKeys().get(i)).append(" is null and ");
@@ -301,8 +305,10 @@ public abstract class BaseEntity extends DBOperation {
 				}
 			}else if (isInsert()) {
 				for(FieldValue value : valueList) {
-					params.add(value.getValue());
-					paramTypes.add(value.getFieldType());
+					if (value.getValue()!=null) {
+						params.add(value.getValue());
+						paramTypes.add(value.getFieldType());
+					}
 				}
 			}else {
 				for(FieldValue value : valueList) {

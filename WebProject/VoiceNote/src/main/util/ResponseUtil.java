@@ -149,6 +149,61 @@ public class ResponseUtil{
         
 	}
 	
+	public static void responseFile(HttpServletResponse response, List<?> resultList, Map<String, Object> resultMap, String msg,File file, boolean success) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("success", success);
+		map.put("msg", ObjUtils.objToStr(msg));
+		if (resultList!=null) {
+			map.put("resultList", resultList);
+		}else {
+			map.put("resultList", new ArrayList<>());
+		}
+		if (resultMap!=null) {
+			map.put("resultMap", resultMap);
+		}else {
+			map.put("resultMap", new HashMap<>());
+		}
+		String resultStr = JSON.toJSONString(map);
+		
+		OutputStream out = response.getOutputStream(); 
+		response.setContentType("application/octet-stream"); 
+		response.addHeader("data", URLEncoder.encode(resultStr,"UTF-8")); 
+		if (file!=null) {
+			response.addHeader("Content-Disposition", "attachment;filename="  
+	                + file.getName()); 
+	        response.addHeader("Content-Length", "" + file.length()); 
+	        response.addHeader("FileName", "" + file.getName()); 
+	        System.out.println("FileName:" + file.getName());  
+	        BufferedInputStream bis = null;
+	        BufferedOutputStream bos = null;
+	        int length = 0;   
+	        try {
+	        	bis = new BufferedInputStream(new FileInputStream(file));
+	 	        bos = new BufferedOutputStream(out);
+	        	byte[] bytes = new byte[2048]; 
+	 	        int read;
+	 	        while ((read = bis.read(bytes,0,bytes.length)) != -1) {
+	 	        	length = length + read;
+	 				bos.write(bytes, 0, read);
+	 			}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();;
+			}finally {
+				if (bis!=null) {
+					bis.close();
+				}
+				if (bos!=null) {
+					bos.close();
+				}
+			}
+	        System.out.println("size:" + length);   
+		}
+        
+	}
+	
+	
+	
 //	public static void responseFile(HttpServletResponse response, List resultList, Map<String, Object> resultMap, String msg,File file) throws IOException {
 //		Map<String, Object> map = new HashMap();
 //		map.put("success", true);

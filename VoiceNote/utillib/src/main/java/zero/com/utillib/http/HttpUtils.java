@@ -33,9 +33,9 @@ import zero.com.utillib.utils.object.StringUtils;
 
 public class HttpUtils {
 //    public static String URL = "http://2u02538w57.imwork.net:36920/VoiceNote/";//花生壳内网穿透用
-//    public static String URL = "http://192.168.0.188:8081/VoiceNote/";//内网用
+    public static String URL = "http://192.168.0.188:8081/VoiceNote/";//内网用
 //    public static String URL = "http://192.168.0.111:8080/VoiceNote/";//内网用
-    public static String URL = "http://193.112.132.83:8080/VoiceNote/";//腾讯云服务器公网
+//    public static String URL = "http://193.112.132.83:8080/VoiceNote/";//腾讯云服务器公网
     public static String USER = "noUser";
     public static String PASSWORD = "";
     public static void doPost(String url, Map<String,Object> map, final OnResponseListener onResponseListener){
@@ -52,8 +52,8 @@ public class HttpUtils {
                 formBodyBuild.add(key, ObjUtils.objToStr(map.get(key)));
             }
         }
-        Logs.JLlog("u" + URL);
         url = URL + url;
+        Logs.JLlog(url);
         Request request=new Request.Builder().url(url)
                 .post(formBodyBuild.build())
                 .build();
@@ -74,7 +74,8 @@ public class HttpUtils {
             @Override
             public void onResponse(final okhttp3.Call call, final Response response) throws IOException {
                 Logs.JLlog(("服务器返回代码：  " + response.code()));
-                String s = response.body().string();
+//                String s = response.body().string();
+                String s = URLDecoder.decode(ObjUtils.objToStr(response.header("data")), "UTF-8");
                 Logs.JLlog("json:"+s);
                 final ResultData resultData = new ResultData(s);
                 if (resultData.isSuccess()){
@@ -150,10 +151,8 @@ public class HttpUtils {
             @Override
             public void onResponse(final okhttp3.Call call, final Response response) throws IOException {
                 Logs.JLlog(("服务器返回代码：  " + response.code()));
-                String s = response.body().string();
+                String s = URLDecoder.decode(ObjUtils.objToStr(response.header("data")), "UTF-8");
                 Logs.JLlog("json:"+s);
-                Map map = JSON.parseObject(s, Map.class);
-                Logs.JLlog("map:"+map.toString());
                 final ResultData resultData = new ResultData(s);
                 Logs.JLlog(response.message());
                 if (resultData.isSuccess()){

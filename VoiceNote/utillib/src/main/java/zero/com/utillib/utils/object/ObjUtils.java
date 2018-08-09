@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -111,10 +112,24 @@ public class ObjUtils {
         }
     }
 
-
     public static Date objToDate(Object obj){
         try {
-            return (Date) obj;
+            if (obj instanceof Date) {
+                return (Date) obj;
+            }else if (obj instanceof Number) {
+                return new Date(Long.valueOf(ObjUtils.objToStr(obj)));
+            }else {
+                try {
+                    return new Date(Long.valueOf(ObjUtils.objToStr(obj)));
+                } catch (Exception e) {
+                    try {
+                        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ObjUtils.objToStr(obj));
+                    } catch (Exception e2) {
+                        return new SimpleDateFormat("yyyy-MM-dd").parse(ObjUtils.objToStr(obj));
+                    }
+                }
+            }
+//            return (Date) obj;
         }catch (Exception e){
             Logs.errlog("时间转换异常",e);
             return new Date(0);
@@ -155,7 +170,6 @@ public class ObjUtils {
             e.printStackTrace();
             return new ArrayList<T>();
         }
-
     }
 
     public static Map<String,Object> findMap(List<Map<String,Object>> data,String name,Object s){

@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -99,7 +100,26 @@ public class ObjUtils {
 
     public static Date objToDate(Object obj){
         try {
-            return (Date) obj;
+        	if (obj instanceof Date) {
+        		return (Date) obj;
+			}else if (obj instanceof Number) {
+				return new Date(Long.valueOf(ObjUtils.objToStr(obj)));
+			}else {
+				try {
+					System.out.println(4);
+					return new Date(Long.valueOf(ObjUtils.objToStr(obj)));	
+				} catch (Exception e) {
+					try {
+						System.out.println(5);
+						return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ObjUtils.objToStr(obj));
+					} catch (Exception e2) {
+						System.out.println(6);
+						return new SimpleDateFormat("yyyy-MM-dd").parse(ObjUtils.objToStr(obj));
+					}
+					
+				}
+			}
+//            return (Date) obj;
         }catch (Exception e){
             return new Date(0);
         }

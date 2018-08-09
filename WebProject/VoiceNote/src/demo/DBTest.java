@@ -26,7 +26,7 @@ public class DBTest extends HttpServlet{
                + "password=pp123456;";   
 	private void main(HttpServletRequest request, HttpServletResponse response){
 		DBUtils dbUtils = null;
-		try {
+	
 			dbUtils = new DBUtils();
 //			List<DBOperation> list = new ArrayList<>();
 //			DBOperation dbOperation = new DBOperation("update dbo.[user] set password = '222' where name= 'zero'");
@@ -49,14 +49,11 @@ public class DBTest extends HttpServlet{
 			note.Field_Message().setValue("¶º±È");
 			note.Field_AddTime().setValue(new Date());
 			dbUtils.saveToDB(note);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
+	
 			if (dbUtils!=null) {
 				dbUtils.destory();
 			}
-		}
+		
 	
 	}
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

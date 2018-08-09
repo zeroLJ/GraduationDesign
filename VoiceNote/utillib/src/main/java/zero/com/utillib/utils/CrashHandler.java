@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Looper;
 
+import com.blankj.utilcode.util.ActivityUtils;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,6 +15,7 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import zero.com.utillib.Activity.BaseApplication;
 import zero.com.utillib.Activity.MApplication;
 import zero.com.utillib.utils.view.Alert;
 
@@ -78,12 +81,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                     e.printStackTrace();
                     Logs.JLlog("记录Crash信息失败");
                 }
-                MApplication.playWarn(-1);
+                BaseApplication.playWarn(-1);
                 Alert.alertDialogOneBtn("错误信息:\n"+stringWriter.toString(),"程序异常请联系管理员！", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        MApplication.stopWarn();
-                        MApplication.finishAllActivity();
+                        BaseApplication.stopWarn();
+                        ActivityUtils.finishAllActivities();
                         Class loginClass = null;
                         if (c!=null){
                             loginClass = c;

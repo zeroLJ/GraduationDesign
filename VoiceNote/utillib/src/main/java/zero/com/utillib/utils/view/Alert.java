@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.ActivityUtils;
 
+import zero.com.utillib.Activity.BaseApplication;
 import zero.com.utillib.Activity.MApplication;
 import zero.com.utillib.utils.Logs;
 import zero.com.utillib.utils.object.StringUtils;
@@ -17,12 +18,12 @@ import zero.com.utillib.utils.object.StringUtils;
 public class Alert {
 
     public static void alertDialogOneBtnWarn(String mag) {
-        MApplication.playWarn(-1);
+        BaseApplication.playWarn(-1);
         alertDialogOneBtn(mag, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 // TODO 自动生成的方法存根
-                MApplication.stopWarn();
+                BaseApplication.stopWarn();
             }
         });
     }
@@ -85,7 +86,7 @@ public class Alert {
                     .setPositiveButton(confirmName, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            MApplication.stopWarn();
+                            BaseApplication.stopWarn();
                             btnDg = null;
                             confirmListener.onClick(dialog,which);
 
@@ -99,7 +100,7 @@ public class Alert {
                 btnDg.setNegativeButton(cancelName, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        MApplication.stopWarn();
+                        BaseApplication.stopWarn();
                         btnDg = null;
                         cancelListener.onClick(dialog,which);
                     }
@@ -142,7 +143,7 @@ public class Alert {
      */
     public static void toastWarnError(String value) {
         toastShort(value);
-        MApplication.sp.play(MApplication.m_warn, 1, 1, 0, 0, 1);
+        BaseApplication.sp.play(BaseApplication.m_warn, 1, 1, 0, 0, 1);
     }
 
     /**
@@ -152,7 +153,7 @@ public class Alert {
      */
     public static void toastWarnSuesss(String value) {
         toastShort(value);
-        MApplication.sp.play(MApplication.m_right, 1, 1, 0, 0, 1);
+        BaseApplication.sp.play(BaseApplication.m_right, 1, 1, 0, 0, 1);
     }
 
     /**

@@ -3,6 +3,7 @@ package zero.com.utillib.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import zero.com.utillib.Activity.BaseApplication;
 import zero.com.utillib.Activity.MApplication;
 
 /**
@@ -15,11 +16,11 @@ public class CacheValue {
 
     private static String SHAREDNANE="newwm";
 
-    private static SharedPreferences mSpf = MApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
+    private static SharedPreferences mSpf = BaseApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
 
 
     public static void removeCacheValue(String name) {        if (mSpf == null) {
-            mSpf = MApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
+            mSpf = BaseApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
         }
         SharedPreferences.Editor spEdit = mSpf.edit();
         spEdit.remove(name);
@@ -35,7 +36,7 @@ public class CacheValue {
      */
     public static void setCacheValue(String name, Object value) {
         if (mSpf == null) {
-            mSpf = MApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
+            mSpf = BaseApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
         }
         SharedPreferences.Editor spEdit = mSpf.edit();
         if (value instanceof String) {
@@ -61,7 +62,7 @@ public class CacheValue {
      */
     public static String getCacheStringValue(String name, String defValue) {
         if (mSpf == null) {
-            mSpf = MApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
+            mSpf = BaseApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
         }
         return mSpf.getString(name, defValue);
     }
@@ -76,7 +77,7 @@ public class CacheValue {
      */
     public static int getCacheIntValue(String name, int defValue) {
         if (mSpf == null) {
-            mSpf = MApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
+            mSpf = BaseApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
         }
         return mSpf.getInt(name, defValue);
     }
@@ -90,7 +91,7 @@ public class CacheValue {
      */
     public static long getCacheLongValue(String name, long defValue) {
         if (mSpf == null) {
-            mSpf = MApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
+            mSpf = BaseApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
         }
         return mSpf.getLong(name, defValue);
     }
@@ -104,7 +105,7 @@ public class CacheValue {
      */
     public static boolean getCacheBooleanValue(String name, boolean defValue) {
         if (mSpf == null) {
-            mSpf = MApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
+            mSpf = BaseApplication.getInstance().getSharedPreferences(SHAREDNANE, Context.MODE_PRIVATE);
         }
         return mSpf.getBoolean(name,defValue);
     }

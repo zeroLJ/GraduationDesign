@@ -14,7 +14,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class BaseCommonActivity extends AppCompatActivity {
     protected int layoutResID;
     private ProgressDialog progressDialog;
-    public static MApplication app = MApplication.getInstance();
+    public static BaseApplication app = BaseApplication.getInstance();
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);

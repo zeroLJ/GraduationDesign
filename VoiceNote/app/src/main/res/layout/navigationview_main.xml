@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="核心技术由科大讯飞提供"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:textSize="9sp" />
 
                 <LinearLayout

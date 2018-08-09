@@ -132,9 +132,6 @@ public class InfoActivity extends BaseActivity {
                         day = ObjUtils.objToInt(s[2]);
                     }catch (Exception e){}
                 }
-                Logs.JLlog("1:" + year);
-                Logs.JLlog("1:" + month);
-                Logs.JLlog("1:" + day);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(InfoActivity.this,DatePickerDialog.THEME_HOLO_LIGHT,null, year, month, day);
                 final DatePicker datePicker = datePickerDialog.getDatePicker();
                 datePicker.setMaxDate(System.currentTimeMillis());
@@ -145,9 +142,6 @@ public class InfoActivity extends BaseActivity {
                         int year = datePicker.getYear();
                         int month = datePicker.getMonth()+1;
                         int day = datePicker.getDayOfMonth();
-//                        Logs.JLlog(""+ year);
-//                        Logs.JLlog(""+ month);
-//                        Logs.JLlog(""+ day);
                         String date = year+"-"+String.format("%02d", month)+"-"+String.format("%02d", day);
                         birthday_tv.setText(date);
                     }
@@ -193,6 +187,7 @@ public class InfoActivity extends BaseActivity {
                 params.put("telephone",telephone);
                 params.put("e_mail", e_mail);
                 showProgressDialog("正在保存...");
+                Logs.JLlog(params.toString());
                 HttpUtils.doPost("InfoUpdate", params, new OnResponseListener() {
                     @Override
                     public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {

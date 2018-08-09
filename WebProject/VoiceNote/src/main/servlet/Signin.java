@@ -10,22 +10,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datasourse.DBUtils;
+import main.ResponseParams;
+import main.User;
 import main.util.ObjUtils;
 import main.util.ResponseUtil;
 
 @WebServlet("/Signin")
 public class Signin extends BaseServlet {
 	private static final long serialVersionUID = 1L;
+
 	@Override
-	public void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
-    		throws SQLException, IOException {
-    	// TODO Auto-generated method stub
+	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
 		Map<String, Object> map = new HashMap<>();
-		String nickname = ObjUtils.objToStr(params.get("nickname"));
-		if (nickname.equals("")) {
-			nickname = ObjUtils.objToStr(params.get("name"));
-		}
+		String nickname = ObjUtils.objToStr(user.getNickName());
 		map.put("nickname",nickname);
-    	ResponseUtil.response(response, null, map, "登录成功！！");
+		return ResponseParams.successResultMap(map);
+//    	ResponseUtil.response(response, null, map, "登录成功！！");
+//		return null;
 	}
 }

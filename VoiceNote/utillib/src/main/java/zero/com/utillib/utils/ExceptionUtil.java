@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.ActivityUtils;
+
+import zero.com.utillib.Activity.BaseApplication;
 import zero.com.utillib.Activity.MApplication;
 
 
@@ -15,7 +18,7 @@ public class ExceptionUtil {
 		try{
 //			BaseActivity.dialogDismiss();
 		}catch (Exception e){
-			Toast.makeText(MApplication.currentActivity(), "Dialog关闭异常！", Toast.LENGTH_LONG).show();
+			Toast.makeText(ActivityUtils.getTopActivity(), "Dialog关闭异常！", Toast.LENGTH_LONG).show();
 		}
 		
 		msg +='\n' +Log.getStackTraceString(tr);
@@ -25,7 +28,7 @@ public class ExceptionUtil {
 	private static Builder oneBtnDg=null;
 	private static void alertDialogOneBtn(String msg){
 		if(oneBtnDg==null){
-			oneBtnDg = new Builder(MApplication.currentActivity());
+			oneBtnDg = new Builder(ActivityUtils.getTopActivity());
 		}
 		oneBtnDg.setCancelable(false)
 		.setTitle("")

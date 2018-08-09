@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import datasourse.DBUtils;
 import main.servlet.BaseServlet;
 import main.servlet.Login;
 import main.servlet.SigninOther;
@@ -213,10 +214,9 @@ public class MainServlet extends BaseServlet{
 	}
 	
 	@Override
-	public void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
-			throws SQLException, IOException {
+	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 }

@@ -1,6 +1,7 @@
 package main.servlet;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import database.entity.UserT;
+import database.query.UserTQuery;
+import datasourse.DBUtils;
+import main.ResponseParams;
+import main.User;
 import main.util.ObjUtils;
 import main.util.ResponseUtil;
 
@@ -27,19 +33,22 @@ public class Login extends BaseServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-    
-    @Override
-	public void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
-    		throws SQLException, IOException {
-    	// TODO Auto-generated method stub
-	        ResultSet rs = sql.executeQuery("select * from dbo.[user] where name='"+ ObjUtils.objToStr(params.get("name")) +"'");
-	        if (rs.next()) {
-	        	ResponseUtil.response(response, "此用户名已存在！", false);
+
+	@Override
+	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
+		UserTQuery query = new UserTQuery();
+		query.Field_Name().setIs(user.getUserName());
+		if (!db.queryEntity(query).isEmpty()) {
+			return ResponseParams.failResult("此用户名已存在！");
+		}else {
+			UserT entity = new UserT();
+			entity.Field_Name().setValue(user.getUserName());
+			entity.Field_Password().setValue(user.getPassword());
+			if (db.saveToDB(entity)) {
+				return ResponseParams.successResult();
 			}else {
-				sql.execute("insert into dbo.[user](name,password) values('"+ObjUtils.objToStr(params.get("name"))+"','"
-						+ObjUtils.objToStr(params.get("password"))+"')"); 
-//				response.getWriter().println("注册成功！");
-				ResponseUtil.response(response, "注册成功！！", true);
+				return ResponseParams.failResult("注册失败");
 			}
-    }
+		}
+	}
 }

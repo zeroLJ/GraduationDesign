@@ -1,48 +1,56 @@
 package main.servlet;
 
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import database.entity.UserT;
+import database.query.UserTQuery;
+import datasourse.DBUtils;
+import main.ResponseParams;
+import main.User;
 import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
 @WebServlet("/InfoUpdate")
-public class InfoUpdate extends BaseServlet{
+public class InfoUpdate extends BaseServlet {
 	private static final long serialVersionUID = 1L;
+
 	@Override
-	public void doSQL(HttpServletRequest request, HttpServletResponse response, Statement sql, Map<String, String> params)
-			throws SQLException, IOException {
-		// TODO Auto-generated method stub
+	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
 		String nickName = ObjUtils.objToStr(params.get("nickName"));
 		String sex = ObjUtils.objToStr(params.get("sex"));
-		String birthday = ObjUtils.objToStr(params.get("birthday"));
+		Date birthday = ObjUtils.objToDate(params.get("birthday"));
 		String job = ObjUtils.objToStr(params.get("job"));
 		String telephone = ObjUtils.objToStr(params.get("telephone"));
 		String e_mail = ObjUtils.objToStr(params.get("e_mail"));
-		String query = "select * from dbo.[user] where " + ObjUtils.objToStr(params.get("nameKey")) + "='" + ObjUtils.objToStr(params.get("name"))+"'";
-		ResultSet rs = sql.executeQuery(query);
-		if (!rs.next()) {
-			ResponseUtil.response(response, "用户不存在", false);
-			return;
+		UserTQuery query = new UserTQuery();
+		// query.Field_Password().setIs(user.getPassword());
+		if (user.getUserName().endsWith("_qq")) {
+			query.Field_Name_qq().setIs(user.getUserName());
+		} else if (user.getUserName().endsWith("_sina")) {
+			query.Field_Name_sina().setIs(user.getUserName());
+		} else {
+			query.Field_Name().setIs(user.getUserName());
 		}
-		String s = "update dbo.[user] set "
-				+ "nickName='"+nickName+"',"
-				+ "sex='"+sex+"',"
-				+ "birthday='"+birthday+"',"
-				+ "job='"+job+"',"
-				+ "telephone='"+telephone+"',"
-				+ "e_mail='"+e_mail+"' "
-				+ "where " + ObjUtils.objToStr(params.get("nameKey")) + "='"+ObjUtils.objToStr(params.get("name"))+"'";
-		System.out.println("执行sql语句:"+s);
-		sql.execute(s); 
-		ResponseUtil.response(response, "修改成功");
+		List<UserT> list = db.queryEntity(query);
+		if (list.size() <= 0) {
+			return ResponseParams.failResult("用户不存在");
+		}
+		list.get(0).Field_Nickname().setValue(nickName);
+		list.get(0).Field_E_mail().setValue(e_mail);
+		list.get(0).Field_Job().setValue(job);
+		list.get(0).Field_Telephone().setValue(telephone);
+		list.get(0).Field_Sex().setValue(sex);
+		list.get(0).Field_Birthday().setValue(birthday);
+		if (db.saveToDB(list)) {
+			return ResponseParams.successResult();
+		}else {
+			return ResponseParams.failResult("修改失败");
+		}
+//		ResponseUtil.response(response, "修改成功"); 
+		
 	}
 
 }

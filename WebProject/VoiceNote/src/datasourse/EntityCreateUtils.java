@@ -26,7 +26,7 @@ public class EntityCreateUtils{
 //    private String queryOutPath = "datasourse.query";//指定查询类生成所在包的路径
 	private String entityOutPath = "database.entity";//指定实体生成所在包的路径
     private String queryOutPath = "database.query";//指定查询类生成所在包的路径
-    private String tablename = "note";//表名  
+    private String tablename = "userT";//表名  
     //数据库连接  
     private static final String URL = "jdbc:sqlserver://localhost:1433;" 
 								            +"databaseName=demo;"
@@ -62,6 +62,7 @@ public class EntityCreateUtils{
             con = DriverManager.getConnection(URL);  
             pStemt = con.prepareStatement(sql);  
            
+           
             //获取主键
             keyList = new ArrayList<>();
             ResultSet pkRSet = con.getMetaData().getPrimaryKeys(null, null, tablename);
@@ -77,6 +78,10 @@ public class EntityCreateUtils{
                 keyList.add(pkRSet.getString(4));
             }
 
+            System.err.println(con.getMetaData().getIdentifierQuoteString());
+            if(true) {
+            	return;
+            }
             
             ResultSetMetaData rsmd = pStemt.getMetaData();
             int size = rsmd.getColumnCount();   //统计列  

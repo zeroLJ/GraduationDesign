@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import datasourse.type.FieldType;
+import main.util.DateUtils;
+import main.util.Logs;
 
 public class DBUtils {
 	private Connection connection;
@@ -24,15 +26,18 @@ public class DBUtils {
  	               +"databaseName=demo;"
  	               + "user=ljl;"
  	               + "password=pp123456;"; 
-	public DBUtils() throws SQLException {
+	public DBUtils()  {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			connection = DriverManager.getConnection(connectionUrl);
+			//设置自动提交事务为false； 即需要手动使用connection.commit提交
+			connection.setAutoCommit(false);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		connection = DriverManager.getConnection(connectionUrl);
-		//设置自动提交事务为false； 即需要手动使用connection.commit提交
-		connection.setAutoCommit(false);
+		
 	}
 	
 	public Connection getConnection() {
@@ -55,12 +60,13 @@ public class DBUtils {
 				}
 				PreparedStatement pStatement = createStatement(operation.toDBOperation());
 				int a = pStatement.executeUpdate();
-				System.out.println("影响行数:" + a);
+				Logs.d("影响行数:" + a);
 			}
 			connection.commit();
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+//			throw new RuntimeException(e);
 			return false;
 		}
 		
@@ -93,7 +99,7 @@ public class DBUtils {
 				}
 				list.add(map);
 			}
-			System.out.println("result："+list.toString());
+			Logs.d("查询结果："+list.toString());
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -152,15 +158,17 @@ public class DBUtils {
 			}else if (type == FieldType.DATETIME){
 //				java.sql.Date date = new java.sql.Date(value.getTime());
 //				pStatement.setDate(count, date);
-				String date = getDateString((Date) params.get(i));
+				String date = DateUtils.getDateString((Date) params.get(i));
 				pStatement.setString(i+1, date);
 			}else if (type == FieldType.BOOLEAN) {
 				pStatement.setBoolean(i+1, (boolean) params.get(i));
 			}
 		}
-		System.out.println("执行sql语句："+operation.getSQL());
-		System.out.println("参数列表："+params.toString());
-		System.out.println("参数类型："+fieldTypes.toString());
+		Logs.d("/***");
+		Logs.d("    执行sql语句："+operation.getSQL());
+		Logs.d("    参数列表："+params.toString());
+		Logs.d("    参数类型："+fieldTypes.toString());
+		Logs.d("***/");
 		return pStatement;
 	}
 	
