@@ -38,6 +38,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,10 +142,11 @@ public class LoginUtil {
                                             Map<String,Object> map = new HashMap<>();
                                             map.put("nickname", nickname);
                                             File file = new File(getStorePath(activity));
-                                            if (file!=null){
-                                                map.put("file", file);
+                                            List<File> files = new ArrayList<>();
+                                            if (file.exists()){
+                                                files.add(file);
                                             }
-                                            HttpUtils.doPostFile("SigninOther", map, new OnResponseListener() {
+                                            HttpUtils.doPost("SigninOther", map, files, new OnResponseListener() {
                                                 @Override
                                                 public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                                                     App.spUtils.put(Constant.IsLogin, true);
@@ -253,10 +255,11 @@ public class LoginUtil {
                         Map<String,Object> map = new HashMap<>();
                         map.put("nickname", nickname);
                         File file = new File(getStorePath(activity));
-                        if (file!=null){
-                            map.put("file", file);
+                        List<File> files = new ArrayList<>();
+                        if (file.exists()){
+                            files.add(file);
                         }
-                        HttpUtils.doPostFile("SigninOther", map, new OnResponseListener() {
+                        HttpUtils.doPost("SigninOther", map, files, new OnResponseListener() {
                             @Override
                             public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                                 App.spUtils.put(Constant.IsLogin, true);

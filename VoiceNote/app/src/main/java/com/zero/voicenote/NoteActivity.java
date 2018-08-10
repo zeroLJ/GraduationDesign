@@ -631,10 +631,11 @@ public class NoteActivity extends BaseActivity {
             }
             Map<String,Object> map = new HashMap<>();
             map.put("data", JSON.toJSONString(note));
-            if (file!=null){
-                map.put("file", file);
+            List<File> files = new ArrayList<>();
+            if (file!=null && file.exists()){
+                files.add(file);
             }
-            HttpUtils.doPostFile("NoteAdd", map, new OnResponseListener() {
+            HttpUtils.doPost("NoteAdd", map, files, new OnResponseListener() {
                 @Override
                 public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                     note.setFlag(Constant.FLAG_COMPLETE);
@@ -671,10 +672,11 @@ public class NoteActivity extends BaseActivity {
 
             Map<String,Object> map = new HashMap<>();
             map.put("data", JSON.toJSONString(note));
-            if (file!=null){
-                map.put("file", file);
+            List<File> files = new ArrayList<>();
+            if (file!=null && file.exists()){
+                files.add(file);
             }
-            HttpUtils.doPostFile("NoteUpdate", map, new OnResponseListener() {
+            HttpUtils.doPost("NoteUpdate", map, files, new OnResponseListener() {
                 @Override
                 public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                     note.setFlag(Constant.FLAG_COMPLETE);

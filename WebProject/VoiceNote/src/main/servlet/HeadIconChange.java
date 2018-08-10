@@ -16,8 +16,8 @@ public class HeadIconChange extends BaseServlet {
 
 	@Override
 	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
-		if (params.get("file") != null && !params.get("file").equals("")) {
-			File file = new File(params.get("file"));
+		if (!db.getUploadFiles().isEmpty()) {
+			File file = db.getUploadFiles().get(0);
 			System.out.println("ÎÄ¼þ´Ó:" + file.getAbsolutePath());
 			File toFile = new File("C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\icon.jpg");
 			toFile.getParentFile().mkdirs();

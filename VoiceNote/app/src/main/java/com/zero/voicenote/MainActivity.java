@@ -478,10 +478,11 @@ public class MainActivity extends BaseActivity implements WbShareCallback {
                     Logs.JLlog(path_cut);
                     Map<String,Object> map = new HashMap<>();
                     File file = new File(path_cut);
-                    if (file!=null){
-                        map.put("file", file);
+                    List<File> files = new ArrayList<>();
+                    if (file.exists()){
+                        files.add(file);
                     }
-                    HttpUtils.doPostFile("HeadIconChange", map, new OnResponseListener() {
+                    HttpUtils.doPost("HeadIconChange", map, files, new OnResponseListener() {
                         @Override
                         public void onSuccess(List<Map<String, Object>> data, ResultData resultData) {
                         }

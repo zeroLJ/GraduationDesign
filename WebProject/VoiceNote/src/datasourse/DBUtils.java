@@ -1,5 +1,6 @@
 package datasourse;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,7 +27,20 @@ public class DBUtils {
  	               +"databaseName=demo;"
  	               + "user=ljl;"
  	               + "password=pp123456;"; 
+	private List<File> uploadFiles = new ArrayList<>();
+	
+	private long startTime;
+	
+	public List<File> getUploadFiles() {
+		return uploadFiles;
+	}
+
+	public void setUploadFiles(List<File> uploadFiles) {
+		this.uploadFiles = uploadFiles;
+	}
+	
 	public DBUtils()  {
+		startTime = System.currentTimeMillis();
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			connection = DriverManager.getConnection(connectionUrl);
@@ -189,6 +203,19 @@ public class DBUtils {
 				e.printStackTrace();
 			}
 		}
-		
+		//删除缓存的文件
+		if (uploadFiles!=null && !uploadFiles.isEmpty()) {
+			File parentFile = uploadFiles.get(0).getParentFile();
+			for(File file : uploadFiles) {
+				if (file.exists()) {
+					file.delete();
+				}
+			}
+			if (parentFile.exists()) {
+				parentFile.delete();		
+			}
+		}
+		Logs.d("耗时:"+(System.currentTimeMillis()-startTime));
 	}
+
 }
