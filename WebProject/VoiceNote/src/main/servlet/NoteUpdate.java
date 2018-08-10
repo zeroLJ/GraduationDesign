@@ -1,29 +1,21 @@
 package main.servlet;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 
 import database.entity.Note;
 import database.query.NoteQuery;
 import datasourse.DBUtils;
-import datasourse.EntityCreateUtils;
 import main.ResponseParams;
 import main.User;
 import main.util.DateUtils;
 import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
 @WebServlet("/NoteUpdate")
 public class NoteUpdate extends BaseServlet{

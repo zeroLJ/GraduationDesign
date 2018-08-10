@@ -2,18 +2,11 @@ package main.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +17,6 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import database.entity.UserT;
 import database.query.UserTQuery;
 import datasourse.DBUtils;
 import main.ResponseParams;
@@ -42,9 +34,7 @@ import main.util.ResponseUtil;
 public abstract class BaseServlet extends HttpServlet {
 	//这个变量必须设置
 	protected static final long serialVersionUID = 1L;
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public BaseServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -148,27 +138,17 @@ public abstract class BaseServlet extends HttpServlet {
 		}  
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
 		try {
 			ResponseParams responseParams = exec(request, response);
-			ResponseUtil.responseFile(response, responseParams.resultList, responseParams.resultMap, responseParams.msg, responseParams.file , responseParams.success); 
+			ResponseUtil.response(response, responseParams.resultList, responseParams.resultMap, responseParams.msg, responseParams.file , responseParams.success); 
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			ResponseUtil.responseFile(response, null, null, e.getMessage(), null, false);
+			ResponseUtil.response(response, null, null, e.getMessage(), null, false);
 		}
-//		ResponseParams responseParams = exec(request, response);
-//		ResponseUtil.responseFile(response, responseParams.resultList, responseParams.resultMap, responseParams.msg, responseParams.file , responseParams.success); 
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}

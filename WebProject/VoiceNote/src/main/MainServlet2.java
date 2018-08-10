@@ -17,7 +17,6 @@ public class MainServlet2 extends MainServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		System.out.println("22222");
 		super.doGet(request, response);
 	}

@@ -17,7 +17,6 @@ public class HeadIconGet extends BaseServlet {
 
 	@Override
 	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
-		// TODO Auto-generated method stub
 		String filepath = "C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\icon.jpg";
 		File file = new File(filepath);
 		boolean hasFile = true;

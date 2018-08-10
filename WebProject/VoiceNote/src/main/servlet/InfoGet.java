@@ -1,9 +1,5 @@
 package main.servlet;
 
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,20 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import database.entity.UserT;
 import database.query.UserTQuery;
-import datasourse.DBOperation;
 import datasourse.DBUtils;
 import main.ResponseParams;
 import main.User;
-import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
 @WebServlet("/InfoGet")
 public class InfoGet extends BaseServlet{

@@ -48,9 +48,7 @@ public class InfoUpdate extends BaseServlet {
 			return ResponseParams.successResult();
 		}else {
 			return ResponseParams.failResult("修改失败");
-		}
-//		ResponseUtil.response(response, "修改成功"); 
-		
+		}	
 	}
 
 }

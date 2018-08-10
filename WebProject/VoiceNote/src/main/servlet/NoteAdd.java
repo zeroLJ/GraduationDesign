@@ -1,18 +1,12 @@
 package main.servlet;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.xml.internal.bind.v2.runtime.Name;
 
 import database.entity.Note;
 import datasourse.DBUtils;
@@ -20,7 +14,6 @@ import main.ResponseParams;
 import main.User;
 import main.util.DateUtils;
 import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
 @WebServlet("/NoteAdd")
 public class NoteAdd extends BaseServlet{
@@ -53,7 +46,6 @@ public class NoteAdd extends BaseServlet{
 		}else {
 			return ResponseParams.successResult();
 		}
-//				ResponseUtil.response(response, "Ìí¼Ó³É¹¦");
 	}
 
 }

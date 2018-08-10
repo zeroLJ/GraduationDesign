@@ -1,16 +1,10 @@
 package main.servlet;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import database.entity.UserT;
 import database.query.UserTQuery;
@@ -18,7 +12,6 @@ import datasourse.DBUtils;
 import main.ResponseParams;
 import main.User;
 import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
 /**
  * 第三方登录接口

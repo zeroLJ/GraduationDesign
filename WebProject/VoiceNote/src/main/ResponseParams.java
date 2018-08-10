@@ -12,7 +12,7 @@ public class ResponseParams {
 	public boolean success = true;// Ä¬ÈÏ³É¹¦
 
 	public ResponseParams() {
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public ResponseParams(List<?> resultList, Map<String, Object> resultMap, String msg, File file, boolean success) {

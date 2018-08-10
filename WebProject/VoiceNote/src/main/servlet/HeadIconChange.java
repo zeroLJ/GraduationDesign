@@ -16,7 +16,6 @@ public class HeadIconChange extends BaseServlet {
 
 	@Override
 	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
-		// TODO Auto-generated method stub
 		if (params.get("file") != null && !params.get("file").equals("")) {
 			File file = new File(params.get("file"));
 			System.out.println("ÎÄ¼þ´Ó:" + file.getAbsolutePath());

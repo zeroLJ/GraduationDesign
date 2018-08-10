@@ -1,17 +1,9 @@
 package main;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -23,16 +15,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
-import main.servlet.Login;
-import main.servlet.SigninOther;
-import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
 
 
@@ -86,7 +68,7 @@ public class MainFilter implements Filter {
         System.out.println(ctxPath);
         chain.doFilter(request, response);
 
-        //Servlet校验放在MainServlet处理
+        //Servlet校验放在BaseServlet处理
        
         /*if (!currentURL.contains("main")) {
 			 return;

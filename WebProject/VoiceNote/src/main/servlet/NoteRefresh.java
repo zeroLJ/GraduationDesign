@@ -1,19 +1,11 @@
 package main.servlet;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 
@@ -25,7 +17,6 @@ import main.User;
 import main.util.DateUtils;
 import main.util.Logs;
 import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
 @WebServlet("/NoteRefresh")
 public class NoteRefresh extends BaseServlet{
@@ -36,7 +27,6 @@ public class NoteRefresh extends BaseServlet{
 		List<Map<String, Object>> list = JSON.parseObject(params.get("data"),List.class);
 		for(Map<String, Object> note : list) {
 			String addTime = ObjUtils.objToStr(note.get("addTime"));
-			String editTime = ObjUtils.objToStr(note.get("editTime"));
 			String title = ObjUtils.objToStr(note.get("title"));
 			String message = ObjUtils.objToStr(note.get("message"));
 			String audioPath = ObjUtils.objToStr(note.get("audioPath"));
