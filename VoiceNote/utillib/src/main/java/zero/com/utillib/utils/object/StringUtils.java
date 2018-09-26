@@ -172,10 +172,13 @@ public class StringUtils {
         Pattern pattern = Pattern
                 .compile("http://(([a-zA-z0-9]|-){1,}\\.){1,}[a-zA-z0-9]{1,}-*");
         Matcher matcher = pattern.matcher(url);
-        if (!matcher.find()) {
-            return false;
-        } else {
+        Pattern pattern2 = Pattern
+                .compile("https://(([a-zA-z0-9]|-){1,}\\.){1,}[a-zA-z0-9]{1,}-*");
+        Matcher matcher2 = pattern2.matcher(url);
+        if (matcher.find() || matcher2.find()) {
             return true;
+        } else {
+            return false;
         }
     }
 

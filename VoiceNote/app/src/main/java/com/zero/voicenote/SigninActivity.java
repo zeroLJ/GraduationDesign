@@ -15,6 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 
+import com.blankj.utilcode.util.RegexUtils;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.IUiListener;
@@ -118,7 +119,7 @@ public class SigninActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         String url = url_et.getText().toString();
-                        if (StringUtils.isWebLink(url)){
+                        if ( RegexUtils.isURL(url)){
                             HttpUtils.URL = url;
                             App.spUtils.put(Constant.Url, url);
                             dialog.cancel();

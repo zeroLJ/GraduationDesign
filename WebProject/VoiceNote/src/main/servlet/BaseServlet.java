@@ -2,6 +2,7 @@ package main.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -95,7 +96,8 @@ public abstract class BaseServlet extends HttpServlet {
         }else {
         	Map<String, String[]> map =  request.getParameterMap();
 			for(String key : map.keySet()) {
-				params.put(key, map.get(key)[0]);
+//				params.put(key, map.get(key)[0]);
+				params.put(key,URLDecoder.decode(map.get(key)[0],"utf-8"));
 			}
 		} 
 		System.out.println("参数列表："+params.toString());

@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -152,7 +153,8 @@ public class MainFilter implements Filter {
 	        }else {
 	        	Map<String, String[]> map =  request.getParameterMap();
 				for(String key : map.keySet()) {
-					params.put(key, map.get(key)[0]);
+//					params.put(key, map.get(key)[0]);
+					params.put(key,URLDecoder.decode(map.get(key)[0],"utf-8"));
 				}
 			} 
 			System.out.println("参数列表："+params.toString());
