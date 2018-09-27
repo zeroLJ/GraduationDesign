@@ -19,6 +19,9 @@ public class HeadIconGet extends BaseServlet {
 	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
 		String filepath = "C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\icon.jpg";
 		File file = new File(filepath);
+		if (!file.exists()) {
+			file = new File( "C:\\VoiceNote\\icon.png");
+		}
 		boolean hasFile = true;
 		if (!file.exists()) {
 			file = null;
