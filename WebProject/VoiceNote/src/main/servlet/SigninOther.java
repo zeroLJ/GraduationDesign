@@ -20,7 +20,7 @@ import main.util.ObjUtils;
  *
  */
 @WebServlet("/SigninOther")
-public class SigninOther extends BaseServlet {
+public class SigninOther extends BaseNoSigninServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override

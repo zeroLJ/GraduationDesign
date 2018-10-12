@@ -15,7 +15,7 @@ import main.User;
  * Servlet implementation class Login
  */
 @WebServlet("/Login")
-public class Login extends BaseServlet {
+public class Login extends BaseNoSigninServlet {
 	private static final long serialVersionUID = 1L;
     /**
      * @see HttpServlet#HttpServlet()

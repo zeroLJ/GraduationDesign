@@ -32,6 +32,8 @@ public class InfoGet extends BaseServlet{
 			query.Field_Name_qq().setIs(user.getUserName());
 		}else if(user.getUserName().endsWith("_sina")) {
 			query.Field_Name_sina().setIs(user.getUserName());
+		}else if(user.getUserName().endsWith("_mini")) {
+			query.Field_Name_mini().setIs(user.getUserName());
 		}else {
 			query.Field_Name().setIs(user.getUserName());
 		}	

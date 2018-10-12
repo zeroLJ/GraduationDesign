@@ -77,11 +77,6 @@ public class EntityCreateUtils{
                 System.err.println("****** ******* ******");    
                 keyList.add(pkRSet.getString(4));
             }
-
-            System.err.println(con.getMetaData().getIdentifierQuoteString());
-            if(true) {
-            	return;
-            }
             
             ResultSetMetaData rsmd = pStemt.getMetaData();
             int size = rsmd.getColumnCount();   //Í³¼ÆÁÐ  

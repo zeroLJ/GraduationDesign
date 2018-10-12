@@ -31,7 +31,7 @@ import main.util.ResponseUtil;
 
 
 /**
- * Servlet implementation class BaseServlet
+ * 需要校验账号密码就继承此类，否则继承BaseNoSigninServlet。class
  */
 //@WebServlet("/BaseServlet")//此参数在整个项目中必须唯一，否则运行失败
 public abstract class BaseServlet extends HttpServlet {
@@ -105,17 +105,14 @@ public abstract class BaseServlet extends HttpServlet {
         name = ObjUtils.objToStr(params.get("name"));
         password = ObjUtils.objToStr(params.get("password"));
         System.out.println("name:"+name+" password:"+password);
-        if (name.endsWith("_qq")) {
-			nameKey = "name_qq";
-		}else if(name.endsWith("_sina")) {
-			nameKey = "name_sina";
-		}else {
-			nameKey = "name";
-		}	
-    	params.put("nameKey", nameKey);
     	
-        if (getClass().isAssignableFrom(Login.class) || getClass().isAssignableFrom(SigninOther.class)) {
-			return doSQL(params, dbUtils, new User(name, "", password));
+    	
+//        if (getClass().isAssignableFrom(Login.class) || getClass().isAssignableFrom(SigninOther.class) || getClass().isAssignableFrom(SigninMiniApp.class)) {
+//			return doSQL(params, dbUtils, new User(name, ObjUtils.objToStr(params.get("nickname")), password));
+//		}
+        if (BaseNoSigninServlet.class.isAssignableFrom(getClass())) {
+        	System.out.println("aaaaa");
+        	return doSQL(params, dbUtils, new User(name, ObjUtils.objToStr(params.get("nickname")), password));
 		}
                
         UserTQuery query = new UserTQuery();
@@ -124,6 +121,8 @@ public abstract class BaseServlet extends HttpServlet {
 			query.Field_Name_qq().setIs(name);
 		}else if(name.endsWith("_sina")) {
 			query.Field_Name_sina().setIs(name);
+		}else if(name.endsWith("_mini")) {
+			query.Field_Name_mini().setIs(name);
 		}else {
 			query.Field_Name().setIs(name);
 		}	

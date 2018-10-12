@@ -15,12 +15,12 @@ import datasourse.type.FieldType;
 /**
  * @author ljl
  * userT ≤È—Ø¿‡
- * 2018-07-26 04:15
+ * 2018-10-11 11:17
  */ 
 
 public class UserTQuery extends BaseQuery {
-	private final static List<String> NAMELIST = Collections.unmodifiableList(Arrays.asList(new String[]{"id","name","name_qq","name_sina","password","nickname","sex","birthday","job","telephone","e_mail"}));
-	private final static List<FieldType> TYPELIST = Collections.unmodifiableList(Arrays.asList(new FieldType[]{FieldType.NUMBER,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.DATETIME,FieldType.STRING,FieldType.STRING,FieldType.STRING}));
+	private final static List<String> NAMELIST = Collections.unmodifiableList(Arrays.asList(new String[]{"id","name","name_qq","name_sina","name_mini","password","nickname","sex","birthday","job","telephone","e_mail"}));
+	private final static List<FieldType> TYPELIST = Collections.unmodifiableList(Arrays.asList(new FieldType[]{FieldType.NUMBER,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.STRING,FieldType.DATETIME,FieldType.STRING,FieldType.STRING,FieldType.STRING}));
 	private final static Map<String,Integer> FIELDPOSITION;
 	private final static String tablename = "userT";
 	static{
@@ -67,31 +67,35 @@ public class UserTQuery extends BaseQuery {
 		return getStringField(3);
 	}
 
-	public StringFieldQuery Field_Password() {
+	public StringFieldQuery Field_Name_mini() {
 		return getStringField(4);
 	}
 
-	public StringFieldQuery Field_Nickname() {
+	public StringFieldQuery Field_Password() {
 		return getStringField(5);
 	}
 
-	public StringFieldQuery Field_Sex() {
+	public StringFieldQuery Field_Nickname() {
 		return getStringField(6);
 	}
 
+	public StringFieldQuery Field_Sex() {
+		return getStringField(7);
+	}
+
 	public DateTimeFieldQuery Field_Birthday() {
-		return getDateTimeField(7);
+		return getDateTimeField(8);
 	}
 
 	public StringFieldQuery Field_Job() {
-		return getStringField(8);
-	}
-
-	public StringFieldQuery Field_Telephone() {
 		return getStringField(9);
 	}
 
-	public StringFieldQuery Field_E_mail() {
+	public StringFieldQuery Field_Telephone() {
 		return getStringField(10);
+	}
+
+	public StringFieldQuery Field_E_mail() {
+		return getStringField(11);
 	}
 }
