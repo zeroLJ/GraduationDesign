@@ -15,7 +15,7 @@ public class FieldQuery<E> {
 	protected List<E> value = new ArrayList<>();
 	private LinkType linkType = LinkType.AND;
 	private FieldType fieldType = FieldType.STRING;
-	private boolean selected;
+	private boolean selected;//是否需要查询出来
 	public void outField() {
 		selected = true;
 	}
@@ -44,12 +44,18 @@ public class FieldQuery<E> {
 	}
 	public String getSQL() {
 		if (sql!=null && !sql.equals("")) {
-			StringBuilder s = new StringBuilder();
-			s.append(fieldName).append(sql).append(" ");
-			return s.toString();
+//			StringBuilder s = new StringBuilder();
+//			s.append(fieldName).append(sql).append(" ");
+//			return s.toString();
+			return sql;
 		}else {
 			return "";
 		}
+	}
+	
+	public void setSql(String sql) {
+		this.value.clear();
+		this.sql = sql;
 	}
 	
 	public List<E> getValue() {
@@ -74,33 +80,33 @@ public class FieldQuery<E> {
 	
 	public void setIs(E value) {
 		setValue(value);
-		this.sql = " = ?";
+		this.sql = fieldName + " = ? ";
 	};
 	
 	public void setIsNot(E value) {
 		setValue(value);
-		this.sql = " != ?";
+		this.sql = fieldName + " != ? ";
 	};
 	
 	public void setIsNull() {
 		this.value.clear();
-		this.sql = " is null"; 
+		this.sql = fieldName + " is null "; 
 	};
 	
 	
 	public void setIsNotNull() {
 		this.value.clear();
-		this.sql = " is not null"; 
+		this.sql = fieldName + " is not null "; 
 	};
 	
 	public void setLike(E value) {
 		setValue(value);
-		this.sql = " like ?"; 
+		this.sql = fieldName + " like ? "; 
 	};
 	
 	public void setNotLike(E value) {
 		setValue(value);
-		this.sql = " not like ?"; 
+		this.sql = fieldName + " not like ? "; 
 	};
 	
 //	public void setLikeStart(E value) {
@@ -132,8 +138,8 @@ public class FieldQuery<E> {
 				builder.append("?,");
 			}
 			builder.deleteCharAt(builder.length()-1);
-			builder.append(")");
-			this.sql = builder.toString();
+			builder.append(") ");
+			this.sql = fieldName + builder.toString();
 		}else {
 			this.sql = "";
 		}
@@ -148,8 +154,8 @@ public class FieldQuery<E> {
 				builder.append("?,");
 			}
 			builder.deleteCharAt(builder.length()-1);
-			builder.append(")");
-			this.sql = builder.toString();
+			builder.append(") ");
+			this.sql = fieldName + builder.toString();
 		}else {
 			this.sql = "";
 		}
@@ -164,8 +170,8 @@ public class FieldQuery<E> {
 				builder.append("?,");
 			}
 			builder.deleteCharAt(builder.length()-1);
-			builder.append(")");
-			this.sql = builder.toString();
+			builder.append(") ");
+			this.sql = fieldName + builder.toString();
 		}else {
 			this.sql = "";
 		}
@@ -180,8 +186,8 @@ public class FieldQuery<E> {
 				builder.append("?,");
 			}
 			builder.deleteCharAt(builder.length()-1);
-			builder.append(")");
-			this.sql = builder.toString();
+			builder.append(") ");
+			this.sql = fieldName + builder.toString();
 		}else {
 			this.sql = "";
 		}

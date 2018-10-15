@@ -93,27 +93,49 @@ public abstract class BaseQuery extends DBOperation{
 		return field;
 	}
 	
+	public void bracketLeft() {
+		FieldQuery field = new FieldQuery("");
+		field.setSql("(");
+		field.setLinkType(linkType);
+		whereList.add(field);
+	}
+	
+	public void bracketRight() {
+		FieldQuery field = new FieldQuery("");
+		field.setSql(") ");
+		field.setLinkType(LinkType.NONE);
+		whereList.add(field);
+	}
+	
+	public String getWhereSQL() {
+		StringBuilder builder = new StringBuilder(); //where 条件字符串
+		boolean flag = true;  //下一个查询条件是否不需要添加连接符  and/or
+		for (FieldQuery field : whereList) {
+			if (!field.getSQL().equals("")) {
+				if (flag) {
+					flag = false;
+				}else {
+					if (field.getLinkType() == LinkType.AND) {
+						builder.append("and ");
+					}else if (field.getLinkType() == LinkType.OR){
+						builder.append("or ");
+					}
+				}
+				if (field.getSQL().equals("(")) {
+					flag = true;
+				}
+				builder.append(field.getSQL());	
+			}
+		}
+		return builder.toString();
+	}
+	
 	
 	public String getSQL() {
-		StringBuilder builder = new StringBuilder();
-		boolean first = true;
 		Set<String> selectSet = new HashSet<>();//需要select出来的字段，若为空，则select所有字段
 		for (FieldQuery field : whereList) {
 			if (field.isSelected()) {
 				selectSet.add(field.getFieldName());
-			}
-			if (!field.getSQL().equals("")) {
-				if (first) {
-					builder.append(field.getSQL());
-					first = false;
-				}else {
-					if (field.getLinkType() == LinkType.AND) {
-						builder.append("and ");
-					}else {
-						builder.append("or ");
-					}
-					builder.append(field.getSQL());	
-				}	
 			}
 		}
 		StringBuilder sql = new StringBuilder("select ");
@@ -126,8 +148,9 @@ public abstract class BaseQuery extends DBOperation{
 			sql.deleteCharAt(sql.lastIndexOf(","));
 		}
 		sql.append("from dbo.").append(getTableName());
-		if (!builder.toString().equals("")) {
-			sql.append(" where ").append(builder.toString());
+		String whereSQL = getWhereSQL();
+		if (!whereSQL.toString().equals("")) {
+			sql.append(" where ").append(whereSQL);
 		}
 		return sql.toString();
 	}
