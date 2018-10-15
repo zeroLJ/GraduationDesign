@@ -1,4 +1,4 @@
-package main.servlet;
+package main.app;
 
 import java.io.File;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import datasourse.DBUtils;
 import main.ResponseParams;
 import main.User;
+import main.base.BaseServlet;
 import main.util.ObjUtils;
 
 @WebServlet("/HeadIconGet")

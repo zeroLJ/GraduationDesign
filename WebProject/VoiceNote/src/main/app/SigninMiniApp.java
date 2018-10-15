@@ -1,4 +1,4 @@
-package main.servlet;
+package main.app;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,6 +14,7 @@ import database.query.UserTQuery;
 import datasourse.DBUtils;
 import main.ResponseParams;
 import main.User;
+import main.base.BaseNoSigninServlet;
 import main.util.HttpRequest;
 import main.util.ObjUtils;
 import main.util.StringUtils;

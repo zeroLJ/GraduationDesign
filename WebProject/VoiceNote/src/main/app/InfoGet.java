@@ -1,4 +1,4 @@
-package main.servlet;
+package main.app;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +15,7 @@ import database.query.UserTQuery;
 import datasourse.DBUtils;
 import main.ResponseParams;
 import main.User;
+import main.base.BaseServlet;
 
 @WebServlet("/InfoGet")
 public class InfoGet extends BaseServlet{

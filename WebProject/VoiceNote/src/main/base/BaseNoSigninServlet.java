@@ -1,4 +1,4 @@
-package main.servlet;
+package main.base;
 
 /**
  * 不用校验账号密码的Servlet

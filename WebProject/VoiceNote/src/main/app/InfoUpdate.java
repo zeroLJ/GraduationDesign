@@ -1,4 +1,4 @@
-package main.servlet;
+package main.app;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +11,7 @@ import database.query.UserTQuery;
 import datasourse.DBUtils;
 import main.ResponseParams;
 import main.User;
+import main.base.BaseServlet;
 import main.util.ObjUtils;
 
 @WebServlet("/InfoUpdate")
