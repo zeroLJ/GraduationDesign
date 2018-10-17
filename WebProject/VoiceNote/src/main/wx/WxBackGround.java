@@ -21,9 +21,6 @@ import main.wxUtils.WxSolve;
 @WebServlet("/WxBackGround")
 public class WxBackGround extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	static String connectionUrl = "jdbc:sqlserver://localhost:1433;"
-			// "jdbc:sqlserver://192.168.0.188:1433;"
-			+ "databaseName=Demo;" + "user=940034240;" + "password=pp123456;";
 
 	public WxBackGround() {
 		super();
@@ -51,7 +48,6 @@ public class WxBackGround extends HttpServlet{
 		list.add(token);
 		list.add(timestamp);
 		list.add(nonce);
-		System.out.println("1111");
 		System.out.println("signature:"+signature);
 		System.out.println("timestamp:"+timestamp);
 		System.out.println("nonce:"+nonce);
@@ -80,14 +76,6 @@ public class WxBackGround extends HttpServlet{
 			WxMessage message = new WxMessage(xml);
 			message.print();
 			result = WxSolve.getResult(message);
-//			Document dom=DocumentHelper.parseText(xml);
-//			  Element root=dom.getRootElement();
-//			  String weighTime=root.element("weighTime").getText();
-//			  String cardNum=root.element("cardNum").getText();
-//			  String cfid=root.element("cfid").getText();
-//			  System.out.println(weighTime);
-//			  System.out.println(cardNum);
-//			  System.out.println(cfid);	
 		}
 		try {
 			OutputStream os = response.getOutputStream();

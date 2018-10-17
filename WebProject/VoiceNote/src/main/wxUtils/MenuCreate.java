@@ -61,19 +61,19 @@ public class MenuCreate {
 	    childMap = new HashMap<>();
 	    childMap.put("type", "view");
 	    childMap.put("name", "≤‚ ‘Õ¯“≥");
-	    childMap.put("url", "https://jhonliu.club/VoiceNote/tab.jsp");
+	    childMap.put("url", "https://jhonliu.club/VoiceNote/view/signin.html");
 	    childList.add(childMap);
 	    
 	    childMap = new HashMap<>();
 	    childMap.put("type", "view");
 	    childMap.put("name", "base");
-	    childMap.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf0c5a5db0211f99d&redirect_uri=https://jhonliu.club/VoiceNote/Show&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+	    childMap.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf0c5a5db0211f99d&redirect_uri=https://jhonliu.club/VoiceNote/WxGetUserInfo&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
 	    childList.add(childMap);
 	    
 	    childMap = new HashMap<>();
 	    childMap.put("type", "view");
 	    childMap.put("name", "userinfo");
-	    childMap.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf0c5a5db0211f99d&redirect_uri=https://jhonliu.club/VoiceNote/Show&response_type=code&scope=snsapi_userinfo&state={123456}#wechat_redirect");
+	    childMap.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf0c5a5db0211f99d&redirect_uri=https://jhonliu.club/VoiceNote/WxGetUserInfo&response_type=code&scope=snsapi_userinfo&state={123456}#wechat_redirect");
 	    childList.add(childMap);
 	    
 	    
