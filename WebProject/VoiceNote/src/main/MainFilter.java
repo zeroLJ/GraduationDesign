@@ -24,7 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  * 由于Servlet校验放在MainServlet处理，这里不进行校验，实际也可以直接在此校验并通过反射访问到对应Servlet的方法
  */
 //@WebFilter("/MainFilter")
-@WebFilter(filterName="MainFilter",urlPatterns={"/*"})//Filter名称和过滤范围设置，通过注解设置就不用在web.xml进行配置
+//微信URL验证的时候必须注释掉（不能有拦截器拦截）才能验证成功，原因不明
+//@WebFilter(filterName="MainFilter",urlPatterns={"/*"})//Filter名称和过滤范围设置，通过注解设置就不用在web.xml进行配置
 public class MainFilter implements Filter {
 
 	protected String connectionUrl = 

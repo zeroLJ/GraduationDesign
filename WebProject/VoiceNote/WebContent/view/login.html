@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-<title>登录</title>
+<title>注册</title>
 <link rel="stylesheet" href="./../style/weui.min.css" />
 <link rel="stylesheet" href="./../style/mStyle.css"/>
 <!-- <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script> -->
 <script src="./../js/httpUtils.js"></script>
 <style>
+
 	.container {
 	    display:flex;
 	    flex-direction:column;
@@ -20,12 +21,20 @@
 	    top: 30%;
 	    width: 70%;
 	}
-		
+	
 	.input {
 		/* border:1px solid #faa; */
 		text-align: center;
-		flex: 1;
+		flex: 1
 	}
+	
+/* .horizontal{
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		justify-content: center;
+		width: 100%
+	}  */
 </style>
 </head>
 <body>
@@ -38,11 +47,14 @@
 			<span>密&emsp;&emsp;码：</span>
 			<input class="input" type="password"  name="password" id="password">
 		</div>
-		<button class="weui-btn weui-btn_primary" style="margin-top: 10px"  onclick="get()" type="button">登&emsp;&emsp;录</button>
-		<button class="weui-btn weui-btn_default" style="margin-top: 10px" onclick="skip()" type="button">注&emsp;&emsp;册</button>
+		<div class="horizontal" style="margin-top: 10px">
+			<span>确认密码：</span>
+			<input class="input" type="password"  name="password" id="password2">
+		</div>
+		<button class="weui-btn weui-btn_primary" style="margin-top: 10px"  onclick="login()" type="button">注&emsp;&emsp;册</button>
 	</form>
 	<script type="text/javascript">
-   		function get() {
+   		function login() {
    			var name = $('#name').val()
    	 		if (isEmpty(name)) {
    				weui.alert('账号不能为空！');
@@ -53,22 +65,32 @@
    				weui.alert('密码不能为空！');
    				return
    			}
+   			var password2 = $('#password2').val()
+   			if (isEmpty(password)) {
+   				weui.alert('请确认密码！');
+   				return
+   			}
+   			if (password != password2) {
+   				weui.alert('两次输入的密码不一致！');
+   				return
+   			}
 			post({
-				url: 'Signin',
+				url: 'Login',
 				msg: "正在登录",
 				data: {
 					name: name,
 					password: password
 				},
 				success: function(json) {
-					weui.toast('登录成功')
-					log(json)
+					weui.toast('注册成功')
+					setTimeout(function() {
+					/* 	$(location).attr('href', 'signin.html'); */
+						/* history.go(-1) */
+						history.back();
+						location.reload();
+					}, 1500)
 				}
 			})
-		}
-   		
-   		function skip() {
-			$(location).attr('href', 'login.html');
 		}
 	</script>
 </body>
