@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>weui JS调用</title>
+<link rel="stylesheet" href="./../style/weui.min.css" />
+<link rel="stylesheet" href="./../style/mStyle.css" />
+<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="./../js/httpUtils.js"></script>
+<style>
+	body {
+		display: flex;
+	    flex-direction: column;
+		align-items: center;
+		background-color:white;
+		justify-content: space-between;
+	}
+	.container {
+	    display:flex;
+	    flex-direction:column;
+	    justify-content: space-between;
+	    align-items: center;
+	    /* position: fixed;
+	    top: 30%;
+	    width: 70%; */
+	} 
+</style>
+</head>
+<body>
+	<div class="container">
+		<button onclick="query()">查询</button>
+	</div>
+	<script type="text/javascript">
+		function query() {
+			request({
+				url:'NoteRefresh',
+		    	data: {
+		        	data: '[{}]'
+		      	},
+		      	msg:'正在查询数据',
+		      	success: function (json) {
+		        	for (var i = 0; i < json.resultList.length; i++) {
+		          		if (isEmpty(json.resultList[i].message)) {
+		            		json.resultList[i].tips = '点击进行编辑'
+		          		}else{
+		           			json.resultList[i].tips = json.resultList[i].message
+		          		}
+		       		}
+		        	log("sss")
+	          		log(json)
+		      	}
+			})
+		}
+		//页面加载完后执行
+		$(document).ready(function(){ 
+			query()
+		}); 
+	</script>
+</body>
+</html>

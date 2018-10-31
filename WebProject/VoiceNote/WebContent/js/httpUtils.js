@@ -57,10 +57,14 @@ head.appendChild(script);
 const URL = 'http://localhost:8081/VoiceNote/'
 //const URL = 'https://jhonliu.club/VoiceNote/'
 var loading;
-function post(mapjson){
-	var showMsg = mapjson.msg
-	var url = mapjson.url
-	var data = mapjson.data
+/**
+ * 网络请求{url:请求的地址，必填	msg:请求时的提示	data:提交参数	success：function 请求成功时调用	error：function 请求成功，但服务器返回失败信息时调用		fail：function 网络请求失败时调用}
+ * @param obj json格式
+ */
+function request(obj){
+	var showMsg = obj.msg
+	var url = obj.url
+	var data = obj.data
     if (isEmpty(url)) {
     	weui.alert('url不能为空！')
     	return
@@ -75,6 +79,8 @@ function post(mapjson){
 	if(isEmpty(data)){
 		data = {}
 	}
+	data.name = getUserName()
+	data.password = getPassWord()
 	log(data)
 	$.ajax({
         type:'POST',
@@ -83,31 +89,29 @@ function post(mapjson){
 		scriptCharset: 'utf-8',
 		timeout: 5000,
         success:function(response,status,xhr){
-          	log("response："+response);
 			log("status："+status);
-			log(xhr);
-			//var jsonObject=eval('('+result+')');
-			//var jsonObject=JSON.parse(result);
-			var json=JSON.parse(decodeURIComponent(xhr.getResponseHeader("data")));
+//			log(xhr);
+			var json=JSON.parse(response);
+//			var json=JSON.parse(decodeURIComponent(xhr.getResponseHeader("data")));
 		    if (json.success) {
-		        if(!isEmpty(mapjson.success)){
-		        	mapjson.success(json)
+		        if(!isEmpty(obj.success)){
+		        	obj.success(json)
 	            }
 	        } else {
-	        	if (isEmpty(mapjson.error)) {
+	        	if (isEmpty(obj.error)) {
 	        		weui.alert(json.msg)
 	        	} else {
-	        		mapjson.error(json)
+	        		obj.error(json)
 	        	}
 	        }			
         },
 		error: function(xhr,status,error){
 			logW("error")
-			if (isEmpty(mapjson.fail)) {
+			if (isEmpty(obj.fail)) {
 				weui.alert('网络请求失败')
-		      }else{
-		        mapjson.fail(res)
-		      }
+			}else{
+				obj.fail(res)
+			}
 		},
 		complete: function(xhr,status) {
 			logW("complete")
@@ -118,11 +122,63 @@ function post(mapjson){
     })
 }
 
+/**
+ * 判断对象是否为空
+ * @param str
+ * @returns
+ */
 function isEmpty(str){
 	if (str == "" || str == undefined || str == null){
 		return true;
 	}else{
 		return false;
+	}
+}
+
+/**
+ * @param html 网页路径，如：login.html
+ */
+function goToPage(html) {
+//	window.location.href= page; 
+	$(location).attr('href', html);
+}
+
+const WEB_NAME = "VoiceNote"
+function setUserName(name) {
+	if(window.sessionStorage){     
+		localStorage.setItem(WEB_NAME+"_name", name);
+	}else{
+		//不支持的情况下暂不考虑
+		alert("浏览暂不支持sessionStorage") 
+	}
+}
+
+function getUserName() {
+	if(window.sessionStorage){     
+		return localStorage.getItem(WEB_NAME+"_name")
+	}else{
+		//不支持的情况下暂不考虑
+		alert("浏览暂不支持sessionStorage") 
+		return ''
+	}
+}
+
+function setPassWord(password) {
+	if(window.sessionStorage){     
+		localStorage.setItem(WEB_NAME+"_password", password);
+	}else{
+		//不支持的情况下暂不考虑
+		alert("浏览暂不支持sessionStorage") 
+	}
+}
+
+function getPassWord() {
+	if(window.sessionStorage){     
+		return localStorage.getItem(WEB_NAME+"_password")
+	}else{
+		//不支持的情况下暂不考虑
+		alert("浏览暂不支持sessionStorage") 
+		return ''
 	}
 }
 

@@ -7,8 +7,8 @@
 <title>登录</title>
 <link rel="stylesheet" href="./../style/weui.min.css" />
 <link rel="stylesheet" href="./../style/mStyle.css"/>
-<!-- <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
-<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script> -->
+<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="./../js/httpUtils.js"></script>
 <style>
 	.container {
@@ -38,11 +38,11 @@
 			<span>密&emsp;&emsp;码：</span>
 			<input class="input" type="password"  name="password" id="password">
 		</div>
-		<button class="weui-btn weui-btn_primary" style="margin-top: 10px"  onclick="get()" type="button">登&emsp;&emsp;录</button>
+		<button class="weui-btn weui-btn_primary" style="margin-top: 10px"  onclick="signin()" type="button">登&emsp;&emsp;录</button>
 		<button class="weui-btn weui-btn_default" style="margin-top: 10px" onclick="skip()" type="button">注&emsp;&emsp;册</button>
 	</form>
 	<script type="text/javascript">
-   		function get() {
+		function signin() {
    			var name = $('#name').val()
    	 		if (isEmpty(name)) {
    				weui.alert('账号不能为空！');
@@ -53,22 +53,21 @@
    				weui.alert('密码不能为空！');
    				return
    			}
-			post({
+   			setUserName(name)
+   			setPassWord(password)
+			request({
 				url: 'Signin',
 				msg: "正在登录",
-				data: {
-					name: name,
-					password: password
-				},
 				success: function(json) {
 					weui.toast('登录成功')
 					log(json)
+					goToPage("main.html");
 				}
 			})
 		}
    		
    		function skip() {
-			$(location).attr('href', 'login.html');
+ 			goToPage('login.html')
 		}
 	</script>
 </body>

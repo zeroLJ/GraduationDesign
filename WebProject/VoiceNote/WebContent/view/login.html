@@ -11,7 +11,6 @@
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script> -->
 <script src="./../js/httpUtils.js"></script>
 <style>
-
 	.container {
 	    display:flex;
 	    flex-direction:column;
@@ -27,14 +26,6 @@
 		text-align: center;
 		flex: 1
 	}
-	
-/* .horizontal{
-		display: flex;
-		flex-wrap: nowrap;
-		flex-direction: row;
-		justify-content: center;
-		width: 100%
-	}  */
 </style>
 </head>
 <body>
@@ -54,6 +45,7 @@
 		<button class="weui-btn weui-btn_primary" style="margin-top: 10px"  onclick="login()" type="button">注&emsp;&emsp;册</button>
 	</form>
 	<script type="text/javascript">
+	console.log(localStorage.getItem("a"));
    		function login() {
    			var name = $('#name').val()
    	 		if (isEmpty(name)) {
@@ -74,13 +66,11 @@
    				weui.alert('两次输入的密码不一致！');
    				return
    			}
-			post({
+   			setUserName(name)
+   			setPassWord(password)
+			request({
 				url: 'Login',
 				msg: "正在登录",
-				data: {
-					name: name,
-					password: password
-				},
 				success: function(json) {
 					weui.toast('注册成功')
 					setTimeout(function() {
