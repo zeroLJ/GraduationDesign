@@ -145,7 +145,7 @@ function goToPage(html) {
 
 const WEB_NAME = "VoiceNote"
 function setUserName(name) {
-	if(window.sessionStorage){     
+	if(window.localStorage){     
 		localStorage.setItem(WEB_NAME+"_name", name);
 	}else{
 		//不支持的情况下暂不考虑
@@ -154,7 +154,7 @@ function setUserName(name) {
 }
 
 function getUserName() {
-	if(window.sessionStorage){     
+	if(window.localStorage){     
 		return localStorage.getItem(WEB_NAME+"_name")
 	}else{
 		//不支持的情况下暂不考虑
@@ -164,7 +164,7 @@ function getUserName() {
 }
 
 function setPassWord(password) {
-	if(window.sessionStorage){     
+	if(window.localStorage){     
 		localStorage.setItem(WEB_NAME+"_password", password);
 	}else{
 		//不支持的情况下暂不考虑
@@ -173,7 +173,7 @@ function setPassWord(password) {
 }
 
 function getPassWord() {
-	if(window.sessionStorage){     
+	if(window.localStorage){     
 		return localStorage.getItem(WEB_NAME+"_password")
 	}else{
 		//不支持的情况下暂不考虑

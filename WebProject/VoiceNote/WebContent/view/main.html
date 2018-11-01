@@ -14,26 +14,58 @@
 	body {
 		display: flex;
 	    flex-direction: column;
-		align-items: center;
+		align-items: flex-start;
 		background-color:white;
-		justify-content: space-between;
+		justify-content: flex-start;
 	}
 	.container {
 	    display:flex;
 	    flex-direction:column;
-	    justify-content: space-between;
-	    align-items: center;
-	    /* position: fixed;
-	    top: 30%;
-	    width: 70%; */
+	    height: 100%;
+	    width: 100%;
 	} 
+	.item {
+		display:flex;
+	    flex-direction:column;
+	    margin-top: 1rem; 
+	    margin-left:1rem;
+	    margin-right: 1rem;
+	    height: auto;
+	}
+	.blue {
+		background-color: #56A8FF;
+		width: 0.2rem;
+		height: 2rem;
+	}
+	.title {
+		margin-left: 0.5rem;
+		font-weight: bold;
+		font-size: 1.5rem;
+		color: black;
+	}
+	.msg {
+		margin-top:0.7rem;
+		margin-bottom:0.7rem;
+		font-size: 1rem;
+		color: darkgrey;
+	}
+	.addTime {
+		font-size: 0.7rem;
+		color: rgb(134, 187, 243);
+	}
+	.divideline {
+		height: 1px;
+		background: gainsboro;
+		margin-top: 0.7rem;
+	}
 </style>
 </head>
 <body>
-	<div class="container">
-		<button onclick="query()">查询</button>
+	
+	<div class="container" id="container">
 	</div>
 	<script type="text/javascript">
+		var data
 		function query() {
 			request({
 				url:'NoteRefresh',
@@ -42,15 +74,54 @@
 		      	},
 		      	msg:'正在查询数据',
 		      	success: function (json) {
+		      		data = json.resultList
+		      		var container = $('#container')
+		      		container.empty();
+		      		var a = ''
 		        	for (var i = 0; i < json.resultList.length; i++) {
 		          		if (isEmpty(json.resultList[i].message)) {
 		            		json.resultList[i].tips = '点击进行编辑'
 		          		}else{
 		           			json.resultList[i].tips = json.resultList[i].message
 		          		}
+		          	    a += "<div class='item' id='"+ i +"' onclick='skip("+i+")'>"
+		          		a += "	<div class='horizontal'>"
+		          		a += "		<div class='blue'></div>"
+		          		a += "		<span class='title'>"+json.resultList[i].title+"</span>"
+		          		a += "	</div>"
+		          		a += "	<span class='msg'>" + json.resultList[i].tips +"</span>"
+		          		a += "	<span class='addTime'>" + json.resultList[i].addTime +"</span>"
+		          		a += "	<div class='divideline'></div>"
+		          		a += "</div>" 
+		          		
+		          		/* var div=document.createElement('div');
+		          		div.className = "item"
+		          		div.id = i
+					    var div2=document.createElement('div')
+					    div2.className = "horizontal"
+					    var div3=document.createElement('div')
+					    div3.className = "blue"
+					    var span=document.createElement('span')
+					    span.className = 'title'
+					    span.innerHTML = json.resultList[i].title
+					    div2.appendChild(div3)
+					    div2.appendChild(span)
+					    var span2=document.createElement('span')
+					    span2.className = 'msg'
+					    span2.innerHTML = json.resultList[i].tips 
+					    var span3=document.createElement('span')
+					    span3.className = 'addTime'
+					    span3.innerHTML = json.resultList[i].addTime 
+					    var div4=document.createElement('div')
+					    div4.className = 'divideline'
+					    div.appendChild(div2)
+					    div.appendChild(span2)
+					    div.appendChild(span3)
+					    div.appendChild(div4)
+					    document.getElementById("container").appendChild(div); */
 		       		}
-		        	log("sss")
-	          		log(json)
+		      		container.append(a)
+	          		log(json)	
 		      	}
 			})
 		}
@@ -58,6 +129,10 @@
 		$(document).ready(function(){ 
 			query()
 		}); 
+		
+		function skip(i) {
+			log(data[i])
+		}
 	</script>
 </body>
 </html>
