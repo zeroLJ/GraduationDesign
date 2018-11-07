@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>weui JS调用</title>
+<link rel="stylesheet" href="./../style/weui.min.css" />
+<link rel="stylesheet" href="./../style/mStyle.css" />
+<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="./../js/httpUtils.js"></script>
+<style>
+	.container {
+	 	position: fixed;
+		display:flex;
+	 	height: 100%;
+		width: 100%; 
+		flex-direction:column;
+	}
+	
+	.top{
+	  /* display: flex;
+	   flex-direction: column; */
+	  flex: 1;
+	  display:flex;
+	  flex-direction:column;
+	}
+	
+	.bottom{
+	  margin-left: 1rem;
+	  margin-right: 1rem;
+	  margin-bottom: 0.5rem;
+	}
+	
+	.divideline{
+	  height: 1px;	  
+	  background-color: gainsboro;
+	  margin-left: 1rem;
+	  margin-right: 1rem;
+	}
+	
+	.input {
+	  text-align: center;
+	  border:0px;
+	  font-size: 1.6rem;
+	  margin-top: 0.4rem;
+	  margin-bottom: 0.4rem;
+	  padding-left: 0.5rem;
+	  padding-right: 0.5rem
+	}
+	textarea {
+	  text-align: left;
+	  border:0px;
+	  font-size: 1.2rem;
+	  margin-top: 0.4rem;
+	  flex: 1;
+	  padding-left: 1rem;
+	  padding-right: 1rem
+	}
+	
+	.playButton 
+	{  
+	  position:fixed; 
+	  bottom:120rpx; 
+	  right: 0;
+	  width: 90rpx;
+	  height: 90rpx;
+	  margin-right: 50rpx;
+	  border-radius: 50%;
+	  z-index: 10
+	} 
+	
+	.recordButton 
+	{  
+	  position:fixed; 
+	  bottom:220rpx; 
+	  right: 0;
+	  width: 90rpx;
+	  height: 90rpx;
+	  margin-right: 50rpx;
+	  border-radius: 50%;
+	  z-index: 10
+	} 
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="top">
+			<input class="input" id="title">
+			<div class="divideline"></div>
+			<textarea id="message" placeholder="点击输入内容"></textarea>
+		</div>
+		<div class="bottom">
+			<button class="weui-btn weui-btn_primary" style="margin-top: 1rem"  onclick="save()" type="button">保&emsp;&emsp;存</button>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var data
+		var isNew
+		function save() {
+			var title = $('#title').val()
+			var message = $('#message').val()
+			data.title = isEmpty(title) ? getStringDate(new Date())+"的笔记" : title
+			data.message = message
+			var url
+			if(isNew){
+			    url = 'NoteAdd'
+			}else{
+			    url = 'NoteUpdate'
+			    data.tips = ''
+			}
+			request({
+				url: url,
+		    	data: {
+		        	data: JSON.stringify(data)
+		      	},
+		      	msg:'正在保存',
+		      	success: function (json) {
+		      		weui.toast('保存成功')
+		      		setTimeout(function() {
+		      			history.back();
+						location.reload();
+		      		}, 2000)
+		      	}
+			})
+		}
+		$(document).ready(function(){
+			var noteData = window.sessionStorage.getItem("noteData")
+			if (isEmpty(noteData)) {
+				data = {}
+			}else {
+				data = JSON.parse(noteData)
+			}
+			isNew = isEmpty(data.addTime)
+			if (isNew) {
+				
+			}
+			console.log(data.title)
+			$('#title').attr("placeholder", getStringDate(new Date())+"的笔记")
+			$('#title').val(data.title)
+			$('#message').val(data.message)
+		});
+	</script>
+</body>
+</html>

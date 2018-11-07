@@ -10,49 +10,16 @@ link.rel = "stylesheet";
 link.href = "./../style/weui.min.css";
 head.appendChild(link);*/
 
-var script = document.createElement("script");
+//由于这种方法会导致在页面加载时无法调用jquery等方法，故最好还是直接在head加载
+/*var script = document.createElement("script");
 script.language = "javascript";
 script.src = "http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js";
 head.appendChild(script);
-//document.write("<script language='javascript' src='http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js'></script>");
-//document.write("<script language='javascript' src='/VoiceNote/js/jquery.js'></script>");
 
 script = document.createElement("script");
 script.language = "javascript";
 script.src = "https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js";
-head.appendChild(script);
-
-/*function post(url , params, callback){
-	$.post(url, params, function(result, status, xhr){
-		console.log("result："+result);
-		console.log("status："+status);
-		console.log("xhr："+xhr);
-		var jsonObject=JSON.parse(decodeURIComponent(xhr.getResponseHeader("data")));
-		callback(jsonObject);
-	}).error(function(str){//处理
-		console.log(str) 
-		console.log("sdsdsd")
-	});
-	
-	$.ajax({
-        type:'POST',
-        url: url,
-        data: params,
-        success:function(response,status,xhr){
-          	console.log("result："+result);
-			console.log("status："+status);
-			console.log("xhr："+xhr);
-			//var jsonObject=eval('('+result+')');
-			//var jsonObject=JSON.parse(result);
-			var jsonObject=JSON.parse(decodeURIComponent(xhr.getResponseHeader("data")));
-			callback(jsonObject);
-        },
-		error: function(xhr){
-			console.log("error");
-			console.log(xhr);
-		}
-    })
-}*/
+head.appendChild(script);*/
 
 const URL = 'http://localhost:8081/VoiceNote/'
 //const URL = 'https://jhonliu.club/VoiceNote/'
@@ -180,6 +147,19 @@ function getPassWord() {
 		alert("浏览暂不支持sessionStorage") 
 		return ''
 	}
+}
+
+function getStringDate(date) {
+    return date.getFullYear() + '-' + formatNumber(date.getMonth() + 1) + '-' + formatNumber(date.getDate())
+}
+
+function getStartDate(date) {
+    return (date.getFullYear()-100) + '-' + formatNumber(date.getMonth() + 1) + '-' + formatNumber(date.getDate())
+}
+
+const formatNumber = n => {
+    n = n.toString()
+    return n[1] ? n : '0' + n
 }
 
 var isDebug = true

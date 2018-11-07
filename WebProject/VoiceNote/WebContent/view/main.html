@@ -93,32 +93,6 @@
 		          		a += "	<span class='addTime'>" + json.resultList[i].addTime +"</span>"
 		          		a += "	<div class='divideline'></div>"
 		          		a += "</div>" 
-		          		
-		          		/* var div=document.createElement('div');
-		          		div.className = "item"
-		          		div.id = i
-					    var div2=document.createElement('div')
-					    div2.className = "horizontal"
-					    var div3=document.createElement('div')
-					    div3.className = "blue"
-					    var span=document.createElement('span')
-					    span.className = 'title'
-					    span.innerHTML = json.resultList[i].title
-					    div2.appendChild(div3)
-					    div2.appendChild(span)
-					    var span2=document.createElement('span')
-					    span2.className = 'msg'
-					    span2.innerHTML = json.resultList[i].tips 
-					    var span3=document.createElement('span')
-					    span3.className = 'addTime'
-					    span3.innerHTML = json.resultList[i].addTime 
-					    var div4=document.createElement('div')
-					    div4.className = 'divideline'
-					    div.appendChild(div2)
-					    div.appendChild(span2)
-					    div.appendChild(span3)
-					    div.appendChild(div4)
-					    document.getElementById("container").appendChild(div); */
 		       		}
 		      		container.append(a)
 	          		log(json)	
@@ -128,10 +102,14 @@
 		//页面加载完后执行
 		$(document).ready(function(){ 
 			query()
-		}); 
-		
+		});
+		/* window.onload = function(){ 
+			query()
+		}; */
 		function skip(i) {
 			log(data[i])
+			window.sessionStorage.setItem("noteData", JSON.stringify(data[i]));
+			goToPage('note.html')
 		}
 	</script>
 </body>
