@@ -96,8 +96,9 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+		checkSignIn()
 		var data
-		var isNew
+		var isNew = true
 		function save() {
 			var title = $('#title').val()
 			var message = $('#message').val()
@@ -108,7 +109,6 @@
 			    url = 'NoteAdd'
 			}else{
 			    url = 'NoteUpdate'
-			    data.tips = ''
 			}
 			request({
 				url: url,
@@ -126,20 +126,18 @@
 			})
 		}
 		$(document).ready(function(){
+			$('#title').attr("placeholder", getStringDate(new Date())+"的笔记")
 			var noteData = window.sessionStorage.getItem("noteData")
 			if (isEmpty(noteData)) {
 				data = {}
 			}else {
 				data = JSON.parse(noteData)
+				isNew = false
 			}
-			isNew = isEmpty(data.addTime)
-			if (isNew) {
-				
-			}
-			console.log(data.title)
-			$('#title').attr("placeholder", getStringDate(new Date())+"的笔记")
-			$('#title').val(data.title)
+			log(data)
 			$('#message').val(data.message)
+			$('#title').val(data.title)
+			
 		});
 	</script>
 </body>

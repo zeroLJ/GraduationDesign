@@ -90,12 +90,33 @@ function request(obj){
 }
 
 /**
+ * 检测是否已经登录，若没登录，返回登录界面
+ * @returns
+ */
+function checkSignIn(){
+	if (isEmpty(getUserName())) {
+		weui.confirm('', {
+		    title: '您尚未登录!',
+		    buttons: [ {
+		        label: '登录',
+		        type: 'primary',
+		        onClick: function(){ 
+		        	console.log('登录') 
+		        	goToPage('signin.html')
+	        	}
+		    }]
+		});
+		
+	}
+}
+
+/**
  * 判断对象是否为空
  * @param str
  * @returns
  */
 function isEmpty(str){
-	if (str == "" || str == undefined || str == null){
+	if (str == "" || str == undefined || str == null || str == 'null'){
 		return true;
 	}else{
 		return false;
