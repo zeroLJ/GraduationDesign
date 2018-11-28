@@ -98,6 +98,19 @@
 	.bottom{
 		flex: 7;
 	}
+	
+	
+	.label_mine{
+		flex: 1;
+		padding-left: 1rem;
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+	}
+	
+	.divideline_mine {
+		height: 1px;
+		background: gainsboro;
+	}
 
 	.userinfo-avatar {
 		width: 4rem;
@@ -128,7 +141,19 @@
 		         			<img src="./../images/p_b.png" class="userinfo-avatar" id="headIcon">
 		         			<span style="color: white;" id="nickname">昵称</span>
 		         		</div>
-		         		<div class="bottom"></div>
+		         		<div class="bottom">
+		         			<div style="width: 100%;" onclick="info()">
+		         				<div style="width: 100%;display:flex;flex-direction: row;">
+		         					<span class="label_mine">个人信息</span>
+		         				</div>
+		         				<div class="divideline_mine"></div>
+		         			</div>
+		         			
+		         			<div style="margin-left: 1rem;margin-right: 1rem;margin-top: 5rem">
+		         				<button class="weui-btn weui-btn_warn" onclick="signout()" type="button">退&emsp;&emsp;出</button>
+		         			</div>
+		         			
+		         		</div>
 		         	</div>
 		        </div>
 		    </div>
@@ -221,6 +246,16 @@
 		function add() {
 			window.sessionStorage.setItem("noteData", null);
 			goToPage('note.html')
+		}
+		
+		function signout(){
+			setUserName('')
+			setPassWord('')
+			goToPage('signin.html')
+		}
+		
+		function info() {
+			goToPage('info.html')
 		}
 	</script>
 </body>

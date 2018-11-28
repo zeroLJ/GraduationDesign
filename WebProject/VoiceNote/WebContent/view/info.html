@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>个人信息</title>
+<link rel="stylesheet" href="./../style/weui.min.css" />
+<link rel="stylesheet" href="./../style/mStyle.css" />
+<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="./../js/httpUtils.js"></script>
+<style>
+	body {
+		display: flex;
+	    flex-direction: column;
+		align-items: center;
+		background-color:gainsboro;
+		justify-content: space-between;
+	}
+	.container {
+	    display:flex;
+	    flex-direction:column;
+	    justify-content: space-between;
+	    align-items: center;
+	    width: 100%;
+	    /* position: fixed;
+	    top: 30%;
+	    width: 70%; */
+	} 
+	
+	
+	.item{
+		padding: 1rem;
+		display:flex;
+		flex-direction: row;
+		background-color: white;
+	}
+	
+	.label{
+		flex: 1;
+	}
+	
+	input{
+		font-size:1.2rem;
+		flex: 3;
+		border:0px;
+	}
+	
+	.divideline {
+		height: 1px;
+		background: gainsboro;
+	}
+	
+	.bottom{
+	  margin-left: 1rem;
+	  margin-right: 1rem;
+	  margin-bottom: 0.5rem;
+	}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div style="width: 100%;">
+			<div class="item">
+				<span class="label">昵称</span>
+				<input placeholder="设置" id="nickname" type="text">
+			</div>
+			<div class="divideline"></div>
+		</div>
+		<div style="width: 100%;">
+			<div class="item" onclick="sexSelect()">
+				<span class="label">性别</span>
+				<input placeholder="设置" id="sex" readonly="true">
+			</div>
+			<div class="divideline"></div>
+		</div>
+		<div style="width: 100%;" onclick="birthDaySelect()">
+			<div class="item">
+				<span class="label">生日</span>
+				<input placeholder="设置" id="birthday" readonly="true">
+			</div>
+			<div class="divideline"></div>
+		</div>
+		
+		<div style="width: 100%;margin-top: 2rem">
+			<div class="item">
+				<span class="label">职业</span>
+				<input placeholder="设置" id="job" type="text">
+			</div>
+			<div class="divideline"></div>
+		</div>
+		<div style="width: 100%;">
+			<div class="item">
+				<span class="label">手机</span>
+				<input placeholder="设置" id="telephone" type="tel">
+			</div>
+			<div class="divideline"></div>
+		</div>
+		<div style="width: 100%;">
+			<div class="item">
+				<span class="label">邮箱</span>
+				<input placeholder="设置" id="e_mail" type="email">
+			</div>
+			<div class="divideline"></div>
+		</div>
+		
+		
+  		<div style="width: 100%">
+			<div style="margin-left: 1rem;margin-right: 1rem;margin-top: 5rem">
+ 				<button class="weui-btn weui-btn_primary" onclick="save()" type="button">保&emsp;&emsp;存</button>
+  			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+   		function sexSelect() {
+			log("ssss")
+			weui.picker([
+				{
+				    label: '男',
+				    value: 0,
+				},
+				{
+				    label: '女',
+				    value: 1
+				}], {
+				   className: 'custom-classname',
+				   container: 'body',
+				   defaultValue: [0],
+				   onChange: function (result) {
+				       console.log(result)
+				   },
+				   onConfirm: function (result) {
+				       $('#sex').val(result[0].label)
+				   },
+				   id: 'singleLinePicker'
+			});
+		}
+   		
+   		function birthDaySelect() {
+   			log(new Date().getDate())
+   			var date
+   			if (isEmpty(data.birthday)) {
+				date = new Date()
+			}else {
+				date = new Date(objToStr(data.birthday))
+			}
+   			weui.datePicker({
+   			    start: date.getFullYear() - 100,
+   			    end: new Date(),
+   			    defaultValue: [date.getFullYear() - 20, date.getMonth()+1, date.getDate()],
+   			    onChange: function(result){
+   			        console.log(result);
+   			    },
+   			    onConfirm: function(result){
+   			     	var month = result[1].value.toString().length==1 ?  '0'+result[1].value : result[1].value;
+   			        $('#birthday').val(result[0].value + "-" + month + "-" + result[2].value)
+   			    },
+   			    id: 'datePicker'
+   			});
+		}
+   		
+   		var data = {};
+   		function query() {
+			request({
+				url:'InfoGet',
+		      	msg:'正在查询数据',
+		      	success: function (json) {
+		      		data = json.resultList[0]
+		      		 $('#nickname').val(objToStr(data.nickname))
+		      		 $('#sex').val(objToStr(data.sex))
+		      		 $('#birthday').val(objToStr(data.birthday))
+		      		 $('#job').val(objToStr(data.job))
+		      		 $('#telephone').val(objToStr(data.telephone))
+		      		 $('#e_mail').val(objToStr(data.e_mail))
+		      	}
+			})
+		}
+		//页面加载完后执行
+		$(document).ready(function(){ 
+			query()
+		});
+		
+		function save() {
+			request({
+				url:'InfoUpdate',
+				data: {
+					birthday:  $('#birthday').val(),
+			        e_mail:  $('#e_mail').val() ,
+			        job:  $('#job').val(),
+			        nickName: $('#nickname').val(),
+			        sex:  $('#sex').val(),
+			        telephone:  $('#telephone').val()
+				},
+		      	msg:'正在保存',
+		      	success: function (json) {
+		      		weui.toast('保存成功')
+		      		setTimeout(function() {
+		      			history.back();
+						location.reload();
+		      		}, 1000)
+		      	}
+			})
+		}
+	</script>
+</body>
+</html>

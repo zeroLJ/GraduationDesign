@@ -28,7 +28,7 @@ public class HeadIconGet extends BaseServlet {
 			file = null;
 			hasFile = false;
 		}
-		String nickname = ObjUtils.objToStr(params.get("nickname"));
+		String nickname = ObjUtils.objToStr(user.getNickName());
 		if (nickname.equals("")) {
 			nickname = ObjUtils.objToStr(params.get("name"));
 		}

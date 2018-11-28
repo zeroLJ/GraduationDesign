@@ -124,6 +124,19 @@ function isEmpty(str){
 }
 
 /**
+ * 对象转字符串
+ * @param str
+ * @returns
+ */
+function objToStr(str){
+	if (str == "" || str == undefined || str == null || str == 'null'){
+		return '';
+	}else{
+		return str.toString().trim();
+	}
+}
+
+/**
  * @param html 网页路径，如：login.html
  */
 function goToPage(html) {
@@ -168,6 +181,12 @@ function getPassWord() {
 		alert("浏览暂不支持sessionStorage") 
 		return ''
 	}
+}
+
+function signout() {
+	setUserName('')
+	setPassWord('')
+	goToPage('signin.html')
 }
 
 function getStringDate(date) {
