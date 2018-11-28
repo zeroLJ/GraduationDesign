@@ -158,7 +158,7 @@
 		        </div>
 		    </div>
 	      	<div class="weui-tabbar"  id="aa">
-	        	<div class="weui-tabbar__item weui-bar__item_on">
+	        	<div class="weui-tabbar__item"> <!-- weui-bar__item_on -->
 	            	<img src="./../images/note_selected.png" alt="" class="weui-tabbar__icon" id="img0">
 	            	<p class="weui-tabbar__label">笔记</p>
 	        	</div>
@@ -173,18 +173,40 @@
 	</div> -->
 	<script type="text/javascript">
 		checkSignIn()
+		
+		function setIcon(index) {
+			if(index == 0){
+	        	$('#img0').attr('src', './../images/note_selected.png')
+	        	$('#img1').attr('src', './../images/user.png')
+	        }else {
+	        	$('#img0').attr('src', './../images/note.png')
+	        	$('#img1').attr('src', './../images/user_selected.png')
+			}
+		}
+		var page = window.location.hash   //#号部分数据
+		if (isEmpty(page)) {
+			page = 0
+		}else {
+			page = page.toString().charAt(1)
+		}
+		setIcon(page)
+		window.onhashchange = function () {
+			var page = window.location.hash   //#号部分数据
+			if (isEmpty(page)) {
+				page = 0
+			}else {
+				page = page.toString().charAt(1)
+			}
+			setIcon(page)
+			log("变化"+page)
+		}
+		log('page'+page)
 		//监听导航栏tab
 		weui.tab('#tab',{
-		    defaultIndex: 0,
+		    defaultIndex: page,
 		    onChange: function(index){
-		        console.log(index);
-		        if(index == 0){
-		        	$('#img0').attr('src', './../images/note_selected.png')
-		        	$('#img1').attr('src', './../images/user.png')
-		        }else {
-		        	$('#img0').attr('src', './../images/note.png')
-		        	$('#img1').attr('src', './../images/user_selected.png')
-				}
+		       	setIcon(index)
+		        window.location.replace(window.location.href.toString().replace(window.location.hash, '')+"#"+index)
 		    }
 		});
 		var data
@@ -226,7 +248,8 @@
 		/* window.onload = function(){ 
 			query()
 		}; */
-		
+
+        
 		request({
 			url:'HeadIconBase64Get',
 	      	success: function (json) {

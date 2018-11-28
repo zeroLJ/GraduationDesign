@@ -139,9 +139,14 @@ function objToStr(str){
 /**
  * @param html 网页路径，如：login.html
  */
-function goToPage(html) {
+function goToPage(html,isRemove) {
 //	window.location.href= page; 
-	$(location).attr('href', html);
+	if (isRemove == true) {
+		location.replace(html)
+	}else {
+		$(location).attr('href', html);
+	}
+	
 }
 
 const WEB_NAME = "VoiceNote"
