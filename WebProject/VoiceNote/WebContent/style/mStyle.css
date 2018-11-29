@@ -53,9 +53,9 @@ body {
 
 .horizontal{
 	display: flex;
-	flex-wrap: nowrap;
 	flex-direction: row;
-	 align-items: center; 
+	/*flex-wrap: nowrap;*/
+	align-items: center;
 	/*justify-content: center;*/
 	width:100%
 }

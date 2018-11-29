@@ -21,11 +21,13 @@ public  class ImageUtil {
 	        data = new byte[inputStream.available()];
 	        inputStream.read(data);
 	        inputStream.close();
+	        // º”√‹
+		    BASE64Encoder encoder = new BASE64Encoder();
+		    return encoder.encode(data);
 	    } catch (IOException e) {
 	        e.printStackTrace();
+	        return "";
 	    }
-	    // º”√‹
-	    BASE64Encoder encoder = new BASE64Encoder();
-	    return encoder.encode(data);
+	   
 	}
 }

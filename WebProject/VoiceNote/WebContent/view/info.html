@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./../style/weui.min.css" />
 <link rel="stylesheet" href="./../style/mStyle.css" />
 <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
-<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 <script src="./../js/httpUtils.js"></script>
 <style>
 	body {
@@ -148,7 +148,7 @@
    			weui.datePicker({
    			    start: date.getFullYear() - 100,
    			    end: new Date(),
-   			    defaultValue: [date.getFullYear() - 20, date.getMonth()+1, date.getDate()],
+   			    defaultValue: [date.getFullYear() , date.getMonth()+1, date.getDate()],
    			    onChange: function(result){
    			        console.log(result);
    			    },

@@ -13,7 +13,7 @@ head.appendChild(link);*/
 //由于这种方法会导致在页面加载时无法调用jquery等方法，故最好还是直接在head加载
 /*var script = document.createElement("script");
 script.language = "javascript";
-script.src = "http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js";
+script.src = "http://https://code.jquery.com/jquery-3.0.0.min.js";
 head.appendChild(script);
 
 script = document.createElement("script");
@@ -21,7 +21,8 @@ script.language = "javascript";
 script.src = "https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js";
 head.appendChild(script);*/
 
-const URL = 'http://localhost:8081/VoiceNote/'
+//const URL = 'http://localhost:8081/VoiceNote/'
+const URL = 'http://192.168.0.128:8081/VoiceNote/'	
 //const URL = 'https://jhonliu.club/VoiceNote/'
 var loading;
 /**
@@ -54,12 +55,78 @@ function request(obj){
         url: url,
         data: data,
 		scriptCharset: 'utf-8',
-		timeout: 5000,
+		timeout: 10000,
         success:function(response,status,xhr){
 			log("status："+status);
 //			log(xhr);
 			var json=JSON.parse(response);
 //			var json=JSON.parse(decodeURIComponent(xhr.getResponseHeader("data")));
+		    if (json.success) {
+		        if(!isEmpty(obj.success)){
+		        	obj.success(json)
+	            }
+	        } else {
+	        	if (isEmpty(obj.error)) {
+	        		weui.alert(json.msg)
+	        	} else {
+	        		obj.error(json)
+	        	}
+	        }			
+        },
+		error: function(xhr,status,error){
+			logW("error")
+			if (isEmpty(obj.fail)) {
+				weui.alert('网络请求失败')
+			}else{
+				obj.fail(res)
+			}
+		},
+		complete: function(xhr,status) {
+			logW("complete")
+			if (!isEmpty(loading)) {
+				loading.hide()
+			}
+		}
+    })
+}
+
+/**
+ * 文件上传{url:请求的地址，必填	msg:请求时的提示	data:提交参数	success：function 请求成功时调用	error：function 请求成功，但服务器返回失败信息时调用		fail：function 网络请求失败时调用}
+ * @param obj FormData格式
+ */
+function upLoad(obj){
+	var showMsg = obj.msg
+	var url = obj.url
+	var data = obj.data
+    if (isEmpty(url)) {
+    	weui.alert('url不能为空！')
+    	return
+	}
+	if(url.indexOf('http')!=0){
+		url = URL + url
+	}
+	var loading
+	if (!isEmpty(showMsg)) {
+		loading = weui.loading(showMsg);
+	}
+	if(isEmpty(data)){
+		data = new FormData()
+	}
+	data.append("name", getUserName())
+	data.append("password", getPassWord())
+	log(data)
+	$.ajax({
+        type:'POST',
+        url: url,
+        data: data,
+		cache : false,
+		processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
+		contentType : false, // 不设置Content-type请求头
+		scriptCharset: 'utf-8',
+		timeout: 5000,
+        success:function(response,status,xhr){
+			log("status："+status);
+			var json=JSON.parse(response);
 		    if (json.success) {
 		        if(!isEmpty(obj.success)){
 		        	obj.success(json)

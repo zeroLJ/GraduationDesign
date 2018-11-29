@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./../style/weui.min.css" />
 <link rel="stylesheet" href="./../style/mStyle.css"/>
 <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
-<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 <script src="./../js/httpUtils.js"></script>
 <style>
 	.container {
@@ -24,25 +24,29 @@
 	.input {
 		/* border:1px solid #faa; */
 		text-align: center;
-		font-size: 1rem;
-		height: 1.2rem;
+		font-size: 1.2rem;
+		padding-top:0.2rem;
+		padding-bottom:0.2rem;
 		flex: 1;
+		display: flex;
+		min-width: 3rem;
 	}
 </style>
 </head>
 <body>
 	<form class="container"  id="form">
 		<div class="horizontal">
-			<span>用&ensp;户&ensp;名：</span>
+			<span >用&ensp;户&ensp;名：</span>
 			<input class="input" placeholder="" name="name" id="name">
 		</div>
 		<div class="horizontal" style="margin-top: 1rem">
-			<span>密&emsp;&emsp;码：</span>
+			<font>密&emsp;&emsp;码：</font>
 			<input class="input" type="password"  name="password" id="password">
 		</div>
 		<button class="weui-btn weui-btn_primary" style="margin-top: 1rem"  onclick="signin()" type="button">登&emsp;&emsp;录</button>
 		<button class="weui-btn weui-btn_default" style="margin-top: 1rem" onclick="skip()" type="button">注&emsp;&emsp;册</button>
 	</form>
+	<!-- <span style="position: fixed; top: 10%">ssss</span> -->
 	<script type="text/javascript">
 		function signin() {
    			var name = $('#name').val()

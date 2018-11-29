@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./../style/weui.min.css" />
 <link rel="stylesheet" href="./../style/mStyle.css"/>
 <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
-<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 <script src="./../js/httpUtils.js"></script>
 <style>
 	.container {
@@ -24,9 +24,12 @@
 	.input {
 		/* border:1px solid #faa; */
 		text-align: center;
+		font-size: 1.2rem;
+		padding-top:0.2rem;
+		padding-bottom:0.2rem;
 		flex: 1;
-		font-size: 1rem;
-		height: 1.2rem;
+		display: flex;
+		min-width: 3rem;
 	}
 </style>
 </head>
@@ -36,11 +39,11 @@
 			<span>用&ensp;户&ensp;名：</span>
 			<input class="input" placeholder="" name="name" id="name">
 		</div>
-		<div class="horizontal" style="margin-top: 1em">
+		<div class="horizontal" style="margin-top: 1rem">
 			<span>密&emsp;&emsp;码：</span>
 			<input class="input" type="password"  name="password" id="password">
 		</div>
-		<div class="horizontal" style="margin-top: 1em">
+		<div class="horizontal" style="margin-top: 1rem">
 			<span>确认密码：</span>
 			<input class="input" type="password"  name="password" id="password2">
 		</div>
