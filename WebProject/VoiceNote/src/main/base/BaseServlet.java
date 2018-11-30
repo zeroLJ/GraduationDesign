@@ -137,12 +137,12 @@ public abstract class BaseServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		DBUtils dbUtils = new DBUtils();
+		DBUtils dbUtils = null;
 		try {
+			dbUtils = new DBUtils();
 			ResponseParams responseParams = exec(request, response, dbUtils);
 			ResponseUtil.response(response, responseParams.resultList, responseParams.resultMap, responseParams.msg, responseParams.file , responseParams.success); 
 		} catch (RuntimeException e) {
-			e.printStackTrace();
 			System.out.println(e.getMessage());
 			ResponseUtil.response(response, null, null, e.getMessage(), null, false);
 		}finally {

@@ -22,8 +22,8 @@ script.src = "https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js";
 head.appendChild(script);*/
 
 //const URL = 'http://localhost:8081/VoiceNote/'
-const URL = 'http://192.168.0.128:8081/VoiceNote/'	
-//const URL = 'https://jhonliu.club/VoiceNote/'
+//const URL = 'http://192.168.0.128:8081/VoiceNote/'	
+const URL = 'https://jhonliu.club/VoiceNote/'
 var loading;
 /**
  * 网络请求{url:请求的地址，必填	msg:请求时的提示	data:提交参数	success：function 请求成功时调用	error：function 请求成功，但服务器返回失败信息时调用		fail：function 网络请求失败时调用}

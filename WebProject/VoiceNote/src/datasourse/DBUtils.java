@@ -1,6 +1,7 @@
 package datasourse;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +16,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import datasourse.type.FieldType;
 import main.util.DateUtils;
@@ -41,7 +47,7 @@ public class DBUtils {
 	
 	public DBUtils()  {
 		startTime = System.currentTimeMillis();
-		try {
+		/*try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			connection = DriverManager.getConnection(connectionUrl);
 			//设置自动提交事务为false； 即需要手动使用connection.commit提交
@@ -50,8 +56,37 @@ public class DBUtils {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}*/
+		setDB("demo");//若没有配置此数据库的连接，会报错
+	}
+	
+	public DBUtils(String db)  {
+		startTime = System.currentTimeMillis();
+		setDB(db);
+	}
+	
+	/**
+	 * 通过读取tomcat中context。xml中的配置连接,例如
+	 * <Resource name="jdbc/demo" auth="Container" type="javax.sql.DataSource"
+		driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" scope="Shareable"
+		testOnBorrow="true" validationQuery="SELECT 1"
+		url="jdbc:sqlserver://localhost:1433;DatabaseName=demo" username="ljl"
+		password="pp123456" maxActive="3" maxIdle="1" maxWait="1" />
+	 */
+	public void setDB(String db)  {
+		try {
+			Context ctx = new InitialContext();
+			DataSource ds=(DataSource)ctx.lookup("java:comp/env/jdbc/" + db);
+			connection = ds.getConnection();
+		} catch (NamingException e) {
+			Logs.d("111111");
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		} catch (SQLException e) {
+			Logs.d("222222");
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}
-		
 	}
 	
 	public Connection getConnection() {
