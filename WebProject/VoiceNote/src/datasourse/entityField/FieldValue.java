@@ -3,8 +3,8 @@ package datasourse.entityField;
 import datasourse.type.FieldType;
 
 /**
- * ÊµÌå×Ö¶Î»ùÀà
- * @param <E> ×Ö¶ÎÊı¾İÀàĞÍ
+ * å®ä½“å­—æ®µåŸºç±»
+ * @param <E> å­—æ®µæ•°æ®ç±»å‹
  */
 public abstract class FieldValue<E> {
 	protected String fieldName;
@@ -22,7 +22,7 @@ public abstract class FieldValue<E> {
 		return fieldName;
 	}
 
-	private boolean flag = false;//ÊÇ·ñÎª³õÊ¼Öµ
+	private boolean flag = false;//æ˜¯å¦ä¸ºåˆå§‹å€¼
 	
 	public void setValue(E value) {
 		this.valueNew = value;

@@ -50,14 +50,14 @@ public class DBUtils {
 		/*try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			connection = DriverManager.getConnection(connectionUrl);
-			//ÉèÖÃ×Ô¶¯Ìá½»ÊÂÎñÎªfalse£» ¼´ĞèÒªÊÖ¶¯Ê¹ÓÃconnection.commitÌá½»
+			//è®¾ç½®è‡ªåŠ¨æäº¤äº‹åŠ¡ä¸ºfalseï¼› å³éœ€è¦æ‰‹åŠ¨ä½¿ç”¨connection.commitæäº¤
 			connection.setAutoCommit(false);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}*/
-		setDB("demo");//ÈôÃ»ÓĞÅäÖÃ´ËÊı¾İ¿âµÄÁ¬½Ó£¬»á±¨´í
+		setDB("demo");//è‹¥æ²¡æœ‰é…ç½®æ­¤æ•°æ®åº“çš„è¿æ¥ï¼Œä¼šæŠ¥é”™
 	}
 	
 	public DBUtils(String db)  {
@@ -66,7 +66,7 @@ public class DBUtils {
 	}
 	
 	/**
-	 * Í¨¹ı¶ÁÈ¡tomcatÖĞcontext¡£xmlÖĞµÄÅäÖÃÁ¬½Ó,ÀıÈç
+	 * é€šè¿‡è¯»å–tomcatä¸­contextã€‚xmlä¸­çš„é…ç½®è¿æ¥,ä¾‹å¦‚
 	 * <Resource name="jdbc/demo" auth="Container" type="javax.sql.DataSource"
 		driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" scope="Shareable"
 		testOnBorrow="true" validationQuery="SELECT 1"
@@ -109,7 +109,7 @@ public class DBUtils {
 				}
 				PreparedStatement pStatement = createStatement(operation.toDBOperation());
 				int a = pStatement.executeUpdate();
-				Logs.d("Ó°ÏìĞĞÊı:" + a);
+				Logs.d("å½±å“è¡Œæ•°:" + a);
 			}
 			connection.commit();
 			return true;
@@ -148,11 +148,11 @@ public class DBUtils {
 				}
 				list.add(map);
 			}
-			Logs.d("²éÑ¯½á¹û£º"+list.toString());
+			Logs.d("æŸ¥è¯¢ç»“æœï¼š"+list.toString());
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Ö´ĞĞ²éÑ¯³ö´í");
+			throw new RuntimeException("æ‰§è¡ŒæŸ¥è¯¢å‡ºé”™");
 		}
 //		return new ArrayList<>();
 	}
@@ -160,8 +160,8 @@ public class DBUtils {
 	
 	
 	/**
-	 * @param query ²éÑ¯Àà 
-	 * @return ·ûºÏ²éÑ¯Ìõ¼şµÄ¶ÔÓ¦µÄÊµÌåÀàÁĞ±í
+	 * @param query æŸ¥è¯¢ç±» 
+	 * @return ç¬¦åˆæŸ¥è¯¢æ¡ä»¶çš„å¯¹åº”çš„å®ä½“ç±»åˆ—è¡¨
 	 * @throws SQLException 
 	 */
 	public <T extends BaseEntity> List<T> queryEntity(BaseQuery query) {
@@ -169,8 +169,8 @@ public class DBUtils {
 	}
 	
 	/**
-	 * @param query ²éÑ¯Àà 
-	 * @return ·ûºÏ²éÑ¯Ìõ¼şµÄ¶ÔÓ¦µÄÊµÌåÀàÁĞ±í
+	 * @param query æŸ¥è¯¢ç±» 
+	 * @return ç¬¦åˆæŸ¥è¯¢æ¡ä»¶çš„å¯¹åº”çš„å®ä½“ç±»åˆ—è¡¨
 	 * @throws SQLException 
 	 */
 	private <T extends BaseEntity> List<T> queryEntity(BaseQuery query, Class<T> c){
@@ -214,9 +214,9 @@ public class DBUtils {
 			}
 		}
 		Logs.d("/***");
-		Logs.d("    Ö´ĞĞsqlÓï¾ä£º"+operation.getSQL());
-		Logs.d("    ²ÎÊıÁĞ±í£º"+params.toString());
-		Logs.d("    ²ÎÊıÀàĞÍ£º"+fieldTypes.toString());
+		Logs.d("    æ‰§è¡Œsqlè¯­å¥ï¼š"+operation.getSQL());
+		Logs.d("    å‚æ•°åˆ—è¡¨ï¼š"+params.toString());
+		Logs.d("    å‚æ•°ç±»å‹ï¼š"+fieldTypes.toString());
 		Logs.d("***/");
 		return pStatement;
 	}
@@ -238,7 +238,7 @@ public class DBUtils {
 				e.printStackTrace();
 			}
 		}
-		//É¾³ı»º´æµÄÎÄ¼ş
+		//åˆ é™¤ç¼“å­˜çš„æ–‡ä»¶
 		if (uploadFiles!=null && !uploadFiles.isEmpty()) {
 			File parentFile = uploadFiles.get(0).getParentFile();
 			for(File file : uploadFiles) {
@@ -250,7 +250,7 @@ public class DBUtils {
 				parentFile.delete();		
 			}
 		}
-		Logs.d("ºÄÊ±:"+(System.currentTimeMillis()-startTime));
+		Logs.d("è€—æ—¶:"+(System.currentTimeMillis()-startTime));
 	}
 
 }

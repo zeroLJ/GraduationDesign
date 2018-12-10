@@ -7,13 +7,13 @@ import java.util.List;
 import datasourse.type.FieldType;
 
 /**
- * Êı¾İ¿â²Ù×÷»ù´¡Àà
- * Ê¹ÓÃµÄÊ±ºò×¢Òâparams Óë paramTypesµÄ´óĞ¡ÒªÒ»ÖÂ¡£
+ * æ•°æ®åº“æ“ä½œåŸºç¡€ç±»
+ * ä½¿ç”¨çš„æ—¶å€™æ³¨æ„params ä¸ paramTypesçš„å¤§å°è¦ä¸€è‡´ã€‚
  */
 public class DBOperation{
-	protected String sql;   //ÒªÖ´ĞĞµÄsqlÓï¾ä
-	protected List<Object> params;   //²ÎÊıÁĞ±í£¬ÓÃÓÚÌæ»»sqlÖĞµÄ¡°?¡±ºÅ
-	protected List<FieldType> paramTypes;  	//²ÎÊıÀàĞÍÁĞ±í
+	protected String sql;   //è¦æ‰§è¡Œçš„sqlè¯­å¥
+	protected List<Object> params;   //å‚æ•°åˆ—è¡¨ï¼Œç”¨äºæ›¿æ¢sqlä¸­çš„â€œ?â€å·
+	protected List<FieldType> paramTypes;  	//å‚æ•°ç±»å‹åˆ—è¡¨
 	
 	public DBOperation(String sql){
 		this.params = new ArrayList<>();

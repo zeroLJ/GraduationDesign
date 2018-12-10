@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.regexp.internal.recompile;
 
 import datasourse.entityField.BooleanFieldValue;
 import datasourse.entityField.DateTimeFieldValue;
@@ -17,36 +16,36 @@ import datasourse.type.FieldType;
 import main.util.ObjUtils;
 
 /**
- * �� ʵ���������
+ * 锟斤拷 实锟斤拷锟斤拷锟斤拷锟斤拷锟�
  */
 public abstract class BaseEntity extends DBOperation {
 	/**
-	 * ��ȡ���ֶ���
+	 * 锟斤拷取锟斤拷锟街讹拷锟斤拷
 	 * @return
 	 */
 	public abstract List<String> getFieldNames();
 	/**
-	 * ��ȡ���ֶ���������
+	 * 锟斤拷取锟斤拷锟街讹拷锟斤拷锟斤拷锟斤拷锟斤拷
 	 * @return
 	 */
 	public abstract List<FieldType> getFieldTypes();
 	/**
-	 * ��ȡ����
+	 * 锟斤拷取锟斤拷锟斤拷
 	 * @return
 	 */
 	public abstract String getTableName();
 	/**
-	 * ��ȡ�������б�
+	 * 锟斤拷取锟斤拷锟斤拷锟斤拷锟叫憋拷
 	 * @return
 	 */
 	protected abstract List<String> getKeys();
 
 	protected abstract Map<String, Integer> getFieldPositionMap();
 	
-	//���ֶ�ֵ�б�
+	//锟斤拷锟街讹拷值锟叫憋拷
 	private List<FieldValue> valueList = new ArrayList<>();
 	/**
-	 * ��ȡ���ֶ�ֵ�б�
+	 * 锟斤拷取锟斤拷锟街讹拷值锟叫憋拷
 	 * @return
 	 */
 	public List<FieldValue> getFieldValues() {
@@ -100,7 +99,7 @@ public abstract class BaseEntity extends DBOperation {
 	}
 
 	/**
-	 * �ѱ�����ʵ��ת��map���ͣ����ڽ����������ݴ���
+	 * 锟窖憋拷锟斤拷锟斤拷实锟斤拷转锟斤拷map锟斤拷锟酵ｏ拷锟斤拷锟节斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟捷达拷锟斤拷
 	 * @return
 	 */	
 	public Map<String, Object> toMap() {
@@ -116,21 +115,21 @@ public abstract class BaseEntity extends DBOperation {
 		return JSON.toJSONString(toMap());
 	}
 
-	//�������������б�
+	//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟叫憋拷
 	private List<FieldType> keyTypes = new ArrayList<>();
 	/**
-	 * ��ȡ�������������б�,��û����������Ϊ�����ֶ�
+	 * 锟斤拷取锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟叫憋拷,锟斤拷没锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷为锟斤拷锟斤拷锟街讹拷
 	 * @return
 	 */
 	public List<FieldType> getKeyFieldTypes() {
 		return keyTypes;
 	}
 	
-	//��������ֵ�б�
+	//锟斤拷锟斤拷锟斤拷锟斤拷值锟叫憋拷
 	private List<Object> keyValues = new ArrayList<>();
 	/**
-	 * ��ȡ������ʼ����ֵ�б�,��û����������Ϊ�����ֶ�
-	 * ������ͨ����ѯ��ѯ���ɵ�entity���ܻ�ȡ��
+	 * 锟斤拷取锟斤拷锟斤拷锟斤拷始锟斤拷锟斤拷值锟叫憋拷,锟斤拷没锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷为锟斤拷锟斤拷锟街讹拷
+	 * 锟斤拷锟斤拷锟斤拷通锟斤拷锟斤拷询锟斤拷询锟斤拷锟缴碉拷entity锟斤拷锟杰伙拷取锟斤拷
 	 * @return
 	 */
 	public List<Object> getKeyFieldValues() {
@@ -138,12 +137,12 @@ public abstract class BaseEntity extends DBOperation {
 	}
 
 	/**
-	 * ������ʼֵ��һ��Ϊ��ѯʱ�Զ����ã�����Ҫ�ֶ����ô˷�����
-	 * ��û�������������������ֶεĳ�ʼֵ
-	 * ע�⣬һ�����ô˷��������ж�Ϊupdate���͡�
-	 * ps:�ֶ����õĻ���ע��������������ݿ���д�����Ψһ��
+	 * 锟斤拷锟斤拷锟斤拷始值锟斤拷一锟斤拷为锟斤拷询时锟皆讹拷锟斤拷锟矫ｏ拷锟斤拷锟斤拷要锟街讹拷锟斤拷锟矫此凤拷锟斤拷锟斤拷
+	 * 锟斤拷没锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟街段的筹拷始值
+	 * 注锟解，一锟斤拷锟斤拷锟矫此凤拷锟斤拷锟斤拷锟斤拷锟叫讹拷为update锟斤拷锟酵★拷
+	 * ps:锟街讹拷锟斤拷锟矫的伙拷锟斤拷注锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷菘锟斤拷锟叫达拷锟斤拷锟斤拷唯一锟斤拷
 	 * @param map
-	 * @return �Ƿ�������
+	 * @return 锟角凤拷锟斤拷锟斤拷锟斤拷
 	 */
 	public void initKeyField(Map<String, Object> map) {
 		keyTypes.clear();
@@ -166,7 +165,7 @@ public abstract class BaseEntity extends DBOperation {
 	}
 	
 	/**
-	 * ������ֵ�滻��map�е�ֵ����û�ж�Ӧkeyֵ����Ϊnull
+	 * 锟斤拷锟斤拷锟斤拷值锟芥换锟斤拷map锟叫碉拷值锟斤拷锟斤拷没锟叫讹拷应key值锟斤拷锟斤拷为null
 	 * @param map
 	 * @return
 	 */
@@ -232,7 +231,7 @@ public abstract class BaseEntity extends DBOperation {
 	}
 	
 	/**
-	 * �����Ƿ��б仯
+	 * 锟斤拷锟斤拷锟角凤拷锟叫变化
 	 * @return
 	 */
 	public boolean isChange() {
@@ -248,7 +247,7 @@ public abstract class BaseEntity extends DBOperation {
 	}
 	
 	/**
-	 * �Ƿ�Ϊ����������
+	 * 锟角凤拷为锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	 * @return
 	 */
 	public boolean isInsert() {
@@ -263,7 +262,7 @@ public abstract class BaseEntity extends DBOperation {
 	}
 	
 	/**
-	 * �Ƿ�Ϊ���µ�����
+	 * 锟角凤拷为锟斤拷锟铰碉拷锟斤拷锟斤拷
 	 * @return
 	 */
 	public boolean isUpdate() {
@@ -279,7 +278,7 @@ public abstract class BaseEntity extends DBOperation {
 	
 	private boolean delete = false;
 	/**
-	 * �Ƿ�Ϊɾ��
+	 * 锟角凤拷为删锟斤拷
 	 * @return
 	 */
 	public boolean isDelete() {

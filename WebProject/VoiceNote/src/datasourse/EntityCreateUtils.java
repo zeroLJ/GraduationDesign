@@ -18,38 +18,38 @@ import datasourse.type.FieldType;
   
 /**
  * @author ljl
- * Êı¾İ¿â±í  ²éÑ¯ÀàºÍÊµÌåÀàµÄÉú³É¹¤¾ßÀà
- * ĞŞ¸ÄÏà¹ØĞÅÏ¢Ö±½Órun¼´¿É
+ * æ•°æ®åº“è¡¨  æŸ¥è¯¢ç±»å’Œå®ä½“ç±»çš„ç”Ÿæˆå·¥å…·ç±»
+ * ä¿®æ”¹ç›¸å…³ä¿¡æ¯ç›´æ¥runå³å¯
  */
 public class EntityCreateUtils{  
-//    private String entityOutPath = "datasourse.entity";//Ö¸¶¨ÊµÌåÉú³ÉËùÔÚ°üµÄÂ·¾¶
-//    private String queryOutPath = "datasourse.query";//Ö¸¶¨²éÑ¯ÀàÉú³ÉËùÔÚ°üµÄÂ·¾¶
-	private String entityOutPath = "database.entity";//Ö¸¶¨ÊµÌåÉú³ÉËùÔÚ°üµÄÂ·¾¶
-    private String queryOutPath = "database.query";//Ö¸¶¨²éÑ¯ÀàÉú³ÉËùÔÚ°üµÄÂ·¾¶
-    private String tablename = "userT";//±íÃû  
-    //Êı¾İ¿âÁ¬½Ó  
+//    private String entityOutPath = "datasourse.entity";//æŒ‡å®šå®ä½“ç”Ÿæˆæ‰€åœ¨åŒ…çš„è·¯å¾„
+//    private String queryOutPath = "datasourse.query";//æŒ‡å®šæŸ¥è¯¢ç±»ç”Ÿæˆæ‰€åœ¨åŒ…çš„è·¯å¾„
+	private String entityOutPath = "database.entity";//æŒ‡å®šå®ä½“ç”Ÿæˆæ‰€åœ¨åŒ…çš„è·¯å¾„
+    private String queryOutPath = "database.query";//æŒ‡å®šæŸ¥è¯¢ç±»ç”Ÿæˆæ‰€åœ¨åŒ…çš„è·¯å¾„
+    private String tablename = "userT";//è¡¨å  
+    //æ•°æ®åº“è¿æ¥  
     private static final String URL = "jdbc:sqlserver://localhost:1433;" 
 								            +"databaseName=demo;"
 								            + "user=ljl;"
 								            + "password=pp123456;";
     private static final String DRIVER ="com.microsoft.sqlserver.jdbc.SQLServerDriver"; 
-    private String authorName = "ljl";//Éú³ÉÕßÃû×Ö  
+    private String authorName = "ljl";//ç”Ÿæˆè€…åå­—  
     
     
-    /******************************** ÒÔÏÂ´úÂë²»ĞèĞŞ¸Ä    **************************************/
+    /******************************** ä»¥ä¸‹ä»£ç ä¸éœ€ä¿®æ”¹    **************************************/
     
-    private String[] colnames; // ÁĞÃûÊı×é  
-    private FieldType[] colTypes; //ÁĞÃûÀàĞÍÊı×é  
-    private int[] colSizes; //ÁĞÃû´óĞ¡Êı×é  
-    private List<String> keyList;//Ö÷¼üÃû³ÆÁĞ±í
+    private String[] colnames; // åˆ—åæ•°ç»„  
+    private FieldType[] colTypes; //åˆ—åç±»å‹æ•°ç»„  
+    private int[] colSizes; //åˆ—åå¤§å°æ•°ç»„  
+    private List<String> keyList;//ä¸»é”®åç§°åˆ—è¡¨
   
     /* 
-     * ¹¹Ôìº¯Êı 
+     * æ„é€ å‡½æ•° 
      */  
     public EntityCreateUtils(){  
-        //´´½¨Á¬½Ó  
+        //åˆ›å»ºè¿æ¥  
         Connection con;  
-        //²éÒªÉú³ÉÊµÌåÀàµÄ±í  
+        //æŸ¥è¦ç”Ÿæˆå®ä½“ç±»çš„è¡¨  
         String sql = "select * from " + tablename;  
         PreparedStatement pStemt = null;  
         try {  
@@ -63,7 +63,7 @@ public class EntityCreateUtils{
             pStemt = con.prepareStatement(sql);  
            
            
-            //»ñÈ¡Ö÷¼ü
+            //è·å–ä¸»é”®
             keyList = new ArrayList<>();
             ResultSet pkRSet = con.getMetaData().getPrimaryKeys(null, null, tablename);
             while(pkRSet.next() ) {
@@ -79,7 +79,7 @@ public class EntityCreateUtils{
             }
             
             ResultSetMetaData rsmd = pStemt.getMetaData();
-            int size = rsmd.getColumnCount();   //Í³¼ÆÁĞ  
+            int size = rsmd.getColumnCount();   //ç»Ÿè®¡åˆ—  
             colnames = new String[size];  
             colTypes = new FieldType[size];  
             colSizes = new int[size];  
@@ -91,11 +91,11 @@ public class EntityCreateUtils{
               
             String entityClassStr = toEntityClassStr(colnames,colTypes,colSizes, keyList);  
             String queryClassStr = toQueryClassStr(colnames,colTypes,colSizes);  
-            //Éú³ÉÊµÌåÀàÎÄ¼ş
+            //ç”Ÿæˆå®ä½“ç±»æ–‡ä»¶
             try {  
                 File directory = new File("");  
-                //System.out.println("¾ø¶ÔÂ·¾¶£º"+directory.getAbsolutePath());  
-                //System.out.println("Ïà¶ÔÂ·¾¶£º"+directory.getCanonicalPath());           
+                //System.out.println("ç»å¯¹è·¯å¾„ï¼š"+directory.getAbsolutePath());  
+                //System.out.println("ç›¸å¯¹è·¯å¾„ï¼š"+directory.getCanonicalPath());           
 //                System.out.println("src/?/"+path.substring(path.lastIndexOf("/com/", path.length())) );  
 //              String outputPath = directory.getAbsolutePath()+ "/src/"+path.substring(path.lastIndexOf("/com/", path.length()), path.length()) + initcap(tablename) + ".java";  
                 String outputPath = directory.getAbsolutePath()+ "/src/"+this.entityOutPath.replace(".", "/")+"/"+initcap(tablename) + ".java";  
@@ -116,7 +116,7 @@ public class EntityCreateUtils{
                 e.printStackTrace();  
             }  
             
-            //Éú³É²éÑ¯ÀàÎÄ¼ş
+            //ç”ŸæˆæŸ¥è¯¢ç±»æ–‡ä»¶
             try {  
                 File directory = new File("");  
                 String outputPath = directory.getAbsolutePath()+ "/src/"+this.queryOutPath.replace(".", "/")+"/"+initcap(tablename) + "Query" + ".java";  
@@ -132,7 +132,7 @@ public class EntityCreateUtils{
             } catch (IOException e) {  
                 e.printStackTrace();  
             }  
-            //¶Ï¿ªÁ¬½Ó
+            //æ–­å¼€è¿æ¥
             con.close();
         } catch (SQLException e) {  
             e.printStackTrace();  
@@ -140,7 +140,7 @@ public class EntityCreateUtils{
     }  
     
     /** 
-     * ¹¦ÄÜ£ºÉú³É²éÑ¯ÀàÖ÷Ìå´úÂë 
+     * åŠŸèƒ½ï¼šç”ŸæˆæŸ¥è¯¢ç±»ä¸»ä½“ä»£ç  
      * @param colnames 
      * @param colTypes 
      * @param colSizes 
@@ -172,13 +172,13 @@ public class EntityCreateUtils{
           }
           sb.append("import datasourse.type.FieldType;\r\n");  
           
-          //×¢ÊÍ²¿·Ö  
+          //æ³¨é‡Šéƒ¨åˆ†  
           sb.append("/**\r\n");  
           sb.append(" * @author "+authorName+"\r\n");  
-          sb.append(" * "+tablename+" ²éÑ¯Àà\r\n");  
+          sb.append(" * "+tablename+" æŸ¥è¯¢ç±»\r\n");  
           sb.append(" * "+getDateString()+"\r\n");  
           sb.append(" */ \r\n");  
-          //ÊµÌå²¿·Ö  
+          //å®ä½“éƒ¨åˆ†  
           sb.append("\r\npublic class " + initcap(tablename) + "Query extends BaseQuery {\r\n");  
           sb.append("\t").append("private final static List<String> NAMELIST = Collections.unmodifiableList(Arrays.asList(new String[]{");
           for(int i = 0; i < colnames.length; i++) {
@@ -257,11 +257,11 @@ public class EntityCreateUtils{
     }  
   
     /** 
-     * ¹¦ÄÜ£ºÉú³ÉÊµÌåÀàÖ÷Ìå´úÂë 
-     * @param colnames ×Ö¶ÎÃû³ÆÁĞ±í
-     * @param colTypes ×Ö¶ÎÀàĞÍÁĞ±í
+     * åŠŸèƒ½ï¼šç”Ÿæˆå®ä½“ç±»ä¸»ä½“ä»£ç  
+     * @param colnames å­—æ®µåç§°åˆ—è¡¨
+     * @param colTypes å­—æ®µç±»å‹åˆ—è¡¨
      * @param colSizes 
-     * @param primaryKeys Ö÷¼üÃû³ÆÁĞ±í
+     * @param primaryKeys ä¸»é”®åç§°åˆ—è¡¨
      * @return 
      */  
     private String toEntityClassStr(String[] colnames, FieldType[] colTypes, int[] colSizes, List<String> primaryKeys) {  
@@ -288,13 +288,13 @@ public class EntityCreateUtils{
         }
         sb.append("import datasourse.type.FieldType;\r\n");  
         
-        //×¢ÊÍ²¿·Ö  
+        //æ³¨é‡Šéƒ¨åˆ†  
         sb.append("/**\r\n");  
         sb.append(" * @author "+authorName+"\r\n");  
-        sb.append(" * "+tablename+" ÊµÌåÀà\r\n");  
+        sb.append(" * "+tablename+" å®ä½“ç±»\r\n");  
         sb.append(" * "+getDateString()+"\r\n");  
         sb.append(" */ \r\n");  
-        //ÊµÌå²¿·Ö  
+        //å®ä½“éƒ¨åˆ†  
         sb.append("\r\npublic class " + initcap(tablename) + " extends BaseEntity {\r\n");  
         sb.append("\t").append("private final static List<String> NAMELIST = Collections.unmodifiableList(Arrays.asList(new String[]{");
         for(int i = 0; i < colnames.length; i++) {
@@ -382,7 +382,7 @@ public class EntityCreateUtils{
       
       
     /** 
-     * ¹¦ÄÜ£º½«ÊäÈë×Ö·û´®µÄÊ××ÖÄ¸¸Ä³É´óĞ´ 
+     * åŠŸèƒ½ï¼šå°†è¾“å…¥å­—ç¬¦ä¸²çš„é¦–å­—æ¯æ”¹æˆå¤§å†™ 
      * @param str 
      * @return 
      */  
@@ -397,7 +397,7 @@ public class EntityCreateUtils{
     }  
   
     /** 
-     * ¹¦ÄÜ£º»ñµÃÁĞµÄÊı¾İÀàĞÍ 
+     * åŠŸèƒ½ï¼šè·å¾—åˆ—çš„æ•°æ®ç±»å‹ 
      * @param sqlType 
      * @return 
      */  
@@ -433,7 +433,7 @@ public class EntityCreateUtils{
     }  
     
     /** 
-     * ¹¦ÄÜ£º»ñµÃÁĞµÄÊı¾İÀàĞÍ 
+     * åŠŸèƒ½ï¼šè·å¾—åˆ—çš„æ•°æ®ç±»å‹ 
      * @param sqlType 
      * @return 
      */  
@@ -442,7 +442,7 @@ public class EntityCreateUtils{
         if(sqlType.equalsIgnoreCase("bit")){  
             return FieldType.BOOLEAN;  
         }else if(sqlType.equalsIgnoreCase("tinyint")){  
-        	//´ı¶¨
+        	//å¾…å®š
             return FieldType.STRING;  
         }else if(sqlType.equalsIgnoreCase("smallint")){  
             return FieldType.NUMBER;  
@@ -463,7 +463,7 @@ public class EntityCreateUtils{
         }else if(sqlType.equalsIgnoreCase("datetime") || sqlType.equalsIgnoreCase("date")){  
             return FieldType.DATETIME;  
         }else if(sqlType.equalsIgnoreCase("image")){
-        	//´ı¶¨
+        	//å¾…å®š
             return FieldType.STRING;  
         }  
           
@@ -476,7 +476,7 @@ public class EntityCreateUtils{
 	}
       
     /** 
-     * ³ö¿Ú 
+     * å‡ºå£ 
      * TODO 
      * @param args 
      */  

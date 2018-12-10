@@ -15,29 +15,29 @@ import datasourse.type.FieldType;
 import datasourse.type.LinkType;
 
 /**
- * ±í²éÑ¯»ù´¡Àà
+ * è¡¨æŸ¥è¯¢åŸºç¡€ç±»
  */
 public abstract class BaseQuery extends DBOperation{
 	public BaseQuery() {
 		super("");
 	}
 	/**
-	 * »ñÈ¡¸÷×Ö¶ÎÃû
+	 * è·å–å„å­—æ®µå
 	 * @return
 	 */
 	public abstract List<String> getFieldNames();
 	/**
-	 * »ñÈ¡¸÷×Ö¶ÎÊı¾İÀàĞÍ
+	 * è·å–å„å­—æ®µæ•°æ®ç±»å‹
 	 * @return
 	 */
 	public abstract List<FieldType> getFieldTypes();
 	/**
-	 * »ñÈ¡±íÃû
+	 * è·å–è¡¨å
 	 * @return
 	 */
 	public abstract String getTableName();
 	/**
-	 * »ñÈ¡ÏàÓ¦µÄÊµÌåÀà
+	 * è·å–ç›¸åº”çš„å®ä½“ç±»
 	 * @return
 	 */
 	public abstract Class<? extends BaseEntity> getEntityClass();
@@ -46,13 +46,13 @@ public abstract class BaseQuery extends DBOperation{
 	
 	private LinkType linkType = LinkType.AND;
 	/**
-	 * ½ÓÏÂÀ´ÉèÖÃµÄwhereÌõ¼şÒÔandÁ¬½Ó
+	 * æ¥ä¸‹æ¥è®¾ç½®çš„whereæ¡ä»¶ä»¥andè¿æ¥
 	 */
 	public void linkAnd() {
 		this.linkType = LinkType.AND;
 	}
 	/**
-	 * ½ÓÏÂÀ´ÉèÖÃµÄwhereÌõ¼şÒÔorÁ¬½Ó
+	 * æ¥ä¸‹æ¥è®¾ç½®çš„whereæ¡ä»¶ä»¥orè¿æ¥
 	 */
 	public void linkOr() {
 		this.linkType = LinkType.OR;
@@ -108,8 +108,8 @@ public abstract class BaseQuery extends DBOperation{
 	}
 	
 	public String getWhereSQL() {
-		StringBuilder builder = new StringBuilder(); //where Ìõ¼ş×Ö·û´®
-		boolean flag = true;  //ÏÂÒ»¸ö²éÑ¯Ìõ¼şÊÇ·ñ²»ĞèÒªÌí¼ÓÁ¬½Ó·û  and/or
+		StringBuilder builder = new StringBuilder(); //where æ¡ä»¶å­—ç¬¦ä¸²
+		boolean flag = true;  //ä¸‹ä¸€ä¸ªæŸ¥è¯¢æ¡ä»¶æ˜¯å¦ä¸éœ€è¦æ·»åŠ è¿æ¥ç¬¦  and/or
 		for (FieldQuery field : whereList) {
 			if (!field.getSQL().equals("")) {
 				if (flag) {
@@ -132,7 +132,7 @@ public abstract class BaseQuery extends DBOperation{
 	
 	
 	public String getSQL() {
-		Set<String> selectSet = new HashSet<>();//ĞèÒªselect³öÀ´µÄ×Ö¶Î£¬ÈôÎª¿Õ£¬ÔòselectËùÓĞ×Ö¶Î
+		Set<String> selectSet = new HashSet<>();//éœ€è¦selectå‡ºæ¥çš„å­—æ®µï¼Œè‹¥ä¸ºç©ºï¼Œåˆ™selectæ‰€æœ‰å­—æ®µ
 		for (FieldQuery field : whereList) {
 			if (field.isSelected()) {
 				selectSet.add(field.getFieldName());
@@ -156,7 +156,7 @@ public abstract class BaseQuery extends DBOperation{
 	}
 	
 	 /** 
-     * ¹¦ÄÜ£º½«ÊäÈë×Ö·û´®µÄÊ××ÖÄ¸¸Ä³É´óĞ´ 
+     * åŠŸèƒ½ï¼šå°†è¾“å…¥å­—ç¬¦ä¸²çš„é¦–å­—æ¯æ”¹æˆå¤§å†™ 
      * @param str 
      * @return 
      */  

@@ -6,16 +6,16 @@ import java.util.List;
 import datasourse.type.FieldType;
 import datasourse.type.LinkType;
 /**
- * ²éÑ¯×Ö¶Î»ùÀà
- * @param <E> ×Ö¶ÎÊı¾İÀàĞÍ
+ * æŸ¥è¯¢å­—æ®µåŸºç±»
+ * @param <E> å­—æ®µæ•°æ®ç±»å‹
  */
 public class FieldQuery<E> {
 	protected String fieldName;
-	protected String sql;//²éÑ¯Ìõ¼ş
+	protected String sql;//æŸ¥è¯¢æ¡ä»¶
 	protected List<E> value = new ArrayList<>();
 	private LinkType linkType = LinkType.AND;
 	private FieldType fieldType = FieldType.STRING;
-	private boolean selected;//ÊÇ·ñĞèÒª²éÑ¯³öÀ´
+	private boolean selected;//æ˜¯å¦éœ€è¦æŸ¥è¯¢å‡ºæ¥
 	public void outField() {
 		selected = true;
 	}
