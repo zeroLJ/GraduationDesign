@@ -40,7 +40,7 @@ public class InfoGet extends BaseServlet{
 		}	
         List<UserT> list =db.queryEntity(query);
 		if (list.size() <= 0) {
-			return ResponseParams.failResult("ÓÃ»§²»´æÔÚ");
+			return ResponseParams.failResult("ç”¨æˆ·ä¸å­˜åœ¨");
 		}
 		List<Map<String, Object>> mList = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();

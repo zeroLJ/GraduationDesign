@@ -15,7 +15,7 @@ public class WxUtils {
 	
 	
 	/**
-	 * »ñÈ¡¹«ÖÚºÅAccess_token
+	 * è·å–å…¬ä¼—å·Access_token
 	 * @return
 	 */
 	public static String getAccess_token() {
@@ -31,8 +31,8 @@ public class WxUtils {
 	}
 	
 	/**
-	 * »ñÈ¡ÓÃ»§Access_token
-	 * @param code  ÓÃ»§Í¬ÒâÊÚÈ¨ºó´«»ØÀ´µÄcode
+	 * è·å–ç”¨æˆ·Access_token
+	 * @param code  ç”¨æˆ·åŒæ„æˆæƒåä¼ å›æ¥çš„code
 	 * @return
 	 */
 	public static WxUserToken getUserAccess_token(String code) {
@@ -48,8 +48,8 @@ public class WxUtils {
 	}
 	
 	/**
-	 * Ë¢ĞÂÓÃ»§Access_token
-	 * @param oldToken  Í¨¹ıgetUserAccess_token»ñÈ¡µÄtoken
+	 * åˆ·æ–°ç”¨æˆ·Access_token
+	 * @param oldToken  é€šè¿‡getUserAccess_tokenè·å–çš„token
 	 * @return
 	 */
 	public static WxUserToken refreshUserAccess_token(WxUserToken oldToken) {
@@ -64,7 +64,7 @@ public class WxUtils {
 	}
 	
 	/**
-	 * ¼ìÑéÓÃ»§ÊÚÈ¨Æ¾Ö¤£¨access_token£©ÊÇ·ñÓĞĞ§
+	 * æ£€éªŒç”¨æˆ·æˆæƒå‡­è¯ï¼ˆaccess_tokenï¼‰æ˜¯å¦æœ‰æ•ˆ
 	 * @param wxUserToken
 	 * @return
 	 */
@@ -83,7 +83,7 @@ public class WxUtils {
 	}
 	
 	/**
-	 * À­È¡ÓÃ»§ĞÅÏ¢£¬(ĞèscopeÎª snsapi_userinfo)
+	 * æ‹‰å–ç”¨æˆ·ä¿¡æ¯ï¼Œ(éœ€scopeä¸º snsapi_userinfo)
 	 * @param token
 	 * @return
 	 */
@@ -91,7 +91,7 @@ public class WxUtils {
 		Map<String, String> params = new HashMap<>();
 		params.put("access_token", token.access_token);
 		params.put("openid", token.openid);
-		params.put("lang", "zh_CN"); //	·µ»Ø¹ú¼ÒµØÇøÓïÑÔ°æ±¾£¬zh_CN ¼òÌå£¬zh_TW ·±Ìå£¬en Ó¢Óï
+		params.put("lang", "zh_CN"); //	è¿”å›å›½å®¶åœ°åŒºè¯­è¨€ç‰ˆæœ¬ï¼Œzh_CN ç®€ä½“ï¼Œzh_TW ç¹ä½“ï¼Œen è‹±è¯­
 	    String json=HttpRequest.sendGet("https://api.weixin.qq.com/sns/userinfo", params);
 	    Logs.d("userinfo_json:" + json);
 	    WxUserInfo info = new WxUserInfo(json);
@@ -99,7 +99,7 @@ public class WxUtils {
 	}
 	
 	/**
-	 * ½Ó¿Úµ÷ÓÃ´ÎÊıÇå0 £¬Ã¿¸öÕÊºÅÃ¿ÔÂ¹²10´ÎÇåÁã²Ù×÷»ú»á£¬ÇåÁãÉúĞ§Ò»´Î¼´ÓÃµôÒ»´Î»ú»á£¨10´Î°üÀ¨ÁËÆ½Ì¨ÉÏµÄÇåÁãºÍµ÷ÓÃ½Ó¿ÚAPIµÄÇåÁã£©¡£
+	 * æ¥å£è°ƒç”¨æ¬¡æ•°æ¸…0 ï¼Œæ¯ä¸ªå¸å·æ¯æœˆå…±10æ¬¡æ¸…é›¶æ“ä½œæœºä¼šï¼Œæ¸…é›¶ç”Ÿæ•ˆä¸€æ¬¡å³ç”¨æ‰ä¸€æ¬¡æœºä¼šï¼ˆ10æ¬¡åŒ…æ‹¬äº†å¹³å°ä¸Šçš„æ¸…é›¶å’Œè°ƒç”¨æ¥å£APIçš„æ¸…é›¶ï¼‰ã€‚
 	 * @return
 	 */
 	public static boolean clear_quota() {

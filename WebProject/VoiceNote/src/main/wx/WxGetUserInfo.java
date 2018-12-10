@@ -18,7 +18,7 @@ import main.wxUtils.WxUtils;
 
 
 /**
- * Î¢ĞÅ¹«ÖÚºÅÊÚÈ¨ºóÌø×ª
+ * å¾®ä¿¡å…¬ä¼—å·æˆæƒåè·³è½¬
  */
 @WebServlet("/WxGetUserInfo")
 public class WxGetUserInfo extends HttpServlet {
@@ -55,7 +55,7 @@ public class WxGetUserInfo extends HttpServlet {
 		WxUtils.getWxUserInfo(token);
 		Logs.d("isWork:"+ WxUtils.checkUserAccess_token(token));
 //		response.sendRedirect("http://193.112.132.83/WxDemo/NewFile.jsp");
-		String result = "ÄãºÃ°¡";
+		String result = "ä½ å¥½å•Š";
 		try {
 			OutputStream os = response.getOutputStream();
 			response.setHeader("Content-Type", "text/html; charset=UTF-8");

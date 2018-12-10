@@ -19,18 +19,18 @@ public class HeadIconChange extends BaseServlet {
 	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
 		if (!db.getUploadFiles().isEmpty()) {
 			File file = db.getUploadFiles().get(0);
-			System.out.println("ÎÄ¼ş´Ó:" + file.getAbsolutePath());
+			System.out.println("æ–‡ä»¶ä»:" + file.getAbsolutePath());
 			File toFile = new File("C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\icon.jpg");
 			toFile.getParentFile().mkdirs();
 			if (toFile.exists()) {
 				toFile.delete();
 			}
 			file.renameTo(toFile);
-			System.out.println("ÎÄ¼şµ½:" + toFile.getAbsolutePath());
+			System.out.println("æ–‡ä»¶åˆ°:" + toFile.getAbsolutePath());
 			return ResponseParams.successResult();
 		} else {
-			return ResponseParams.failResult("Í·Ïñ¸ü¸ÄÊ§°Ü");
-			// ResponseUtil.response(response, "Í·Ïñ¸ü¸ÄÊ§°Ü",false);
+			return ResponseParams.failResult("å¤´åƒæ›´æ”¹å¤±è´¥");
+			// ResponseUtil.response(response, "å¤´åƒæ›´æ”¹å¤±è´¥",false);
 		}
 	}
 

@@ -31,7 +31,7 @@ public class Login extends BaseNoSigninServlet {
 		UserTQuery query = new UserTQuery();
 		query.Field_Name().setIs(user.getUserName());
 		if (!db.queryEntity(query).isEmpty()) {
-			return ResponseParams.failResult("´ËÓÃ»§ÃûÒÑ´æÔÚ£¡");
+			return ResponseParams.failResult("æ­¤ç”¨æˆ·åå·²å­˜åœ¨ï¼");
 		}else {
 			UserT entity = new UserT();
 			entity.Field_Name().setValue(user.getUserName());
@@ -39,7 +39,7 @@ public class Login extends BaseNoSigninServlet {
 			if (db.saveToDB(entity)) {
 				return ResponseParams.successResult();
 			}else {
-				return ResponseParams.failResult("×¢²áÊ§°Ü");
+				return ResponseParams.failResult("æ³¨å†Œå¤±è´¥");
 			}
 		}
 	}

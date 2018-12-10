@@ -31,11 +31,11 @@ import main.util.ResponseUtil;
 
 
 /**
- * ĞèÒªĞ£ÑéÕËºÅÃÜÂë¾Í¼Ì³Ğ´ËÀà£¬·ñÔò¼Ì³ĞBaseNoSigninServlet¡£class
+ * éœ€è¦æ ¡éªŒè´¦å·å¯†ç å°±ç»§æ‰¿æ­¤ç±»ï¼Œå¦åˆ™ç»§æ‰¿BaseNoSigninServletã€‚class
  */
-//@WebServlet("/BaseServlet")//´Ë²ÎÊıÔÚÕû¸öÏîÄ¿ÖĞ±ØĞëÎ¨Ò»£¬·ñÔòÔËĞĞÊ§°Ü
+//@WebServlet("/BaseServlet")//æ­¤å‚æ•°åœ¨æ•´ä¸ªé¡¹ç›®ä¸­å¿…é¡»å”¯ä¸€ï¼Œå¦åˆ™è¿è¡Œå¤±è´¥
 public abstract class BaseServlet extends HttpServlet {
-	//Õâ¸ö±äÁ¿±ØĞëÉèÖÃ
+	//è¿™ä¸ªå˜é‡å¿…é¡»è®¾ç½®
 	protected static final long serialVersionUID = 1L;
 
     public BaseServlet() {
@@ -48,31 +48,31 @@ public abstract class BaseServlet extends HttpServlet {
 		String nameKey = "name";
 		Map<String, String> params = new HashMap<>();
 		System.out.println("Served at: "+request.getContextPath() + "  Class:" + getClass().getName());
-        String uploadFileName = ""; // ÉÏ´«µÄÎÄ¼şÃû  
-        String fieldName = ""; // ±íµ¥×Ö¶ÎÔªËØµÄnameÊôĞÔÖµ  
-        List<File> files = new ArrayList<>();//ÓÃ»§ÉÏ´«µÄÎÄ¼şÁĞ±í
+        String uploadFileName = ""; // ä¸Šä¼ çš„æ–‡ä»¶å  
+        String fieldName = ""; // è¡¨å•å­—æ®µå…ƒç´ çš„nameå±æ€§å€¼  
+        List<File> files = new ArrayList<>();//ç”¨æˆ·ä¸Šä¼ çš„æ–‡ä»¶åˆ—è¡¨
         request.setCharacterEncoding("UTF-8"); 
         
-		// ÇëÇóĞÅÏ¢ÖĞµÄÄÚÈİÊÇ·ñÊÇmultipartÀàĞÍ  
+		// è¯·æ±‚ä¿¡æ¯ä¸­çš„å†…å®¹æ˜¯å¦æ˜¯multipartç±»å‹  
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);  
         if (isMultipart) {  
             FileItemFactory factory = new DiskFileItemFactory();
             ServletFileUpload upload = new ServletFileUpload(factory);  
             try {  
-                // ½âÎöform±íµ¥ÖĞËùÓĞÎÄ¼ş  
+                // è§£æformè¡¨å•ä¸­æ‰€æœ‰æ–‡ä»¶  
                 @SuppressWarnings("unchecked")
 				List<FileItem> items = upload.parseRequest(request);  
                 Iterator<FileItem> iter = items.iterator();  
-                while (iter.hasNext()) { // ÒÀ´Î´¦ÀíÃ¿¸öÎÄ¼ş  
+                while (iter.hasNext()) { // ä¾æ¬¡å¤„ç†æ¯ä¸ªæ–‡ä»¶  
                     FileItem item = (FileItem) iter.next();  
-                    if (item.isFormField()) { // ÆÕÍ¨±íµ¥×Ö¶Î  
-                        fieldName = item.getFieldName(); // ±íµ¥×Ö¶ÎµÄnameÊôĞÔÖµ  
+                    if (item.isFormField()) { // æ™®é€šè¡¨å•å­—æ®µ  
+                        fieldName = item.getFieldName(); // è¡¨å•å­—æ®µçš„nameå±æ€§å€¼  
                         params.put(fieldName, item.getString("UTF-8"));
                         if (fieldName.equals("name")) {  
-                            // Êä³ö±íµ¥×Ö¶ÎµÄÖµ  
-                            System.out.println(item.getString("UTF-8") + "ÉÏ´«ÁËÎÄ¼ş.");  
+                            // è¾“å‡ºè¡¨å•å­—æ®µçš„å€¼  
+                            System.out.println(item.getString("UTF-8") + "ä¸Šä¼ äº†æ–‡ä»¶.");  
                         }  
-                    } else { // ÎÄ¼ş±íµ¥×Ö¶Î  
+                    } else { // æ–‡ä»¶è¡¨å•å­—æ®µ  
                     	fieldName = item.getFieldName();
                     	uploadFileName = item.getName();  
                         if (uploadFileName != null && !uploadFileName.equals("")) {  
@@ -83,8 +83,8 @@ public abstract class BaseServlet extends HttpServlet {
                             File saveFile = new File(file.getAbsolutePath(), uploadFileName);  
                             item.write(saveFile);  
                             files.add(saveFile);
-//                            params.put(fieldName, saveFile.getAbsolutePath());//±£´æÎÄ¼şÂ·¾¶ÒÔ±¸Ê¹ÓÃ
-                            System.out.println("ÉÏ´«ÎÄ¼ş:" + uploadFileName + " ´æ´¢Â·¾¶£º" + saveFile.getAbsolutePath());  
+//                            params.put(fieldName, saveFile.getAbsolutePath());//ä¿å­˜æ–‡ä»¶è·¯å¾„ä»¥å¤‡ä½¿ç”¨
+                            System.out.println("ä¸Šä¼ æ–‡ä»¶:" + uploadFileName + " å­˜å‚¨è·¯å¾„ï¼š" + saveFile.getAbsolutePath());  
                         }  
                     }  
                 }  
@@ -100,7 +100,7 @@ public abstract class BaseServlet extends HttpServlet {
 				params.put(key,URLDecoder.decode(map.get(key)[0],"utf-8"));
 			}
 		} 
-		System.out.println("²ÎÊıÁĞ±í£º"+params.toString());
+		System.out.println("å‚æ•°åˆ—è¡¨ï¼š"+params.toString());
 		
         name = ObjUtils.objToStr(params.get("name"));
         password = ObjUtils.objToStr(params.get("password"));
@@ -128,11 +128,11 @@ public abstract class BaseServlet extends HttpServlet {
 		}	
         List<Map<String, Object>> list = dbUtils.queryList(query);
         if (list.size() > 0) {
-        	System.out.println("ÓĞ´ËÓÃ»§");
+        	System.out.println("æœ‰æ­¤ç”¨æˆ·");
         	User user = new User(name, ObjUtils.objToStr(list.get(0).get("nickname")), password);
         	return doSQL(params, dbUtils, user);
 		}else {
-			return ResponseParams.failResult("ÓÃ»§Ãû»òÃÜÂë´íÎó£¡£¡");
+			return ResponseParams.failResult("ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼ï¼");
 		}  
 	}
 

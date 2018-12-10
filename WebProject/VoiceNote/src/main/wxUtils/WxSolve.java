@@ -3,7 +3,7 @@ package main.wxUtils;
 import main.util.ObjUtils;
 
 /**
- * ¹«ÖÚºÅ»Ø¸´¹¤¾ßÀà
+ * å…¬ä¼—å·å›å¤å·¥å…·ç±»
  * @author ljl
  */
 public class WxSolve {
@@ -17,16 +17,16 @@ public class WxSolve {
 	}
 	
 	/**
-	 * »ñÈ¡eventÊÂ¼şÒª·µ»ØµÄ×Ö·û´®
+	 * è·å–eventäº‹ä»¶è¦è¿”å›çš„å­—ç¬¦ä¸²
 	 * @param message
 	 * @return
 	 */
 	private static String getEventResult(WxMessage message) {
 		if (message.Event!=null) {
 			switch (message.Event) {
-				case "subscribe"://¹Ø×¢
+				case "subscribe"://å…³æ³¨
 					return getSubscribeResult(message);
-				case "unsubscribe"://È¡Ïû¹Ø×¢
+				case "unsubscribe"://å–æ¶ˆå…³æ³¨
 					
 					break;
 				case "CLICK":
@@ -40,14 +40,14 @@ public class WxSolve {
 	
 	
 	/**
-	 * »ñÈ¡³ıeventÊÂ¼şÍâÒª·µ»ØµÄ×Ö·û´®
+	 * è·å–é™¤eventäº‹ä»¶å¤–è¦è¿”å›çš„å­—ç¬¦ä¸²
 	 * @param message
 	 * @return
 	 */
 	private static String getOtherResult(WxMessage message) {
 		StringBuilder s = new StringBuilder();
 		if (message.Content!=null) {
-			String result = "ÄãÒ²"+message.Content;
+			String result = "ä½ ä¹Ÿ"+message.Content;
 			s.append("<xml>");
 			s.append(" <ToUserName><![CDATA[").append(message.FromUserName).append("]]></ToUserName>");
 			s.append(" <FromUserName><![CDATA[").append(message.ToUserName).append("]]></FromUserName>");
@@ -61,7 +61,7 @@ public class WxSolve {
 	}
 	
 	/**
-	 * »ñÈ¡¹Ø×¢ÊÂ¼şĞèÒª·µ»ØµÄ×Ö·û´®
+	 * è·å–å…³æ³¨äº‹ä»¶éœ€è¦è¿”å›çš„å­—ç¬¦ä¸²
 	 * @param message
 	 * @return
 	 */
@@ -72,14 +72,14 @@ public class WxSolve {
 		s.append(" <FromUserName><![CDATA[").append(message.ToUserName).append("]]></FromUserName>");
 		s.append(" <CreateTime>").append(System.currentTimeMillis()).append("</CreateTime>");
 		s.append(" <MsgType><![CDATA[").append("text").append("]]></MsgType>");
-		s.append(" <Content><![CDATA[").append("¸ĞĞ»¹Ø×¢").append("]]></Content>");
+		s.append(" <Content><![CDATA[").append("æ„Ÿè°¢å…³æ³¨").append("]]></Content>");
 		s.append("</xml>");
 		return s.toString();
 	}
 	
 	
 	/**
-	 * »ñÈ¡µã»÷ÊÂ¼şĞèÒª·µ»ØµÄ×Ö·û´®
+	 * è·å–ç‚¹å‡»äº‹ä»¶éœ€è¦è¿”å›çš„å­—ç¬¦ä¸²
 	 * @param message
 	 * @return
 	 */

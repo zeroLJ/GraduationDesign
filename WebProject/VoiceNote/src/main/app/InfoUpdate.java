@@ -39,7 +39,7 @@ public class InfoUpdate extends BaseServlet {
 		}
 		List<UserT> list = db.queryEntity(query);
 		if (list.size() <= 0) {
-			return ResponseParams.failResult("ÓÃ»§²»´æÔÚ");
+			return ResponseParams.failResult("ç”¨æˆ·ä¸å­˜åœ¨");
 		}
 		list.get(0).Field_Nickname().setValue(nickName);
 		list.get(0).Field_E_mail().setValue(e_mail);
@@ -50,7 +50,7 @@ public class InfoUpdate extends BaseServlet {
 		if (db.saveToDB(list)) {
 			return ResponseParams.successResult();
 		}else {
-			return ResponseParams.failResult("ÐÞ¸ÄÊ§°Ü");
+			return ResponseParams.failResult("ä¿®æ”¹å¤±è´¥");
 		}	
 	}
 

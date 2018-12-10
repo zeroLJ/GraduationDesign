@@ -22,7 +22,7 @@ public class NoteGetAudio extends BaseServlet {
 				+ DateUtils.getFileNameByDate(DateUtils.StringDateTime(params.get("addTime"))) + "\\iat.wav";
 		File file = new File(filepath);
 		if (!file.exists()) {
-			return ResponseParams.failResult("ÏÂÔØÎÄ¼ş²»´æÔÚ£¡£¡");
+			return ResponseParams.failResult("ä¸‹è½½æ–‡ä»¶ä¸å­˜åœ¨ï¼ï¼");
 		}
 		return ResponseParams.successResultFile(file);
 	}

@@ -27,7 +27,7 @@ public class NoteDelete extends BaseServlet{
                 File f = files[i];
                 deleteFile(f);
             }
-            file.delete();//ÈçÒª±£ÁôÎÄ¼ş¼Ğ£¬Ö»É¾³ıÎÄ¼ş£¬Çë×¢ÊÍÕâĞĞ
+            file.delete();//å¦‚è¦ä¿ç•™æ–‡ä»¶å¤¹ï¼Œåªåˆ é™¤æ–‡ä»¶ï¼Œè¯·æ³¨é‡Šè¿™è¡Œ
         } else if (file.exists()) {
             file.delete();
         }

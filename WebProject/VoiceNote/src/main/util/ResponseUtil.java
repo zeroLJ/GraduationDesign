@@ -32,11 +32,11 @@ public class ResponseUtil{
 			map.put("resultMap", new HashMap<>());
 		}
 		String resultStr = JSON.toJSONString(map);
-		response.setContentType("text/html;charset=utf-8");//设置返回数据的编码，不需使用encode
+		response.setContentType("text/html;charset=utf-8");//璁剧疆杩斿洖鏁版嵁鐨勭紪鐮侊紝涓嶉渶浣跨敤encode
 //		response.addHeader("data", URLEncoder.encode(resultStr,"UTF-8")); 
 //		response.addHeader("data", resultStr); 
 		if (file!=null) {
-			response.addHeader("data", URLEncoder.encode(resultStr,"UTF-8")); //若在header添加数据，需要encode
+			response.addHeader("data", URLEncoder.encode(resultStr,"UTF-8")); //鑻ュ湪header娣诲姞鏁版嵁锛岄渶瑕乪ncode
 			OutputStream out = response.getOutputStream(); 
 			response.setContentType("application/octet-stream"); 
 			response.addHeader("Content-Disposition", "attachment;filename="  

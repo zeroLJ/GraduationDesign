@@ -57,11 +57,11 @@ public class WxBackGround extends HttpServlet{
 //	     System.out.println("access_token" + access_token);
 		
 		String result = "";
-		if (echostr!=null && echostr.length()>0) { //Ö»ÓĞ¶Ë¿ÚÑéÖ¤µÄÊ±ºòÓĞÓÃ
+		if (echostr!=null && echostr.length()>0) { //åªæœ‰ç«¯å£éªŒè¯çš„æ—¶å€™æœ‰ç”¨
 			result = echostr;
 			System.out.println("xml2:" + "\n");
 		}else {
-			/** ¶ÁÈ¡½ÓÊÕµ½µÄxmlÏûÏ¢ */
+			/** è¯»å–æ¥æ”¶åˆ°çš„xmlæ¶ˆæ¯ */
 			StringBuffer sb = new StringBuffer();
 			InputStream is = request.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is, "UTF-8");
@@ -70,7 +70,7 @@ public class WxBackGround extends HttpServlet{
 			while ((s = br.readLine()) != null) {
 				sb.append(s);
 			}
-			String xml = sb.toString();	//´Î¼´Îª½ÓÊÕµ½Î¢ĞÅ¶Ë·¢ËÍ¹ıÀ´µÄxmlÊı¾İ
+			String xml = sb.toString();	//æ¬¡å³ä¸ºæ¥æ”¶åˆ°å¾®ä¿¡ç«¯å‘é€è¿‡æ¥çš„xmlæ•°æ®
 			System.out.println("xml:"+xml + "\n");
 			
 			WxMessage message = new WxMessage(xml);

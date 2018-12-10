@@ -20,12 +20,12 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * ¹ıÂËÆ÷£¬¿ÉÒÔÔÚÕâÀïĞ£ÑéÇëÇóÊÇ·ñÕıÈ·
- * ÓÉÓÚServletĞ£Ñé·ÅÔÚMainServlet´¦Àí£¬ÕâÀï²»½øĞĞĞ£Ñé£¬Êµ¼ÊÒ²¿ÉÒÔÖ±½ÓÔÚ´ËĞ£Ñé²¢Í¨¹ı·´Éä·ÃÎÊµ½¶ÔÓ¦ServletµÄ·½·¨
+ * è¿‡æ»¤å™¨ï¼Œå¯ä»¥åœ¨è¿™é‡Œæ ¡éªŒè¯·æ±‚æ˜¯å¦æ­£ç¡®
+ * ç”±äºServletæ ¡éªŒæ”¾åœ¨MainServletå¤„ç†ï¼Œè¿™é‡Œä¸è¿›è¡Œæ ¡éªŒï¼Œå®é™…ä¹Ÿå¯ä»¥ç›´æ¥åœ¨æ­¤æ ¡éªŒå¹¶é€šè¿‡åå°„è®¿é—®åˆ°å¯¹åº”Servletçš„æ–¹æ³•
  */
 //@WebFilter("/MainFilter")
-//Î¢ĞÅURLÑéÖ¤µÄÊ±ºò±ØĞë×¢ÊÍµô£¨²»ÄÜÓĞÀ¹½ØÆ÷À¹½Ø£©²ÅÄÜÑéÖ¤³É¹¦£¬Ô­Òò²»Ã÷
-//@WebFilter(filterName="MainFilter",urlPatterns={"/*"})//FilterÃû³ÆºÍ¹ıÂË·¶Î§ÉèÖÃ£¬Í¨¹ı×¢½âÉèÖÃ¾Í²»ÓÃÔÚweb.xml½øĞĞÅäÖÃ
+//å¾®ä¿¡URLéªŒè¯çš„æ—¶å€™å¿…é¡»æ³¨é‡Šæ‰ï¼ˆä¸èƒ½æœ‰æ‹¦æˆªå™¨æ‹¦æˆªï¼‰æ‰èƒ½éªŒè¯æˆåŠŸï¼ŒåŸå› ä¸æ˜
+//@WebFilter(filterName="MainFilter",urlPatterns={"/*"})//Filteråç§°å’Œè¿‡æ»¤èŒƒå›´è®¾ç½®ï¼Œé€šè¿‡æ³¨è§£è®¾ç½®å°±ä¸ç”¨åœ¨web.xmlè¿›è¡Œé…ç½®
 public class MainFilter implements Filter {
 
 	protected String connectionUrl = 
@@ -70,7 +70,7 @@ public class MainFilter implements Filter {
         System.out.println(ctxPath);
         chain.doFilter(request, response);
 
-        //ServletĞ£Ñé·ÅÔÚBaseServlet´¦Àí
+        //Servletæ ¡éªŒæ”¾åœ¨BaseServletå¤„ç†
        
         /*if (!currentURL.contains("main")) {
 			 return;
@@ -81,27 +81,27 @@ public class MainFilter implements Filter {
 			aClass = Class.forName("main.InfoGet");
 			method = aClass.getDeclaredMethod("doSQL",  HttpServletRequest.class, 
 					HttpServletResponse.class,Statement.class, Map.class);
-			System.out.println("·½·¨´æÔÚ");
+			System.out.println("æ–¹æ³•å­˜åœ¨");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("²»´æÔÚ");
+			System.out.println("ä¸å­˜åœ¨");
 			return;
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("·½·¨²»´æÔÚ");
+			System.out.println("æ–¹æ³•ä¸å­˜åœ¨");
 			return;
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("ÎŞ·¨·ÃÎÊ");
+			System.out.println("æ— æ³•è®¿é—®");
 			return;
 		}
         
         System.out.println("Served at: "+request.getContextPath() + "  Class:" + getClass().getName());
-        String uploadFileName = ""; // ÉÏ´«µÄÎÄ¼şÃû  
-        String fieldName = ""; // ±íµ¥×Ö¶ÎÔªËØµÄnameÊôĞÔÖµ  
+        String uploadFileName = ""; // ä¸Šä¼ çš„æ–‡ä»¶å  
+        String fieldName = ""; // è¡¨å•å­—æ®µå…ƒç´ çš„nameå±æ€§å€¼  
         
 		
 		try {
@@ -109,26 +109,26 @@ public class MainFilter implements Filter {
 			request.setCharacterEncoding("UTF-8"); 
 			con = DriverManager.getConnection(connectionUrl);
 			
-			// ÇëÇóĞÅÏ¢ÖĞµÄÄÚÈİÊÇ·ñÊÇmultipartÀàĞÍ  
+			// è¯·æ±‚ä¿¡æ¯ä¸­çš„å†…å®¹æ˜¯å¦æ˜¯multipartç±»å‹  
 	        boolean isMultipart = ServletFileUpload.isMultipartContent(request);  
 	        if (isMultipart) {  
 	            FileItemFactory factory = new DiskFileItemFactory();
 	            ServletFileUpload upload = new ServletFileUpload(factory);  
 	            try {  
-	                // ½âÎöform±íµ¥ÖĞËùÓĞÎÄ¼ş  
+	                // è§£æformè¡¨å•ä¸­æ‰€æœ‰æ–‡ä»¶  
 	                @SuppressWarnings("unchecked")
 					List<FileItem> items = upload.parseRequest(request);  
 	                Iterator<FileItem> iter = items.iterator();  
-	                while (iter.hasNext()) { // ÒÀ´Î´¦ÀíÃ¿¸öÎÄ¼ş  
+	                while (iter.hasNext()) { // ä¾æ¬¡å¤„ç†æ¯ä¸ªæ–‡ä»¶  
 	                    FileItem item = (FileItem) iter.next();  
-	                    if (item.isFormField()) { // ÆÕÍ¨±íµ¥×Ö¶Î  
-	                        fieldName = item.getFieldName(); // ±íµ¥×Ö¶ÎµÄnameÊôĞÔÖµ  
+	                    if (item.isFormField()) { // æ™®é€šè¡¨å•å­—æ®µ  
+	                        fieldName = item.getFieldName(); // è¡¨å•å­—æ®µçš„nameå±æ€§å€¼  
 	                        params.put(fieldName, item.getString("UTF-8"));
 	                        if (fieldName.equals("name")) {  
-	                            // Êä³ö±íµ¥×Ö¶ÎµÄÖµ  
-	                            System.out.println(item.getString("UTF-8") + "ÉÏ´«ÁËÎÄ¼ş.");  
+	                            // è¾“å‡ºè¡¨å•å­—æ®µçš„å€¼  
+	                            System.out.println(item.getString("UTF-8") + "ä¸Šä¼ äº†æ–‡ä»¶.");  
 	                        }  
-	                    } else { // ÎÄ¼ş±íµ¥×Ö¶Î  
+	                    } else { // æ–‡ä»¶è¡¨å•å­—æ®µ  
 	                        String fileName = item.getName();  
 	                        if (fileName != null && !fileName.equals("")) {  
 	                            File fullFile = new File(item.getName());  
@@ -141,8 +141,8 @@ public class MainFilter implements Filter {
 	                            File saveFile = new File(file.getAbsolutePath(), fileName);  
 	                            item.write(saveFile);  
 	                            uploadFileName = fullFile.getName();  
-	                            params.put(strings[1], saveFile.getAbsolutePath());//±£´æÎÄ¼şÂ·¾¶ÒÔ±¸Ê¹ÓÃ
-	                            System.out.println("ÉÏ´«µÄÎÄ¼şÃûÊÇ:" + uploadFileName + " ´æ´¢Â·¾¶£º" + saveFile.getAbsolutePath());  
+	                            params.put(strings[1], saveFile.getAbsolutePath());//ä¿å­˜æ–‡ä»¶è·¯å¾„ä»¥å¤‡ä½¿ç”¨
+	                            System.out.println("ä¸Šä¼ çš„æ–‡ä»¶åæ˜¯:" + uploadFileName + " å­˜å‚¨è·¯å¾„ï¼š" + saveFile.getAbsolutePath());  
 	                        }  
 	                    }  
 	                }  
@@ -158,7 +158,7 @@ public class MainFilter implements Filter {
 					params.put(key,URLDecoder.decode(map.get(key)[0],"utf-8"));
 				}
 			} 
-			System.out.println("²ÎÊıÁĞ±í£º"+params.toString());
+			System.out.println("å‚æ•°åˆ—è¡¨ï¼š"+params.toString());
 			
 		    stmt = con.createStatement();
 	        name = ObjUtils.objToStr(params.get("name"));
@@ -178,11 +178,11 @@ public class MainFilter implements Filter {
 			}	        
 	        ResultSet rs = stmt.executeQuery("select * from dbo.[user] where "+ nameKey + "='"+ name +"' and password='" + password + "'");
 	        if (rs.next()) {
-	        	System.out.println("ÓĞ´ËÓÃ»§");
+	        	System.out.println("æœ‰æ­¤ç”¨æˆ·");
 	        	params.put("nickname", rs.getString("nickname"));
 	        	method.invoke(aClass.newInstance(),request, response, stmt, params);
 			}else {
-				ResponseUtil.response(response, "ÓÃ»§Ãû»òÃÜÂë´íÎó£¡£¡", false);
+				ResponseUtil.response(response, "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼ï¼", false);
 			}      
 		} catch (ClassNotFoundException e) {
 			ResponseUtil.response(response, e.getMessage(), false);

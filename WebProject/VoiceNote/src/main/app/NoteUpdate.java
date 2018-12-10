@@ -33,14 +33,14 @@ public class NoteUpdate extends BaseServlet{
 //		String query = "select * from dbo.[note] where addTime='"+addTime+"' and name='"+ ObjUtils.objToStr(params.get("name"))+"'";
 		if (params.get("file") != null && !params.get("file").equals("") ) {
 			File file = new File(params.get("file"));
-			System.out.println("ÎÄ¼ş´Ó:" + file.getAbsolutePath());  
+			System.out.println("æ–‡ä»¶ä»:" + file.getAbsolutePath());  
 			File toFile = new File("C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime)) + "\\iat.wav");
 			toFile.getParentFile().mkdirs();
 			if (toFile.exists()) {
 				toFile.delete();
 			}
 			file.renameTo(toFile);
-			System.out.println("ÎÄ¼şµ½:" + toFile.getAbsolutePath());  
+			System.out.println("æ–‡ä»¶åˆ°:" + toFile.getAbsolutePath());  
 		}
 		NoteQuery query = new NoteQuery();
 		query.Field_Name().setIs(user.getUserName());
@@ -54,7 +54,7 @@ public class NoteUpdate extends BaseServlet{
 			note.Field_AddTime().setValue(new Date());
 			note.Field_AudioPath().setValue(audioPath);
 			db.saveToDB(note);
-//			ResponseUtil.response(response, "Ìí¼Ó³É¹¦");
+//			ResponseUtil.response(response, "æ·»åŠ æˆåŠŸ");
 			return ResponseParams.successResult();
 		}
 		list.get(0).Field_Name().setValue(user.getUserName());
@@ -71,9 +71,9 @@ public class NoteUpdate extends BaseServlet{
 //				+ "audioPath='"+audioPath+"' "
 //				+ "where addTime='"+addTime+"' "
 //				+ "and name='"+ ObjUtils.objToStr(params.get("name")) +"'";
-//		System.out.println("Ö´ĞĞsqlÓï¾ä:"+s);
+//		System.out.println("æ‰§è¡Œsqlè¯­å¥:"+s);
 //		sql.execute(s); 
-//		ResponseUtil.response(response, "ĞŞ¸Ä³É¹¦");
+//		ResponseUtil.response(response, "ä¿®æ”¹æˆåŠŸ");
 //		return null;
 	}
 

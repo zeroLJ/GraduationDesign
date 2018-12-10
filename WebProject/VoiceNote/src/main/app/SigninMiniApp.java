@@ -20,7 +20,7 @@ import main.util.ObjUtils;
 import main.util.StringUtils;
 
 /**
- * Î¢ĞÅĞ¡³ÌĞò×¨ÓÃµÇÂ¼½Ó¿Ú
+ * å¾®ä¿¡å°ç¨‹åºä¸“ç”¨ç™»å½•æ¥å£
  * @author ljl
  *
  */
@@ -32,7 +32,7 @@ public class SigninMiniApp extends BaseNoSigninServlet {
 	public ResponseParams doSQL(Map<String, String> params, DBUtils db, User user) {
 		String code = ObjUtils.objToStr(params.get("code"));
 		if (StringUtils.isEmpty(code)) {
-			return ResponseParams.failResult("²ÎÊıcode²»ÄÜÎª¿Õ");
+			return ResponseParams.failResult("å‚æ•°codeä¸èƒ½ä¸ºç©º");
 		}
 		Map<String, String> map = new HashMap<>();
 		map.put("appid", "wx8c8a0f220cd8fc1c");
@@ -45,7 +45,7 @@ public class SigninMiniApp extends BaseNoSigninServlet {
 		try {
 			rMap = JSON.parseObject(result,Map.class);
 		} catch (Exception e) {
-			return ResponseParams.failResult("jscode2session·µ»Ø½á¹û½âÎöÊ§°Ü");
+			return ResponseParams.failResult("jscode2sessionè¿”å›ç»“æœè§£æå¤±è´¥");
 		}
 		System.out.println(rMap.toString());
 		String userName = ObjUtils.objToStr(rMap.get("openid")) + "_mini";
@@ -56,14 +56,14 @@ public class SigninMiniApp extends BaseNoSigninServlet {
 			if (StringUtils.isNotEmpty(params.get("iconUrl"))) {
 				File file = HttpRequest.downloadFile(params.get("iconUrl"), new File("C:\\VoiceNote\\" + userName + "\\icon_temp.jpg"));
 				if (file!=null) {
-					System.out.println("ÎÄ¼ş´Ó:" + file.getAbsolutePath());
+					System.out.println("æ–‡ä»¶ä»:" + file.getAbsolutePath());
 					File toFile = new File("C:\\VoiceNote\\" + userName + "\\icon.jpg");
 					toFile.getParentFile().mkdirs();
 					if (toFile.exists()) {
 						toFile.delete();
 					}
 					file.renameTo(toFile);
-					System.out.println("ÎÄ¼şµ½:" + toFile.getAbsolutePath());
+					System.out.println("æ–‡ä»¶åˆ°:" + toFile.getAbsolutePath());
 				}
 			}
 			UserT userT = new UserT();
@@ -72,16 +72,16 @@ public class SigninMiniApp extends BaseNoSigninServlet {
 			userT.Field_Name_mini().setValue(userName);
 			int sex = ObjUtils.objToInt(params.get("gender"));
 			if (sex == 1) {
-				userT.Field_Sex().setValue("ÄĞ");
+				userT.Field_Sex().setValue("ç”·");
 			}else if(sex==2){
-				userT.Field_Sex().setValue("Å®");
+				userT.Field_Sex().setValue("å¥³");
 			}
 			if (db.saveToDB(userT)) {
 				rMap.put("newUser", "true");
 				rMap.put("nickname", user.getNickName());
 				return ResponseParams.successResultMap(rMap);
 			}else {
-				return ResponseParams.failResult("µÇÂ¼Ê§°Ü");
+				return ResponseParams.failResult("ç™»å½•å¤±è´¥");
 			}
 		}
 		rMap.put("nickname", ObjUtils.objToStr(list.get(0).get("nickname")));

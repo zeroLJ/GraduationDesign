@@ -32,7 +32,7 @@ public class NoteRefresh extends BaseServlet{
 			String message = ObjUtils.objToStr(note.get("message"));
 			String audioPath = ObjUtils.objToStr(note.get("audioPath"));
 			switch (ObjUtils.objToStr(note.get("flag"))) {
-				case "1"://ĞÂÔö
+				case "1"://æ–°å¢
 					Note entity = new Note();
 					entity.Field_Name().setValue(user.getUserName());
 					entity.Field_Title().setValue(title);
@@ -40,7 +40,7 @@ public class NoteRefresh extends BaseServlet{
 					entity.Field_AddTime().setValue(DateUtils.StringDateTime(addTime));
 					entity.Field_AudioPath().setValue(audioPath);
 					db.saveToDB(entity);
-				case "2"://ĞŞ¸Ä
+				case "2"://ä¿®æ”¹
 					NoteQuery query = new NoteQuery();
 					query.Field_Name().setIs(user.getUserName());
 					query.Field_AddTime().setIs(DateUtils.StringDateTime(addTime));
@@ -53,7 +53,7 @@ public class NoteRefresh extends BaseServlet{
 						note2.Field_AddTime().setValue(DateUtils.StringDateTime(addTime));
 						note2.Field_AudioPath().setValue(audioPath);
 						db.saveToDB(note2);
-//						ResponseUtil.response(response, "Ìí¼Ó³É¹¦");
+//						ResponseUtil.response(response, "æ·»åŠ æˆåŠŸ");
 						return ResponseParams.successResult();
 					}
 					list2.get(0).Field_Name().setValue(user.getUserName());
@@ -65,7 +65,7 @@ public class NoteRefresh extends BaseServlet{
 					
 					
 //					s =  "select * from dbo.[note] where addTime='"+addTime+"' and name='"+ ObjUtils.objToStr(params.get("name"))+"'";
-//					System.out.println("Ö´ĞĞsqlÓï¾ä:"+s);
+//					System.out.println("æ‰§è¡Œsqlè¯­å¥:"+s);
 //					ResultSet rs = sql.executeQuery(s);
 //					if (!rs.next()) {
 //						sql.execute("insert into dbo.[note](name,title,message,addTime,editTime,audioPath) values("
@@ -81,7 +81,7 @@ public class NoteRefresh extends BaseServlet{
 //						String eString = rs.getString(rs.findColumn("editTime"));
 //						if (eString!=null) {
 //							Date date2 = DateUtils.StringDateTime(rs.getString(rs.findColumn("editTime")));
-//							if (date1.getTime() > date2.getTime()) { //¿Í»§¶ËµÄĞŞ¸ÄÊ±¼äÍíÓÚ·şÎñÆ÷¶ËµÄĞŞ¸ÄÊ±¼ä
+//							if (date1.getTime() > date2.getTime()) { //å®¢æˆ·ç«¯çš„ä¿®æ”¹æ—¶é—´æ™šäºæœåŠ¡å™¨ç«¯çš„ä¿®æ”¹æ—¶é—´
 //								s = "update dbo.[note] set "
 //										+ "title='"+title+"',"
 //										+ "message='"+message+"',"
@@ -89,7 +89,7 @@ public class NoteRefresh extends BaseServlet{
 //										+ "audioPath='"+audioPath+"' "
 //										+ "where addTime='"+addTime+"' "
 //										+ "and name='"+ObjUtils.objToStr(params.get("name"))+"'";
-//								System.out.println("Ö´ĞĞsqlÓï¾ä:"+s);
+//								System.out.println("æ‰§è¡Œsqlè¯­å¥:"+s);
 //								sql.execute(s);
 //							}
 //						}else {
@@ -100,14 +100,14 @@ public class NoteRefresh extends BaseServlet{
 //									+ "audioPath='"+audioPath+"' "
 //									+ "where addTime='"+addTime+"' "
 //									+ "and name='"+ObjUtils.objToStr(params.get("name"))+"'";
-//							System.out.println("Ö´ĞĞsqlÓï¾ä:"+s);
+//							System.out.println("æ‰§è¡Œsqlè¯­å¥:"+s);
 //							sql.execute(s); 
 //						}
 //					}
 //					break;
-				case "3"://É¾³ı
+				case "3"://åˆ é™¤
 //					s = "delete from dbo.[note] where addTime='"+addTime+"' and name='"+ObjUtils.objToStr(params.get("name"))+"'";
-//					System.out.println("Ö´ĞĞsqlÓï¾ä:"+s);
+//					System.out.println("æ‰§è¡Œsqlè¯­å¥:"+s);
 //					sql.execute(s); 
 					NoteQuery noteQuery = new NoteQuery();
 					noteQuery.Field_Name().setIs(user.getUserName());
@@ -141,7 +141,7 @@ public class NoteRefresh extends BaseServlet{
 		Logs.d("list:"+resultList);
 		return ResponseParams.successResultList(resultList);
 //		s = "select * from dbo.[note] where name='"+ObjUtils.objToStr(params.get("name"))+"'";
-//		System.out.println("Ö´ĞĞsqlÓï¾ä:"+s);
+//		System.out.println("æ‰§è¡Œsqlè¯­å¥:"+s);
 //		ResultSet rs = sql.executeQuery(s);
 //		List<Map<String, Object>> mList = new ArrayList<>();
 //		while (rs.next()) {
@@ -165,7 +165,7 @@ public class NoteRefresh extends BaseServlet{
 //			mList.add(map);
 //		}
 //		System.out.println(mList.toString());
-//		ResponseUtil.response(response, mList, null,"Í¬²½³É¹¦");
+//		ResponseUtil.response(response, mList, null,"åŒæ­¥æˆåŠŸ");
 //		return null;
 	}
 

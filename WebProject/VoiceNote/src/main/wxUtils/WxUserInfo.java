@@ -9,20 +9,20 @@ import main.util.ObjUtils;
 import main.util.StringUtils;
 
 /**
- * »ñÈ¡ÓÃ»§¸öÈËĞÅÏ¢ £¬ ÓÉÓÚÓĞ¿ÉÄÜ»ñÈ¡Ê§°Ü£¬Ê¹ÓÃµÄÊ±ºòÒªµ÷ÓÃisSuccess()·½·¨ÅĞ¶ÏÊÇ·ñ»ñÈ¡³É¹¦
+ * è·å–ç”¨æˆ·ä¸ªäººä¿¡æ¯ ï¼Œ ç”±äºæœ‰å¯èƒ½è·å–å¤±è´¥ï¼Œä½¿ç”¨çš„æ—¶å€™è¦è°ƒç”¨isSuccess()æ–¹æ³•åˆ¤æ–­æ˜¯å¦è·å–æˆåŠŸ
  * @author ljl
  */
 public class WxUserInfo {
-	public String openid;//ÓÃ»§µÄÎ¨Ò»±êÊ¶
-	public String nickname;//ÓÃ»§êÇ³Æ
-	public String sex;//ÓÃ»§µÄĞÔ±ğ£¬ÖµÎª1Ê±ÊÇÄĞĞÔ£¬ÖµÎª2Ê±ÊÇÅ®ĞÔ£¬ÖµÎª0Ê±ÊÇÎ´Öª
-	public String province;//ÓÃ»§¸öÈË×ÊÁÏÌîĞ´µÄÊ¡·İ
-	public String city;//ÆÕÍ¨ÓÃ»§¸öÈË×ÊÁÏÌîĞ´µÄ³ÇÊĞ
-	public String country;//¹ú¼Ò£¬ÈçÖĞ¹úÎªCN
-	public String headimgurl;//ÓÃ»§Í·Ïñ£¬×îºóÒ»¸öÊıÖµ´ú±íÕı·½ĞÎÍ·Ïñ´óĞ¡£¨ÓĞ0¡¢46¡¢64¡¢96¡¢132ÊıÖµ¿ÉÑ¡£¬0´ú±í640*640Õı·½ĞÎÍ·Ïñ£©£¬ÓÃ»§Ã»ÓĞÍ·ÏñÊ±¸ÃÏîÎª¿Õ¡£ÈôÓÃ»§¸ü»»Í·Ïñ£¬Ô­ÓĞÍ·ÏñURL½«Ê§Ğ§¡£
-	public String privilege;//ÓÃ»§ÌØÈ¨ĞÅÏ¢£¬json Êı×é£¬ÈçÎ¢ĞÅÎÖ¿¨ÓÃ»§Îª£¨chinaunicom£©
-	public String unionid;//Ö»ÓĞÔÚÓÃ»§½«¹«ÖÚºÅ°ó¶¨µ½Î¢ĞÅ¿ª·ÅÆ½Ì¨ÕÊºÅºó£¬²Å»á³öÏÖ¸Ã×Ö¶Î¡£
-	public String errcode;//»ñÈ¡³É¹¦µÄÊ±ºò¸ÃÖµÎª¿Õ
+	public String openid;//ç”¨æˆ·çš„å”¯ä¸€æ ‡è¯†
+	public String nickname;//ç”¨æˆ·æ˜µç§°
+	public String sex;//ç”¨æˆ·çš„æ€§åˆ«ï¼Œå€¼ä¸º1æ—¶æ˜¯ç”·æ€§ï¼Œå€¼ä¸º2æ—¶æ˜¯å¥³æ€§ï¼Œå€¼ä¸º0æ—¶æ˜¯æœªçŸ¥
+	public String province;//ç”¨æˆ·ä¸ªäººèµ„æ–™å¡«å†™çš„çœä»½
+	public String city;//æ™®é€šç”¨æˆ·ä¸ªäººèµ„æ–™å¡«å†™çš„åŸå¸‚
+	public String country;//å›½å®¶ï¼Œå¦‚ä¸­å›½ä¸ºCN
+	public String headimgurl;//ç”¨æˆ·å¤´åƒï¼Œæœ€åä¸€ä¸ªæ•°å€¼ä»£è¡¨æ­£æ–¹å½¢å¤´åƒå¤§å°ï¼ˆæœ‰0ã€46ã€64ã€96ã€132æ•°å€¼å¯é€‰ï¼Œ0ä»£è¡¨640*640æ­£æ–¹å½¢å¤´åƒï¼‰ï¼Œç”¨æˆ·æ²¡æœ‰å¤´åƒæ—¶è¯¥é¡¹ä¸ºç©ºã€‚è‹¥ç”¨æˆ·æ›´æ¢å¤´åƒï¼ŒåŸæœ‰å¤´åƒURLå°†å¤±æ•ˆã€‚
+	public String privilege;//ç”¨æˆ·ç‰¹æƒä¿¡æ¯ï¼Œjson æ•°ç»„ï¼Œå¦‚å¾®ä¿¡æ²ƒå¡ç”¨æˆ·ä¸ºï¼ˆchinaunicomï¼‰
+	public String unionid;//åªæœ‰åœ¨ç”¨æˆ·å°†å…¬ä¼—å·ç»‘å®šåˆ°å¾®ä¿¡å¼€æ”¾å¹³å°å¸å·åï¼Œæ‰ä¼šå‡ºç°è¯¥å­—æ®µã€‚
+	public String errcode;//è·å–æˆåŠŸçš„æ—¶å€™è¯¥å€¼ä¸ºç©º
 	public WxUserInfo(String json) {
 		Map<String, Object> map = JSON.parseObject(json, Map.class);
 		Logs.d("userinfo_map:" + map);
@@ -40,7 +40,7 @@ public class WxUserInfo {
 	
 	
 	/**
-	 * ÇëÇóÓÃ»§Êı¾İÊÇ·ñ³É¹¦
+	 * è¯·æ±‚ç”¨æˆ·æ•°æ®æ˜¯å¦æˆåŠŸ
 	 * @return
 	 */
 	public boolean isSuccess() {

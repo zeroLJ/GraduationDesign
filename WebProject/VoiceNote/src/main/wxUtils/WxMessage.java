@@ -2,12 +2,12 @@ package main.wxUtils;
 
 
 /**
- * Î¢ĞÅ¹«ÖÚºÅ´«¹ıÀ´µÄÊı¾İ¸ñÊ½
+ * å¾®ä¿¡å…¬ä¼—å·ä¼ è¿‡æ¥çš„æ•°æ®æ ¼å¼
  * @author ljl
  */
 public class WxMessage {
 	/**
-	 * ¹«ÖÚºÅ·µ»ØÊı¾İµÄ¸ñÊ½https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141016
+	 * å…¬ä¼—å·è¿”å›æ•°æ®çš„æ ¼å¼https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141016
 	 * <xml>
 	 *  <ToUserName><![CDATA[toUser]]></ToUserName>
 	 *	<FromUserName><![CDATA[FromUser]]></FromUserName>
@@ -17,18 +17,18 @@ public class WxMessage {
 	 *	<EventKey><![CDATA[EVENTKEY]]></EventKey>
 	 * </xml>
 	 */
-	public String ToUserName; //¿ª·¢Õß Î¢ĞÅºÅ
-	public String FromUserName;//·¢ËÍ·½ÕÊºÅ£¨Ò»¸öOpenID£©
-	public String CreateTime;//ÏûÏ¢´´½¨Ê±¼ä £¨ÕûĞÍ£©
-	public String MsgType;//ÏûÏ¢ÀàĞÍ£¬event
-	public String Event;//ÊÂ¼şÀàĞÍ£¬CLICK(µã»÷)/VIEW(Ìø×ªÁ´½Ó)/scancode_push/scancode_waitmsg(É¨Ãè·µ»Ø)/subscribe(¶©ÔÄ)/unsubscribe(È¡Ïû¶©ÔÄ)
-	public String EventKey;//ÊÂ¼şKEYÖµ£¬Óë×Ô¶¨Òå²Ëµ¥½Ó¿ÚÖĞKEYÖµ¶ÔÓ¦ »ò Ìø×ªµÄURL
-	public String MenuId;//Ö¸²Ëµ¥ID£¬Èç¹ûÊÇ¸öĞÔ»¯²Ëµ¥£¬Ôò¿ÉÒÔÍ¨¹ıÕâ¸ö×Ö¶Î£¬ÖªµÀÊÇÄÄ¸ö¹æÔòµÄ²Ëµ¥±»µã»÷ÁË¡£
-	public boolean hasScanCodeInfo = false;//É¨ÃèĞÅÏ¢
-	public String ScanType;//É¨ÃèÀàĞÍ£¬Ò»°ãÊÇqrcode
-	public String ScanResult;//É¨Ãè½á¹û£¬¼´¶şÎ¬Âë¶ÔÓ¦µÄ×Ö·û´®ĞÅÏ¢
-	public String Content;//ÎÄ±¾ÏûÏ¢ÄÚÈİ
-	public long MsgId;//ÏûÏ¢id£¬64Î»ÕûĞÍ
+	public String ToUserName; //å¼€å‘è€… å¾®ä¿¡å·
+	public String FromUserName;//å‘é€æ–¹å¸å·ï¼ˆä¸€ä¸ªOpenIDï¼‰
+	public String CreateTime;//æ¶ˆæ¯åˆ›å»ºæ—¶é—´ ï¼ˆæ•´å‹ï¼‰
+	public String MsgType;//æ¶ˆæ¯ç±»å‹ï¼Œevent
+	public String Event;//äº‹ä»¶ç±»å‹ï¼ŒCLICK(ç‚¹å‡»)/VIEW(è·³è½¬é“¾æ¥)/scancode_push/scancode_waitmsg(æ‰«æè¿”å›)/subscribe(è®¢é˜…)/unsubscribe(å–æ¶ˆè®¢é˜…)
+	public String EventKey;//äº‹ä»¶KEYå€¼ï¼Œä¸è‡ªå®šä¹‰èœå•æ¥å£ä¸­KEYå€¼å¯¹åº” æˆ– è·³è½¬çš„URL
+	public String MenuId;//æŒ‡èœå•IDï¼Œå¦‚æœæ˜¯ä¸ªæ€§åŒ–èœå•ï¼Œåˆ™å¯ä»¥é€šè¿‡è¿™ä¸ªå­—æ®µï¼ŒçŸ¥é“æ˜¯å“ªä¸ªè§„åˆ™çš„èœå•è¢«ç‚¹å‡»äº†ã€‚
+	public boolean hasScanCodeInfo = false;//æ‰«æä¿¡æ¯
+	public String ScanType;//æ‰«æç±»å‹ï¼Œä¸€èˆ¬æ˜¯qrcode
+	public String ScanResult;//æ‰«æç»“æœï¼Œå³äºŒç»´ç å¯¹åº”çš„å­—ç¬¦ä¸²ä¿¡æ¯
+	public String Content;//æ–‡æœ¬æ¶ˆæ¯å†…å®¹
+	public long MsgId;//æ¶ˆæ¯idï¼Œ64ä½æ•´å‹
 	public WxMessage(String xml) {
 		int keyL,keyR;
 		String key = "<ToUserName><![CDATA[";

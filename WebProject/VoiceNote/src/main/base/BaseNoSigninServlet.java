@@ -1,7 +1,7 @@
 package main.base;
 
 /**
- * 不用校验账号密码的Servlet
+ * 涓嶇敤鏍￠獙璐﹀彿瀵嗙爜鐨凷ervlet
  * @author ljl
  *
  */

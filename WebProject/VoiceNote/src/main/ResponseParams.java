@@ -9,7 +9,7 @@ public class ResponseParams {
 	public Map<String, Object> resultMap;
 	public String msg;
 	public File file;
-	public boolean success = true;// Ĭ�ϳɹ�
+	public boolean success = true;// 默认成功
 
 	public ResponseParams() {
 	

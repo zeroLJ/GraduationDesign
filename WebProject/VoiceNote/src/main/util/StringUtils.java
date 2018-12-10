@@ -2,7 +2,7 @@ package main.util;
 
 public class StringUtils {
 	/**
-     * ÅĞ¶ÏStringÊÇ·ñÎª¿Õ
+     * åˆ¤æ–­Stringæ˜¯å¦ä¸ºç©º
      *
      * @param str
      * @return
@@ -16,7 +16,7 @@ public class StringUtils {
     }
 
     /**
-     * ÅĞ¶ÏString²»Îª¿Õ
+     * åˆ¤æ–­Stringä¸ä¸ºç©º
      *
      * @param str
      * @return
@@ -32,7 +32,7 @@ public class StringUtils {
    
 
     /**
-     * ÅĞ¶ÏÊÇ·ñÎªÊı×ÖÀàĞÍº¬¸ººÅ¡°-¡±°üº¬Ğ¡Êıµã
+     * åˆ¤æ–­æ˜¯å¦ä¸ºæ•°å­—ç±»å‹å«è´Ÿå·â€œ-â€åŒ…å«å°æ•°ç‚¹
      * @param str
      * @return
      */

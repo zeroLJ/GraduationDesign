@@ -9,15 +9,15 @@ import com.alibaba.fastjson.JSON;
 import main.util.HttpRequest;
 
 /**
- * Î¢ĞÅ¹«ÖÚºÅ´´½¨×Ô¶¨Òå²Ëµ¥£¬Êı¾İ½á¹¹Çë¿´https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141013
+ * å¾®ä¿¡å…¬ä¼—å·åˆ›å»ºè‡ªå®šä¹‰èœå•ï¼Œæ•°æ®ç»“æ„è¯·çœ‹https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141013
  * @author ljl
  */
 public class MenuCreate {
 	
 	public static void main(String[] args) {
-		Map<String, List<Map<String, Object>>> map = new HashMap<>(); //×îÍâ²ã·â×°
-	    List<Map<String, Object>> list = new ArrayList<>();//Ò»¼¶²Ëµ¥ÁĞ±í£¬¸öÊıÓ¦Îª1~3¸ö£¬   Ò»¼¶²Ëµ¥×î¶à4¸öºº×Ö
-	    List<Map<String, String>> childList = new ArrayList<>();//¶ş¼¶²Ëµ¥ÁĞ±í£¬¸öÊıÓ¦Îª1~5¸ö£¬ ¶ş¼¶²Ëµ¥×î¶à7¸öºº×Ö
+		Map<String, List<Map<String, Object>>> map = new HashMap<>(); //æœ€å¤–å±‚å°è£…
+	    List<Map<String, Object>> list = new ArrayList<>();//ä¸€çº§èœå•åˆ—è¡¨ï¼Œä¸ªæ•°åº”ä¸º1~3ä¸ªï¼Œ   ä¸€çº§èœå•æœ€å¤š4ä¸ªæ±‰å­—
+	    List<Map<String, String>> childList = new ArrayList<>();//äºŒçº§èœå•åˆ—è¡¨ï¼Œä¸ªæ•°åº”ä¸º1~5ä¸ªï¼Œ äºŒçº§èœå•æœ€å¤š7ä¸ªæ±‰å­—
 	    
 //        String access_token=HttpRequest.sendGet("https://api.weixin.qq.com/cgi-bin/token", "grant_type=client_credential&appid=wxf0c5a5db0211f99d&secret=9f793217bf3047e764000d79edc63121");
 //	    System.out.println("access_token" + access_token);
@@ -30,13 +30,13 @@ public class MenuCreate {
 //	    String access_token = "13_hzjkAdlI_UvhWX0O0T8LJbQaAZiNxYdoyOtdqdkzQzBtfsXW4c_C-e4OqvP43tqpWiHDfK8qZFPAmMFTsXVSw0YuuPOl1aIUB40tT1STaScS_YQqEOKTVDCETGvgUtmbNDiB0GsYQw_ut3_lNMOfAEAAZB";
 	   
 	    map.put("button", list);
-	    //µÚÒ»¸ö²Ëµ¥
+	    //ç¬¬ä¸€ä¸ªèœå•
 	    Map<String, Object> objMap = new HashMap<>();
 	    objMap.put("type", "click");
-	    objMap.put("name", "½ñÈÕ¸èÇú");
+	    objMap.put("name", "ä»Šæ—¥æ­Œæ›²");
 	    objMap.put("key", "V1001_TODAY_MUSIC");
 	    list.add(objMap);
-	    //Î´·¢²¼µÄĞ¡³ÌĞòÎŞ·¨°ó¶¨
+	    //æœªå‘å¸ƒçš„å°ç¨‹åºæ— æ³•ç»‘å®š
 	    /*objMap.put("type", "miniprogram");
 	    objMap.put("name", "VoiceNote");
 	    objMap.put("url", "http://mp.weixin.qq.com");
@@ -45,10 +45,10 @@ public class MenuCreate {
 	    list.add(objMap);*/
 	    
 	    
-	    //µÚ¶ş¸ö²Ëµ¥
-	    objMap = new HashMap<>();//²Ëµ¥ÊôĞÔ
-	    objMap.put("name", "²Ëµ¥");
-	    //µÚ¶ş¸ö²Ëµ¥µÄ¶ş¼¶²Ëµ¥
+	    //ç¬¬äºŒä¸ªèœå•
+	    objMap = new HashMap<>();//èœå•å±æ€§
+	    objMap.put("name", "èœå•");
+	    //ç¬¬äºŒä¸ªèœå•çš„äºŒçº§èœå•
 	    childList = new ArrayList<>();
 	    Map<String, String> childMap = new HashMap<>();
 	    childMap.put("type", "view");
@@ -56,11 +56,11 @@ public class MenuCreate {
 	    childMap.put("url", "http://www.soso.com/");
 	    childList.add(childMap);
 	    
-	    //http://193.112.132.83/WxDemo/index¡£jsp
+	    //http://193.112.132.83/WxDemo/indexã€‚jsp
 	    //https://www.csdn.net/
 	    childMap = new HashMap<>();
 	    childMap.put("type", "view");
-	    childMap.put("name", "²âÊÔÍøÒ³");
+	    childMap.put("name", "æµ‹è¯•ç½‘é¡µ");
 	    childMap.put("url", "https://jhonliu.club/VoiceNote/view/signin.html");
 	    childList.add(childMap);
 	    
@@ -87,27 +87,27 @@ public class MenuCreate {
 	    
 	    childMap = new HashMap<>();
 	    childMap.put("type", "view");
-	    childMap.put("name", "²Ëµ¥");
+	    childMap.put("name", "èœå•");
 	    childMap.put("url", "https://mp.weixin.qq.com/mp/homepage?__biz=MzU2NzY3OTM5Mg%3D%3D&hid=1&sn=7cea03cee8b433fb6c5d4becbd44025c");
 	    childList.add(childMap);
 	    
 //	    childMap = new HashMap<>();
 //	    childMap.put("type", "click");
-//	    childMap.put("name", "ÔŞÎÒÃÇÒ»ÏÂ");
+//	    childMap.put("name", "èµæˆ‘ä»¬ä¸€ä¸‹");
 //	    childMap.put("key", "V1001_GOOD");
 //	    childList.add(childMap);
 	    
-	    objMap.put("sub_button", childList);//ÉèÖÃµÚ¶ş¸ö²Ëµ¥µÄ×Ó²Ëµ¥ÁĞ±í
+	    objMap.put("sub_button", childList);//è®¾ç½®ç¬¬äºŒä¸ªèœå•çš„å­èœå•åˆ—è¡¨
 	    list.add(objMap); 
 	    
-	    //µÚÈı¸ö²Ëµ¥
+	    //ç¬¬ä¸‰ä¸ªèœå•
 	    objMap = new HashMap<>();
 	    objMap.put("type", "scancode_waitmsg");
-	    objMap.put("name", "É¨ÂëÌáÊ¾");
+	    objMap.put("name", "æ‰«ç æç¤º");
 	    objMap.put("key", "rselfmenu_0_0");
 	    list.add(objMap); 
 	    
-	    String json = JSON.toJSONString(map);//×ª»¯³Éjson
+	    String json = JSON.toJSONString(map);//è½¬åŒ–æˆjson
 	    System.out.println("json:" + json);
 	    String result = HttpRequest.sendPost("https://api.weixin.qq.com/cgi-bin/menu/create?access_token="+access_token, json);
 	    System.out.println(result);

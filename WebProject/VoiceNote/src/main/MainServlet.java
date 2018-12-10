@@ -1,17 +1,8 @@
 package main;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -20,30 +11,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
 import datasourse.DBUtils;
-import main.servlet.BaseServlet;
-import main.servlet.Login;
-import main.servlet.SigninOther;
+import main.base.BaseServlet;
 import main.util.Logs;
-import main.util.ObjUtils;
-import main.util.ResponseUtil;
 
-//@WebServlet("/MainServlet")//´Ë²ÎÊıÔÚÕû¸öÏîÄ¿ÖĞ±ØĞëÎ¨Ò»£¬·ñÔòÔËĞĞÊ§°Ü
+//@WebServlet("/MainServlet")//æ­¤å‚æ•°åœ¨æ•´ä¸ªé¡¹ç›®ä¸­å¿…é¡»å”¯ä¸€ï¼Œå¦åˆ™è¿è¡Œå¤±è´¥
 
 
 /**
- * ËùÓĞ.doÎªºó×ºµÄÇëÇó¶¼»á·ÃÎÊ´ËServlet£¬ÔÙÍ¨¹ı·´ÉäÕÒµ½¶ÔÓ¦Servlet
- * ±ÈÈç£¬·ÃÎÊmain.servlet.InfoGet¿ÉÒÔÊ¹ÓÃhttp://localhost:8081/VoiceNote/main/servlet/InfoGet.do £¨Í¨¹ı·´Éä£©
- * »òhttp://localhost:8081/VoiceNote/InfoGet(ServletÅäÖÃµÄÂ·¾¶)
+ * æ‰€æœ‰.doä¸ºåç¼€çš„è¯·æ±‚éƒ½ä¼šè®¿é—®æ­¤Servletï¼Œå†é€šè¿‡åå°„æ‰¾åˆ°å¯¹åº”Servlet
+ * æ¯”å¦‚ï¼Œè®¿é—®main.servlet.InfoGetå¯ä»¥ä½¿ç”¨http://localhost:8081/VoiceNote/main/servlet/InfoGet.do ï¼ˆé€šè¿‡åå°„ï¼‰
+ * æˆ–http://localhost:8081/VoiceNote/InfoGet(Servleté…ç½®çš„è·¯å¾„)
  */
-//Í¨¹ı×¢½âÅäÖÃServletÃû³ÆºÍ²¿ÊğÂ·¾¶£¬²»ĞèÔÚweb.xmlÅäÖÃ
+//é€šè¿‡æ³¨è§£é…ç½®Servletåç§°å’Œéƒ¨ç½²è·¯å¾„ï¼Œä¸éœ€åœ¨web.xmlé…ç½®
 @WebServlet(name="MainServlet",urlPatterns={"*.do"},
-		//Ä¬ÈÏ²ÎÊı£¬Í¨¹ıgetInitParameter()·½·¨»ñÈ¡£¬µ«×¢ÒâÍ¨¹ı·´Éä·ÃÎÊµÄServletÎŞ·¨»ñÈ¡µ½
+		//é»˜è®¤å‚æ•°ï¼Œé€šè¿‡getInitParameter()æ–¹æ³•è·å–ï¼Œä½†æ³¨æ„é€šè¿‡åå°„è®¿é—®çš„Servletæ— æ³•è·å–åˆ°
 		initParams= {@WebInitParam(name = "path", value = "")})
 public class MainServlet extends BaseServlet{	
 	@Override
@@ -53,11 +35,11 @@ public class MainServlet extends BaseServlet{
         Method method;
         String currentURL=request.getRequestURI();
         String ctxPath = request.getContextPath();
-        String className = currentURL.substring(ctxPath.length()+1);//È¥µôÎŞÓÃÇ°×º
+        String className = currentURL.substring(ctxPath.length()+1);//å»æ‰æ— ç”¨å‰ç¼€
         if (className.contains(".")) {
-        	className = className.substring(0,className.lastIndexOf("."));//È¥µôºó×º
+        	className = className.substring(0,className.lastIndexOf("."));//å»æ‰åç¼€
 		}
-        className = className.replaceAll("/", ".");//×ª»¯³ÉclassµÄÃû³Æ
+        className = className.replaceAll("/", ".");//è½¬åŒ–æˆclassçš„åç§°
         Logs.d("class:"+className);
         className = getInitParameter("path") + className;
         Logs.d("path:"+className);
@@ -71,30 +53,30 @@ public class MainServlet extends BaseServlet{
 			method = aClass.getDeclaredMethod("doGet",  HttpServletRequest.class, 
 			HttpServletResponse.class);
 //			method = aClass.getSuperclass().getDeclaredMethod("doGet",  HttpServletRequest.class, 
-//					HttpServletResponse.class);//¶ÔÓ¦¸¸Àà£¬¼´BaseServletµÄdoGet·½·¨
+//					HttpServletResponse.class);//å¯¹åº”çˆ¶ç±»ï¼Œå³BaseServletçš„doGetæ–¹æ³•
 			method.setAccessible(true);
 			method.invoke(classObj,request, response);
-			Logs.d("·½·¨´æÔÚ");
+			Logs.d("æ–¹æ³•å­˜åœ¨");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			Logs.d("ÕÒ²»µ½"+className);
+			Logs.d("æ‰¾ä¸åˆ°"+className);
 			return;
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			Logs.d("·½·¨²»´æÔÚ");
+			Logs.d("æ–¹æ³•ä¸å­˜åœ¨");
 			return;
 		} catch (SecurityException e) {
 			e.printStackTrace();
-			Logs.d("ÎŞ·¨·ÃÎÊ");
+			Logs.d("æ— æ³•è®¿é—®");
 			return;
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println(className+"³õÊ¼»¯´íÎó");
+			System.out.println(className+"åˆå§‹åŒ–é”™è¯¯");
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println(className+"³õÊ¼»¯´íÎó£¡");
+			System.out.println(className+"åˆå§‹åŒ–é”™è¯¯ï¼");
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -8,8 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//Í¨¹ıÄ¬ÈÏ²ÎÊıÅäÖÃÂ·¾¶£¬Ëõ¶ÌÇëÇóurlµÄ³¤¶È£¬±ÈÈçÔÚMainServletÎª http://localhost:8081/VoiceNote/main/servlet/InfoGet.do
-//ÔÚÕâÀïÖ»ĞèÒªhttp://localhost:8081/VoiceNote/InfoGet.do2
+//é€šè¿‡é»˜è®¤å‚æ•°é…ç½®è·¯å¾„ï¼Œç¼©çŸ­è¯·æ±‚urlçš„é•¿åº¦ï¼Œæ¯”å¦‚åœ¨MainServletä¸º http://localhost:8081/VoiceNote/main/servlet/InfoGet.do
+//åœ¨è¿™é‡Œåªéœ€è¦http://localhost:8081/VoiceNote/InfoGet.do2
 @WebServlet(name="MainServlet2",urlPatterns={"*.do2"},
 	initParams= {@WebInitParam(name = "path", value = "main.servlet.")})//
 public class MainServlet2 extends MainServlet{

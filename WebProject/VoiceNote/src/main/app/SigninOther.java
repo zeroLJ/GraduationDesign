@@ -15,7 +15,7 @@ import main.base.BaseNoSigninServlet;
 import main.util.ObjUtils;
 
 /**
- * µÚÈı·½µÇÂ¼½Ó¿Ú
+ * ç¬¬ä¸‰æ–¹ç™»å½•æ¥å£
  * 
  * @author ljl
  *
@@ -35,14 +35,14 @@ public class SigninOther extends BaseNoSigninServlet {
 		if (db.queryList(query).isEmpty()) {
 			if (params.get("file") != null && !params.get("file").equals("")) {
 				File file = new File(params.get("file"));
-				System.out.println("ÎÄ¼ş´Ó:" + file.getAbsolutePath());
+				System.out.println("æ–‡ä»¶ä»:" + file.getAbsolutePath());
 				File toFile = new File("C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\icon.jpg");
 				toFile.getParentFile().mkdirs();
 				if (toFile.exists()) {
 					toFile.delete();
 				}
 				file.renameTo(toFile);
-				System.out.println("ÎÄ¼şµ½:" + toFile.getAbsolutePath());
+				System.out.println("æ–‡ä»¶åˆ°:" + toFile.getAbsolutePath());
 			}
 			UserT userT = new UserT();
 			userT.Field_Password().setValue(user.getPassword());
@@ -55,13 +55,13 @@ public class SigninOther extends BaseNoSigninServlet {
 			if (db.saveToDB(userT)) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("newUser", "true");
-//				ResponseUtil.response(response, null, map, "×¢²á³É¹¦£¡£¡", true);
+//				ResponseUtil.response(response, null, map, "æ³¨å†ŒæˆåŠŸï¼ï¼", true);
 				return ResponseParams.successResultMap(map);
 			}else {
-				return ResponseParams.failResult("µÇÂ¼Ê§°Ü");
+				return ResponseParams.failResult("ç™»å½•å¤±è´¥");
 			}
 		}
-//		ResponseUtil.response(response, "µÇÂ¼³É¹¦£¡£¡", true);
+//		ResponseUtil.response(response, "ç™»å½•æˆåŠŸï¼ï¼", true);
 		return ResponseParams.successResult();
 	}
 }

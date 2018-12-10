@@ -8,7 +8,7 @@ import sun.misc.BASE64Encoder;
 
 public  class ImageUtil {
 	/**
-	 * @Description: ¸ù¾İÍ¼Æ¬µØÖ·×ª»»Îªbase64±àÂë×Ö·û´®
+	 * @Description: æ ¹æ®å›¾ç‰‡åœ°å€è½¬æ¢ä¸ºbase64ç¼–ç å­—ç¬¦ä¸²
 	 * @Author: 
 	 * @CreateTime: 
 	 * @return
@@ -21,7 +21,7 @@ public  class ImageUtil {
 	        data = new byte[inputStream.available()];
 	        inputStream.read(data);
 	        inputStream.close();
-	        // ¼ÓÃÜ
+	        // åŠ å¯†
 		    BASE64Encoder encoder = new BASE64Encoder();
 		    return encoder.encode(data);
 	    } catch (IOException e) {

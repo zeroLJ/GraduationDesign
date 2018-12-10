@@ -7,15 +7,15 @@ import com.alibaba.fastjson.JSON;
 import main.util.ObjUtils;
 
 /**
- * ¹«ÖÚºÅÓÃ»§ÊÚÈ¨³É¹¦ºó»ñÈ¡µÄ¸ÃÓÃ»§µÄĞÅÏ¢ £¬ ÓÉÓÚÓĞ¿ÉÄÜ»ñÈ¡Ê§°Ü£¬Ê¹ÓÃµÄÊ±ºòÒªÏÈÅĞ¶Ïexpires_inÊÇ·ñ´óÓÚ0;ÈôÎª0ÔòÎª»ñÈ¡Ê§°Ü
+ * å…¬ä¼—å·ç”¨æˆ·æˆæƒæˆåŠŸåè·å–çš„è¯¥ç”¨æˆ·çš„ä¿¡æ¯ ï¼Œ ç”±äºæœ‰å¯èƒ½è·å–å¤±è´¥ï¼Œä½¿ç”¨çš„æ—¶å€™è¦å…ˆåˆ¤æ–­expires_inæ˜¯å¦å¤§äº0;è‹¥ä¸º0åˆ™ä¸ºè·å–å¤±è´¥
  * @author ljl
  */
 public class WxUserToken {
-	public String access_token;//ÍøÒ³ÊÚÈ¨½Ó¿Úµ÷ÓÃÆ¾Ö¤,×¢Òâ£º´Ëaccess_tokenÓë»ù´¡Ö§³ÖµÄaccess_token²»Í¬
-	public int expires_in;//access_token½Ó¿Úµ÷ÓÃÆ¾Ö¤³¬Ê±Ê±¼ä£¬µ¥Î»£¨Ãë£©
-	public String refresh_token;//ÓÃ»§Ë¢ĞÂaccess_token
-	public String openid;//ÓÃ»§Î¨Ò»±êÊ¶£¬Çë×¢Òâ£¬ÔÚÎ´¹Ø×¢¹«ÖÚºÅÊ±£¬ÓÃ»§·ÃÎÊ¹«ÖÚºÅµÄÍøÒ³£¬Ò²»á²úÉúÒ»¸öÓÃ»§ºÍ¹«ÖÚºÅÎ¨Ò»µÄOpenID
-	public String scope;//ÓÃ»§ÊÚÈ¨µÄ×÷ÓÃÓò£¬Ê¹ÓÃ¶ººÅ£¨,£©·Ö¸ô        snsapi_base/snsapi_userinfo
+	public String access_token;//ç½‘é¡µæˆæƒæ¥å£è°ƒç”¨å‡­è¯,æ³¨æ„ï¼šæ­¤access_tokenä¸åŸºç¡€æ”¯æŒçš„access_tokenä¸åŒ
+	public int expires_in;//access_tokenæ¥å£è°ƒç”¨å‡­è¯è¶…æ—¶æ—¶é—´ï¼Œå•ä½ï¼ˆç§’ï¼‰
+	public String refresh_token;//ç”¨æˆ·åˆ·æ–°access_token
+	public String openid;//ç”¨æˆ·å”¯ä¸€æ ‡è¯†ï¼Œè¯·æ³¨æ„ï¼Œåœ¨æœªå…³æ³¨å…¬ä¼—å·æ—¶ï¼Œç”¨æˆ·è®¿é—®å…¬ä¼—å·çš„ç½‘é¡µï¼Œä¹Ÿä¼šäº§ç”Ÿä¸€ä¸ªç”¨æˆ·å’Œå…¬ä¼—å·å”¯ä¸€çš„OpenID
+	public String scope;//ç”¨æˆ·æˆæƒçš„ä½œç”¨åŸŸï¼Œä½¿ç”¨é€—å·ï¼ˆ,ï¼‰åˆ†éš”        snsapi_base/snsapi_userinfo
 	
 	public WxUserToken(String json) {
 		Map<String, Object> map = JSON.parseObject(json, Map.class);

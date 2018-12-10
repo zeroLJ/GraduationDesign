@@ -21,12 +21,12 @@ import java.util.Map;
 
 public class ObjUtils {
     /**
-     * Ô­À´ÓÃµÄ4µ«ÊÇcwkÌá³öÓÃ8Î»»áÒÔ0²¹×ã.
-     * Ô­ÒòÊÇÊı¾İ¿â±£´æµÄÊÇ°ËÎ»Ğ¡Êı£¬Èç¹û³öÏÖ°ËÎ»¾ÍÊÇÊı¾İ¿â±£´æÊı¾İµÄÎÊÌâ
+     * åŸæ¥ç”¨çš„4ä½†æ˜¯cwkæå‡ºç”¨8ä½ä¼šä»¥0è¡¥è¶³.
+     * åŸå› æ˜¯æ•°æ®åº“ä¿å­˜çš„æ˜¯å…«ä½å°æ•°ï¼Œå¦‚æœå‡ºç°å…«ä½å°±æ˜¯æ•°æ®åº“ä¿å­˜æ•°æ®çš„é—®é¢˜
      */
     public static DecimalFormat mDecimalFormat=new DecimalFormat("#.########");
     /**
-     * ¶ÔÏó×ªString
+     * å¯¹è±¡è½¬String
      *
      * @param obj
      * @return
@@ -52,7 +52,7 @@ public class ObjUtils {
 
 
     /**
-     * ¶ÔÏó×ªDouble
+     * å¯¹è±¡è½¬Double
      *
      * @param obj
      * @return
@@ -67,7 +67,7 @@ public class ObjUtils {
     }
 
     /**
-     * ¶ÔÏó×ªInt
+     * å¯¹è±¡è½¬Int
      *
      * @param obj
      * @return
@@ -164,7 +164,7 @@ public class ObjUtils {
     }
 
     /**
-     * listÉî¶È¿½±´
+     * listæ·±åº¦æ‹·è´
      * @param src
      * @param <T>
      * @return
@@ -264,10 +264,10 @@ public class ObjUtils {
 
 
     /**
-     * Created by ljl ¼ò»¯²éÕÒ·½·¨
-     * ²éÕÒlistÖĞÂú×ãÆ¥ÅäÌõ¼şµÄmap
-     * @param data  ±»Æ¥ÅäµÄlist
-     * @param maps  Æ¥ÅäÌõ¼ş
+     * Created by ljl ç®€åŒ–æŸ¥æ‰¾æ–¹æ³•
+     * æŸ¥æ‰¾listä¸­æ»¡è¶³åŒ¹é…æ¡ä»¶çš„map
+     * @param data  è¢«åŒ¹é…çš„list
+     * @param maps  åŒ¹é…æ¡ä»¶
      * @return
      */
     public static Map<String,Object> findMap(List<Map<String,Object>> data, Map<String,Object> maps){
@@ -309,7 +309,7 @@ public class ObjUtils {
     }
 
     /**
-     * ²éÑ¯Âú×ãÌõ¼şÖ®Ò»µÄmapÁĞ±í
+     * æŸ¥è¯¢æ»¡è¶³æ¡ä»¶ä¹‹ä¸€çš„mapåˆ—è¡¨
      * @param data
      * @param maps
      * @return
@@ -426,7 +426,7 @@ public class ObjUtils {
 
 
     /**
-     * ½µĞò
+     * é™åº
      */
     public static void sortDESC(List bData,final String name){
         Collections.sort(bData, new Comparator<Map<String, Object>>() {
@@ -441,7 +441,7 @@ public class ObjUtils {
     }
 
     /**
-     * ÉıĞò
+     * å‡åº
      */
     public static void sortASC(List bData,final String name){
         Collections.sort(bData, new Comparator<Map<String, Object>>() {

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class EntityUtils {
 	/**
-	 * ÊµÌåÀà×ªMap
+	 * å®ä½“ç±»è½¬Map
 	 * @param object
 	 * @return
 	 */
@@ -27,9 +27,9 @@ public class EntityUtils {
 	}
 	
 	/**
-	 * Map×ªÊµÌåÀà
-	 * @param map ĞèÒª³õÊ¼»¯µÄÊı¾İ£¬key×Ö¶Î±ØĞëÓëÊµÌåÀàµÄ³ÉÔ±Ãû×ÖÒ»Ñù£¬·ñÔò¸³ÖµÎª¿Õ
-	 * @param entity  ĞèÒª×ª»¯³ÉµÄÊµÌåÀà
+	 * Mapè½¬å®ä½“ç±»
+	 * @param map éœ€è¦åˆå§‹åŒ–çš„æ•°æ®ï¼Œkeyå­—æ®µå¿…é¡»ä¸å®ä½“ç±»çš„æˆå‘˜åå­—ä¸€æ ·ï¼Œå¦åˆ™èµ‹å€¼ä¸ºç©º
+	 * @param entity  éœ€è¦è½¬åŒ–æˆçš„å®ä½“ç±»
 	 * @return
 	 */
 	public static <T> T mapToEntity(Map<String, Object> map, Class<T> entity) {

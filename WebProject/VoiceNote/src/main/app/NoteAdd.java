@@ -29,11 +29,11 @@ public class NoteAdd extends BaseServlet{
 		String audioPath = ObjUtils.objToStr(map.get("audioPath"));
 		if (!db.getUploadFiles().isEmpty()) {
 			File file = db.getUploadFiles().get(0);
-			System.out.println("ÎÄ¼þ´Ó:" + file.getAbsolutePath());  
+			System.out.println("æ–‡ä»¶ä»Ž:" + file.getAbsolutePath());  
 			File toFile = new File("C:\\VoiceNote\\" + ObjUtils.objToStr(params.get("name")) + "\\" + DateUtils.getFileNameByDate(DateUtils.StringDateTime(addTime)) + "\\iat.wav");
 			toFile.getParentFile().mkdirs();
 			file.renameTo(toFile);
-			System.out.println("ÎÄ¼þµ½:" + toFile.getAbsolutePath());  
+			System.out.println("æ–‡ä»¶åˆ°:" + toFile.getAbsolutePath());  
 		}
 		Note note = new Note();
 		note.Field_Name().setValue(user.getUserName());
