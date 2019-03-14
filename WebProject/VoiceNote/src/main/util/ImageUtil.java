@@ -3,8 +3,8 @@ package main.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 
-import sun.misc.BASE64Encoder;
 
 public  class ImageUtil {
 	/**
@@ -22,8 +22,10 @@ public  class ImageUtil {
 	        inputStream.read(data);
 	        inputStream.close();
 	        // 加密
-		    BASE64Encoder encoder = new BASE64Encoder();
-		    return encoder.encode(data);
+		    /*BASE64Encoder encoder = new BASE64Encoder();
+		    return encoder.encode(data);*/
+		    
+		    return  Base64.getEncoder().encodeToString(data);
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	        return "";
